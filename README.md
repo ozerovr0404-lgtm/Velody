@@ -6,7 +6,7 @@
 |----------|----------|
 | Frontend | React 19 + JavaScript + TypeScript |
 | Backend | Node.js 22 (LTS) |
-| Database | PostreSQL |
+| Database | PostgreSQL |
 | Инфраструктура | Пока не определено |
 | Документация | Нужно выбрать ближе к итоговой реализации |
 | Доп. API | Возможно, Ю-Касса (для оплаты) |
