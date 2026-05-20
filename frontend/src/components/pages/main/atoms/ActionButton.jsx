@@ -1,10 +1,20 @@
 // src/components/main/atoms/ActionButton.jsx
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 
-const ActionButton = ({ label, variant = 'contained' }) => {
+const ActionButton = ({ label, variant = 'contained', navigateTo }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (navigateTo) {
+      navigate(navigateTo);
+    }
+  };
+
   return (
     <Button
+      onClick={handleClick}
       variant={variant}
       sx={{
         textTransform: 'none',
@@ -12,7 +22,10 @@ const ActionButton = ({ label, variant = 'contained' }) => {
         fontSize: '1rem',
         mt: 1,
         color: 'rgba(253, 253, 253, 1)',
-        backgroundColor: 'rgba(8, 94, 75, 1)'
+        backgroundColor: 'rgba(8, 94, 75, 1)',
+        '&:hover': {
+          backgroundColor: 'rgba(6, 70, 56, 1)',
+        }
       }}
     >
       {label}
