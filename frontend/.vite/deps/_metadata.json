@@ -1,0 +1,140 @@
+{
+  "hash": "303d8726",
+  "configHash": "fccf02f5",
+  "lockfileHash": "2a0dc907",
+  "browserHash": "5adf1c2f",
+  "optimized": {
+    "@mui/icons-material/Facebook": {
+      "src": "../../node_modules/@mui/icons-material/Facebook.mjs",
+      "file": "@mui_icons-material_Facebook.js",
+      "fileHash": "189e030f",
+      "needsInterop": false
+    },
+    "@mui/icons-material/Instagram": {
+      "src": "../../node_modules/@mui/icons-material/Instagram.mjs",
+      "file": "@mui_icons-material_Instagram.js",
+      "fileHash": "f12b9714",
+      "needsInterop": false
+    },
+    "@mui/icons-material/Menu": {
+      "src": "../../node_modules/@mui/icons-material/Menu.mjs",
+      "file": "@mui_icons-material_Menu.js",
+      "fileHash": "a521ebdb",
+      "needsInterop": false
+    },
+    "@mui/icons-material/Twitter": {
+      "src": "../../node_modules/@mui/icons-material/Twitter.mjs",
+      "file": "@mui_icons-material_Twitter.js",
+      "fileHash": "1c908269",
+      "needsInterop": false
+    },
+    "@mui/material": {
+      "src": "../../node_modules/@mui/material/index.mjs",
+      "file": "@mui_material.js",
+      "fileHash": "ca20fed6",
+      "needsInterop": false
+    },
+    "@mui/material/Box": {
+      "src": "../../node_modules/@mui/material/Box/index.mjs",
+      "file": "@mui_material_Box.js",
+      "fileHash": "4b06bdcb",
+      "needsInterop": false
+    },
+    "@mui/material/CssBaseline": {
+      "src": "../../node_modules/@mui/material/CssBaseline/index.mjs",
+      "file": "@mui_material_CssBaseline.js",
+      "fileHash": "a789d575",
+      "needsInterop": false
+    },
+    "@mui/material/Dialog": {
+      "src": "../../node_modules/@mui/material/Dialog/index.mjs",
+      "file": "@mui_material_Dialog.js",
+      "fileHash": "b73a9901",
+      "needsInterop": false
+    },
+    "@mui/material/TextField": {
+      "src": "../../node_modules/@mui/material/TextField/index.mjs",
+      "file": "@mui_material_TextField.js",
+      "fileHash": "9162af9c",
+      "needsInterop": false
+    },
+    "@mui/material/styles": {
+      "src": "../../node_modules/@mui/material/styles/index.mjs",
+      "file": "@mui_material_styles.js",
+      "fileHash": "45106985",
+      "needsInterop": false
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "e9c8a7c8",
+      "needsInterop": true
+    },
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "300117f3",
+      "needsInterop": true
+    },
+    "react/jsx-dev-runtime": {
+      "src": "../../node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "e64afbcd",
+      "needsInterop": true
+    }
+  },
+  "chunks": {
+    "Box-DLeo2mwf": {
+      "file": "Box-DLeo2mwf.js",
+      "isDynamicEntry": false
+    },
+    "CssBaseline-RTtnnAy1": {
+      "file": "CssBaseline-RTtnnAy1.js",
+      "isDynamicEntry": false
+    },
+    "DefaultPropsProvider-B1Hjb_o4": {
+      "file": "DefaultPropsProvider-B1Hjb_o4.js",
+      "isDynamicEntry": false
+    },
+    "Dialog-C4pzTikE": {
+      "file": "Dialog-C4pzTikE.js",
+      "isDynamicEntry": false
+    },
+    "Modal-BxBxQTIt": {
+      "file": "Modal-BxBxQTIt.js",
+      "isDynamicEntry": false
+    },
+    "TextField-D-6B3hhs": {
+      "file": "TextField-D-6B3hhs.js",
+      "isDynamicEntry": false
+    },
+    "createSvgIcon-DnwwfkGu": {
+      "file": "createSvgIcon-DnwwfkGu.js",
+      "isDynamicEntry": false
+    },
+    "generateUtilityClasses-_cBmygnp": {
+      "file": "generateUtilityClasses-_cBmygnp.js",
+      "isDynamicEntry": false
+    },
+    "memoTheme-CdUeTh4v": {
+      "file": "memoTheme-CdUeTh4v.js",
+      "isDynamicEntry": false
+    },
+    "react-B35R_oEX": {
+      "file": "react-B35R_oEX.js",
+      "isDynamicEntry": false
+    },
+    "react-dom-CYDThRfy": {
+      "file": "react-dom-CYDThRfy.js",
+      "isDynamicEntry": false
+    },
+    "styled-B5beAdxu": {
+      "file": "styled-B5beAdxu.js",
+      "isDynamicEntry": false
+    },
+    "styles-CYThNX9Y": {
+      "file": "styles-CYThNX9Y.js",
+      "isDynamicEntry": false
+    }
+  }
+}
