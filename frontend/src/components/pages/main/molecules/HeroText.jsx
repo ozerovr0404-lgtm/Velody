@@ -1,5 +1,4 @@
 // src/components/main/molecules/HeroText.jsx
-import React from 'react';
 import { Box, colors } from '@mui/material';
 import Title from '../atoms/Title';
 import Subtitle from '../atoms/Subtitle';
@@ -13,7 +12,7 @@ const HeroText = () => {
       <Subtitle />
 
       <Box sx={{ display: 'flex', flexDirection: 'row', gap: '20px', margin: '0 10px 40px' }}>
-        <ActionButton label="Найти музыканта" />
+        <ActionButton label="Найти музыканта" navigateTo="/catalog" />
         <ActionButton label="Предложить услуги" />
       </Box>
 
