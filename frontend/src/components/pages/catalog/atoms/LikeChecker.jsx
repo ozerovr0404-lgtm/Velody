@@ -16,10 +16,10 @@ const LikeChecker = ({ isLiked = false, onToggleLike }) => {
       <IconButton
         onClick={handleLike}
         sx={{
-          color: liked ? 'rgba(244, 67, 54, 1)' : 'rgba(158, 158, 158, 1)',
+          color: liked ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 1)',
           transition: 'color 0.3s ease',
           '&:hover': {
-            color: 'rgba(244, 67, 54, 1)',
+            color: 'rgba(255, 255, 255, 1)',
           },
         }}
       >

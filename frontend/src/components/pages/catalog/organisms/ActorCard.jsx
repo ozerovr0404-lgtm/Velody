@@ -7,6 +7,7 @@ import ActorFooter from '../molecules/ActorFooter';
 const ActorCard = ({
   id,
   name,
+  image,
   avatar,
   category,
   rating = 4.5,
@@ -33,13 +34,14 @@ const ActorCard = ({
         flexDirection: 'column',
         width: '100%',
         maxWidth: '360px',
+        minWidth: '360px',
         margin: '0 auto',
       }}
     >
       {/* Фото с лайком */}
       <ActorImage
         avatar={avatar}
-        name={name}
+        image={image}
         isLiked={isLiked}
         onToggleLike={onToggleLike}
       />

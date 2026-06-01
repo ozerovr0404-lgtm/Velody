@@ -2,7 +2,7 @@ import React from 'react';
 import { Box } from '@mui/material';
 import LikeChecker from '../atoms/LikeChecker';
 
-const ActorImage = ({ avatar, name, isLiked = false, onToggleLike }) => {
+const ActorImage = ({ image, isLiked = false, onToggleLike }) => {
   return (
     <Box
       sx={{
@@ -10,7 +10,7 @@ const ActorImage = ({ avatar, name, isLiked = false, onToggleLike }) => {
         width: '100%',
         paddingTop: '100%', // 1:1 aspect ratio
         backgroundColor: 'rgba(200, 200, 200, 0.3)',
-        backgroundImage: `url(${avatar})`,
+        backgroundImage: `url(${image})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         borderRadius: '12px 12px 0 0',
