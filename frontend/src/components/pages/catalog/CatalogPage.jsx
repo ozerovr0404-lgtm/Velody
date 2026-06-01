@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import Tabs from '@mui/material/Tabs';
 import { Box, Container, Grid } from '@mui/material';
-import Header from '../components/header/Header';
-import Footer from '../components/footer/Footer';
-import ActorCard from '../components/pages/catalog/organisms/ActorCard';
-import RegisterModal from '../features/authModal/RegisterModal';
-import LoginModal from '../features/authModal/LoginModal';
-import CategoryTab from '../components/shared/tabs/CategoryTab';
+import Header from '../../header/Header';
+import Footer from '../../footer/Footer';
+import ActorCard from './organisms/ActorCard';
+import RegisterModal from '../../../features/authModal/RegisterModal';
+import LoginModal from '../../../features/authModal/LoginModal';
+import CategoryTab from '../../shared/tabs/CategoryTab';
 
 const CatalogPage = () => {
   const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
@@ -68,7 +68,7 @@ const CatalogPage = () => {
       isLiked: false,
     },
     {
-      id: 4,
+      id: 5,
       name: 'Ольга Морозова',
       image: 'https://media.istockphoto.com/id/1470763004/tr/fotoğraf/woman-playing-the-violin.jpg?s=170667a&w=0&k=20&c=lcxBn8eVQzzJ8heecbBmx5cKcs9RCKiXNSGdVXg33YA=',
       avatar: '/avatar-placeholder.jpg',
@@ -79,7 +79,7 @@ const CatalogPage = () => {
       description: 'Концертирующая скрипачка, сольные выступления и камерная музыка.',
       isLiked: false,
     },{
-      id: 4,
+      id: 6,
       name: 'Полина Скалл',
       image: 'https://thumbs.dreamstime.com/b/творчество-и-музыка-молодая-красивая-девушка-играет-на-барабанах-187280556.jpg',
       avatar: '/avatar-placeholder.jpg',
@@ -90,6 +90,18 @@ const CatalogPage = () => {
       description: 'Ударные - лучший кайф!',
       isLiked: false,
     },
+    {
+      id: 7,
+      name: 'Max Painz',
+      image: 'https://avatars.mds.yandex.net/i?id=f26b2eda0b31c718a585523e56f441ed_l-5150842-images-thumbs&n=13',
+      avatar: '/avatar-placeholder.jpg',
+      category: 'Звукорежиссер',
+      rating: 5.0,
+      reviewCount: 70,
+      price: 9000,
+      description: 'Свожу всё, что слышу.',
+      isLiked: false,
+    }
   ];
 
   const handleContact = (id) => {
@@ -156,7 +168,7 @@ const CatalogPage = () => {
 
       <Box sx={{ flex: 1, py: { xs: 4, md: 4 } }}>
         <Container maxWidth="lg">
-          <Grid container spacing={3} sx={{ justifyContent: 'center' }}>
+          <Grid container spacing={3} sx={{ justifyContent: 'flex-start' }}>
             {actors.map((actor) => (
               <Grid item xs={12} sm={6} md={3} lg={3} key={actor.id}>
                 <ActorCard

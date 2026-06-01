@@ -4,7 +4,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import "./index.css";
 import App from "./App.jsx";
-import CatalogPage from "./pages/CatalogPage.jsx";
+import CatalogPage from "./components/pages/catalog/CatalogPage.jsx";
 import { UserProvider } from "./context/UserContext.jsx";
 
 const theme = createTheme({
