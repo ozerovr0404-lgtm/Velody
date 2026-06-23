@@ -7,6 +7,7 @@ const LoginModal = ({ open, onClose }) => {
     <Dialog
       open={!!open}
       onClose={onClose}
+      disableScrollLock
       maxWidth="sm"
       fullWidth
     >

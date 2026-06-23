@@ -9,14 +9,7 @@ import LoginModal from '../../../features/authModal/LoginModal';
 import CategoryTab from '../../shared/tabs/CategoryTab';
 
 const CatalogPage = () => {
-  const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
-  const [isOpenLoginModal, setIsOpenLoginModal] = useState(false);
   const [tabValue, setTabValue] = useState(0);
-
-  const handleOpenRegister = () => setRegisterModalOpen(true);
-  const handleCloseRegister = () => setRegisterModalOpen(false);
-  const handleOpenLoginModal = () => setIsOpenLoginModal(true);
-  const handleCloseLoginModal = () => setIsOpenLoginModal(false);
 
   const actors = [
     {
@@ -124,7 +117,6 @@ const CatalogPage = () => {
         flexDirection: 'column',
       }}
     >
-      <Header onRegisterClick={handleOpenRegister} onLoginClick={handleOpenLoginModal} />
 
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <Tabs
@@ -181,11 +173,6 @@ const CatalogPage = () => {
           </Grid>
         </Container>
       </Box>
-
-      <Footer />
-
-      <RegisterModal open={isRegisterModalOpen} onClose={handleCloseRegister} />
-      <LoginModal open={isOpenLoginModal} onClose={handleCloseLoginModal} />
     </Box>
   );
 };
