@@ -1,46 +1,59 @@
 
 
 
-import React from 'react';
-import { Box, Typography, Tabs, Tab, Paper, Button } from '@mui/material';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { Box, Tabs, Tab, Typography, TextField, Button, Stack } from '@mui/material';
 
-const TierBox = ({ title, price }) => (
-  <Paper variant="outlined" sx={{ p: 2, mb: 2 }}>
-    <Typography sx={{ fontWeight: 700 }}>{price}$</Typography>
-    <Typography variant="caption">60 sec</Typography>
-    <Box sx={{ mt: 1 }}>
-      <Typography variant="body2">• hq audio file</Typography>
-      <Typography variant="body2">• mixing and mastering</Typography>
-    </Box>
-    <Box sx={{ mt: 2 }}>
-      <Button variant="outlined">Checkout</Button>
-    </Box>
-  </Paper>
-);
-
-const ActorInfo = ({ actor }) => {
+const ActorInfo = ({ actor, onUpdate }) => {
   const [tab, setTab] = useState(0);
+  const [editing, setEditing] = useState(false);
+  const [form, setForm] = useState({
+    secondary_name: actor?.secondary_name || '',
+    description: actor?.description || '',
+  });
+
+  const handleChange = (e, v) => setTab(v);
+  const handleSave = () => {
+    onUpdate?.(form);
+    setEditing(false);
+  };
 
   return (
     <Box>
       <Typography variant="h4" sx={{ mb: 1 }}>
-        @{actor.name}
-      </Typography>
-      <Typography variant="body1" sx={{ mb: 3 }}>
-        {actor.description}
+        @{actor?.stage_name}
       </Typography>
 
-      <Tabs value={tab} onChange={(e, v) => setTab(v)} sx={{ mb: 2 }}>
-        <Tab label="Standart" />
-        <Tab label="Premium" />
-        <Tab label="Elite" />
+      <Tabs value={tab} onChange={handleChange} aria-label="directions tabs">
+        <Tab label="Направление 1" />
+        <Tab label="Направление 2" />
+        <Tab label="Направление 3" />
       </Tabs>
 
-      <Box>
-        {tab === 0 && <TierBox title="Standart" price={actor.price} />}
-        {tab === 1 && <TierBox title="Premium" price={actor.price * 1.5} />}
-        {tab === 2 && <TierBox title="Elite" price={actor.price * 2} />}
+      <Box sx={{ mt: 2 }}>
+        {!editing ? (
+          <>
+            <Typography variant="body1">{actor?.description}</Typography>
+            <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mt: 1 }}>
+              Опыт: {actor?.experience_year} лет • Город: {actor?.city}
+            </Typography>
+            <Typography variant="subtitle2" sx={{ mt: 1 }}>
+              Доп. имя: {actor?.secondary_name}
+            </Typography>
+            <Button sx={{ mt: 1 }} size="small" onClick={() => setEditing(true)}>
+              Редактировать
+            </Button>
+          </>
+        ) : (
+          <Stack spacing={1}>
+            <TextField label="secondary_name" value={form.secondary_name} onChange={(e) => setForm({ ...form, secondary_name: e.target.value })} />
+            <TextField label="description" multiline minRows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              <Button variant="contained" onClick={handleSave}>Save</Button>
+              <Button variant="outlined" onClick={() => setEditing(false)}>Cancel</Button>
+            </Box>
+          </Stack>
+        )}
       </Box>
     </Box>
   );
