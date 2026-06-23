@@ -17,9 +17,7 @@ const App = () => {
 
   return (
     <>
-      <Header onRegisterClick={handleOpenRegister} onLoginClick={handleOpenLoginModal} />
       <Main />
-      <Footer />
       <RegisterModal open={isRegisterModalOpen} onClose={handleCloseRegister} />
       <LoginModal open={isOpenLoginModal} onClose={handleCloseLoginModal} />
     </>
