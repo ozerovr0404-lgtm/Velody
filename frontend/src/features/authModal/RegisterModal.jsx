@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import RegisterForm from './molecules/RegisterForm';
 
 const RegisterModal = ({ open, onClose }) => {
+  
   return (
     <Dialog
       open={!!open}

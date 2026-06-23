@@ -1,13 +1,14 @@
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import { User } from '../../models/User.js';
+import jwt from 'jsonwebtoken';
 
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-export const loginUser = async ({ email, password_hash }) => {
-  if (!email || !password_hash) {
+export const loginUser = async ({ email, password }) => {
+  if (!email || !password) {
     throw new Error("Логин или пароль обязательны!");
   }
 
@@ -17,7 +18,7 @@ export const loginUser = async ({ email, password_hash }) => {
     throw new Error("Неверный логин или пароль!")
   }
 
-  const isMatch = await bcrypt.compare(password_hash, user.password_hash);
+  const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {
     throw new Error("Неверный логин или пароль!");
