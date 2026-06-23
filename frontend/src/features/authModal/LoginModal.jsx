@@ -17,7 +17,7 @@ const LoginModal = ({ open, onClose }) => {
           backgroundColor: '#ffffffff',
         }}
       >
-        <LoginForm />
+        <LoginForm onClose={onClose} />
 
       </Box>
     </Dialog>

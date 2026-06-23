@@ -18,7 +18,9 @@ const RegisterModal = ({ open, onClose }) => {
           backgroundColor: '#ffffffff',
         }}
       >
-        <RegisterForm />
+        <RegisterForm 
+          onClose={onClose}
+        />
 
       </Box>
     </Dialog>

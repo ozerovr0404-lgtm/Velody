@@ -12,7 +12,7 @@ import {
 import InputMask from 'react-input-mask';
 import TextField from '@mui/material/TextField';
 
-const RegisterForm = () => {
+const RegisterForm = ({ onClose }) => {
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -47,6 +47,10 @@ const RegisterForm = () => {
           }
 
           console.log(data);
+
+          if (response.ok) {
+            onClose?.();
+          }
 
       } catch (err) {
         setError('Ошибка соединения с сервером!');

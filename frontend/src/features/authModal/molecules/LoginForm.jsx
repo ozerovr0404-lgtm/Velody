@@ -4,7 +4,7 @@ import AuthTitle from '../atoms/AuthTitle';
 import AuthUserField from '../atoms/AuthUserField';
 import MainButton from '../../../components/shared/buttons/MainButton';
 
-const LoginForm = () => {
+const LoginForm = ({ onClose}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isOpen, setIsOpen] = useState(true);
@@ -27,6 +27,10 @@ const LoginForm = () => {
       if (!response.ok) {
         setError(data.error || 'Ошибка авторизации!')
         return;
+      }
+
+      if (response.ok) {
+        onClose?.();
       }
 
     } catch (err) {
