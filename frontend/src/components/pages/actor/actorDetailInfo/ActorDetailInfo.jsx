@@ -66,25 +66,35 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
           sx={{ width: 160, height: 160 }}
         />
         <Box>
+          
           <Stack direction="row" spacing={1} alignItems="center">
             <Typography variant="h6">@{actor?.stage_name}</Typography>
             <IconButton size="small" onClick={handleEditToggle}>
               <EditIcon fontSize="small" />
             </IconButton>
-            <Button variant="outlined" size="small" onClick={handleFileClick}>
+            <Button 
+              variant="outlined" 
+              size="small" 
+              onClick={handleFileClick}
+              sx={{
+              color: 'rgba(8, 94, 75, 1)',
+              border: '1px solid rgba(8, 94, 75, 1)'
+            }}
+            >
               Загрузить
             </Button>
+            
           </Stack>
-
+            
           <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
             "{actor?.description}"
           </Typography>
         </Box>
       </Stack>
 
-      <Dialog open={openMsg} onClose={handleClose} fullWidth maxWidth="sm">
-        <DialogTitle>Send message to {actor?.name}</DialogTitle>
-        <DialogContent>
+      <Dialog open={openMsg} onClose={handleClose} fullWidth maxWidth="sm" disableScrollLock>
+        <DialogTitle>Написать сообщение {actor?.name}</DialogTitle>
+        <DialogContent sx={{ pb: 0}}>
           <TextField
             fullWidth
             multiline
@@ -95,9 +105,24 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSend} variant="contained">
-            Send
+          <Button 
+            onClick={handleClose}
+            sx={{
+              color: 'rgba(8, 94, 75, 1)',
+              border: '1px solid rgba(8, 94, 75, 1)'
+            }}
+          >
+            Отмена</Button>
+          <Button 
+            onClick={handleSend} 
+            variant="contained"
+            sx={{
+            color: 'white',
+            backgroundColor: 'rgba(8, 94, 75, 1)',
+            mr: 2
+          }}
+          >
+            Отправить
           </Button>
         </DialogActions>
       </Dialog>
@@ -105,17 +130,48 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
       {/* Inline edit area */}
       {editing && (
         <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <TextField label="stage_name" value={form.stage_name} onChange={(e) => setForm({ ...form, stage_name: e.target.value })} />
-          <TextField label="experience_year" value={form.experience_year} onChange={(e) => setForm({ ...form, experience_year: e.target.value })} />
-          <TextField label="city" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
-          <TextField label="price_from" value={form.price_from} onChange={(e) => setForm({ ...form, price_from: e.target.value })} />
-          <TextField label="created_at" value={form.created_at} onChange={(e) => setForm({ ...form, created_at: e.target.value })} />
+          <TextField label="Сценическое имя" value={form.stage_name} onChange={(e) => setForm({ ...form, stage_name: e.target.value })} />
+          <TextField label="Опыт" value={form.experience_year} onChange={(e) => setForm({ ...form, experience_year: e.target.value })} />
+          <TextField label="Город" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
+          <TextField label="Цена от" value={form.price_from} onChange={(e) => setForm({ ...form, price_from: e.target.value })} />
+          <TextField label="Дата готовности" value={form.created_at} onChange={(e) => setForm({ ...form, created_at: e.target.value })} />
           <Box sx={{ display: 'flex', gap: 1 }}>
-            <Button variant="contained" onClick={handleSave}>Save</Button>
-            <Button variant="outlined" onClick={handleEditToggle}>Cancel</Button>
+            <Button 
+              variant="contained" 
+              onClick={handleSave}
+              sx={{
+              color: 'white',
+              backgroundColor: 'rgba(8, 94, 75, 1)'
+            }}
+            >
+              Сохранить
+            </Button>
+            <Button 
+             variant="outlined" 
+             onClick={handleEditToggle}
+             sx={{
+              color: 'rgba(8, 94, 75, 1)',
+              border: '1px solid rgba(8, 94, 75, 1)'
+            }}
+            >
+              Отменить
+            </Button>
           </Box>
         </Box>
       )}
+      <Button 
+        variant="outlined" 
+        size="normal" 
+        onClick={handleOpen}
+        sx={{
+          width: '160px',
+          height: '40px',
+          color: 'white',
+          backgroundColor: 'rgba(8, 94, 75, 1)'
+        }}
+      >
+        Связаться
+      </Button>
     </Box>
   );
 };

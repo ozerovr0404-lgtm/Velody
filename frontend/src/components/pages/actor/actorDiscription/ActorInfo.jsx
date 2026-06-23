@@ -21,10 +21,25 @@ const ActorInfo = ({ actor, onUpdate }) => {
         @{actor?.stage_name}
       </Typography>
 
-      <Tabs value={tab} onChange={handleChange} aria-label="directions tabs">
-        <Tab label="Направление 1" />
-        <Tab label="Направление 2" />
-        <Tab label="Направление 3" />
+      <Tabs 
+        value={tab} 
+        onChange={handleChange} 
+        aria-label="directions tabs"
+        sx={{
+          '& .MuiTabs-indicator': {
+              backgroundColor: '#085E4B',
+          }
+        }}
+        >
+        <Tab 
+          label="Направление"
+          sx={{
+            color: '#999',
+            '&.Mui-selected': {
+              color: '#085E4B',
+            }
+          }}
+        />  // переделать на мультиселект с запросом в БД
       </Tabs>
 
       <Box sx={{ mt: 2 }}>
@@ -37,17 +52,43 @@ const ActorInfo = ({ actor, onUpdate }) => {
             <Typography variant="subtitle2" sx={{ mt: 1 }}>
               Доп. имя: {actor?.secondary_name}
             </Typography>
-            <Button sx={{ mt: 1 }} size="small" onClick={() => setEditing(true)}>
+            <Button 
+              sx={{ 
+                mt: 1,
+                color: 'rgba(8, 94, 75, 1)',
+                border: '1px solid rgba(8, 94, 75, 1)',
+              }} 
+              size="small" 
+              onClick={() => setEditing(true)}
+            >
               Редактировать
             </Button>
           </>
         ) : (
           <Stack spacing={1}>
-            <TextField label="secondary_name" value={form.secondary_name} onChange={(e) => setForm({ ...form, secondary_name: e.target.value })} />
-            <TextField label="description" multiline minRows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+            <TextField label="Сценическое имя" value={form.secondary_name} onChange={(e) => setForm({ ...form, secondary_name: e.target.value })} />
+            <TextField label="Описание" multiline minRows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
             <Box sx={{ display: 'flex', gap: 1 }}>
-              <Button variant="contained" onClick={handleSave}>Save</Button>
-              <Button variant="outlined" onClick={() => setEditing(false)}>Cancel</Button>
+              <Button 
+                variant="contained" 
+                onClick={handleSave}
+                sx={{
+                  color: 'white',
+                  backgroundColor: 'rgba(8, 94, 75, 1)'
+                }}
+              >
+                Сохранить
+              </Button>
+              <Button 
+                variant="outlined" 
+                onClick={() => setEditing(false)}
+                sx={{
+                  color: 'rgba(8, 94, 75, 1)',
+                  border: '1px solid rgba(8, 94, 75, 1)'
+                }}
+              >
+                Отмена
+              </Button>
             </Box>
           </Stack>
         )}
@@ -57,3 +98,4 @@ const ActorInfo = ({ actor, onUpdate }) => {
 };
 
 export default ActorInfo;
+
