@@ -1,11 +1,7 @@
 import React, { useState } from 'react';
 import Tabs from '@mui/material/Tabs';
 import { Box, Container, Grid } from '@mui/material';
-import Header from '../../header/Header';
-import Footer from '../../footer/Footer';
 import ActorCard from './organisms/ActorCard';
-import RegisterModal from '../../../features/authModal/RegisterModal';
-import LoginModal from '../../../features/authModal/LoginModal';
 import CategoryTab from '../../shared/tabs/CategoryTab';
 
 const CatalogPage = () => {
@@ -81,18 +77,6 @@ const CatalogPage = () => {
       reviewCount: 40,
       price: 2500,
       description: 'Ударные - лучший кайф!',
-      isLiked: false,
-    },
-    {
-      id: 7,
-      name: 'Max Painz',
-      image: 'https://avatars.mds.yandex.net/i?id=f26b2eda0b31c718a585523e56f441ed_l-5150842-images-thumbs&n=13',
-      avatar: '/avatar-placeholder.jpg',
-      category: 'Звукорежиссер',
-      rating: 5.0,
-      reviewCount: 70,
-      price: 9000,
-      description: 'Свожу всё, что слышу.',
       isLiked: false,
     }
   ];
