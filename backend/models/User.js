@@ -27,9 +27,17 @@ export class User {
           p.description,
           p.experience_years,
           p.city,
-          p.price_from
+          p.price_from,
+          ph.url AS avatar_url
         FROM users u
         LEFT JOIN artist_profile p ON p.user_id = u.id
+        LEFT JOIN LATERAL (
+          SELECT url
+          FROM artist_photo ph
+          WHERE ph.artist_profile_id = p.id
+          ORDER BY ph.order_index ASC
+          LIMIT 1
+        ) ph ON true
         WHERE u.id = $1`, 
       [id]
     );

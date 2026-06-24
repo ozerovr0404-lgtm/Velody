@@ -26,6 +26,8 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
   });
   const fileRef = useRef();
 
+  console.log("actor avatar:", actor?.avatar_url);
+
   const handleOpen = () => setOpenMsg(true);
   const handleClose = () => setOpenMsg(false);
   const handleSend = () => {
@@ -47,7 +49,7 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
     const reader = new FileReader();
     reader.onload = () => {
       const base64 = reader.result;
-      onUpdate?.({ avatar: base64 });
+      onUpdate?.({ avatar_url: base64 });
     };
     reader.readAsDataURL(file);
   };
@@ -60,10 +62,12 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
 
       <Stack direction="row" spacing={2} alignItems="center">
         <Avatar
-          src={actor?.avatar}
+          src={actor?.avatar_url}
           alt={actor?.stage_name}
           sx={{ width: 160, height: 160 }}
-        />
+        >
+          {actor?.stage_name?.[0]}
+        </Avatar>
         <Box>
           
           <Stack direction="row" spacing={1} alignItems="center">

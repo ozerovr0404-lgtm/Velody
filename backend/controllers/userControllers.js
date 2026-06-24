@@ -24,7 +24,6 @@ export const getUser = async (request, reply) => {
 };
 
 export const getProfile = async (request, reply) => {
-    console.log("HIT BACKEND /actor/profile/:id", request.params);
 
   try {
     const { id } = request.params;
