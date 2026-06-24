@@ -50,7 +50,7 @@ const ActorPage = () => {
 
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <Container maxWidth="lg" sx={{ py: 6 }}>
+      <Container maxWidth="md" sx={{ py: 6, ml: 35 }}>
         <Grid container spacing={4} justifyContent="center">
           <Grid item xs={12} md={4}>
             <ActorDetailInfo 

@@ -68,7 +68,11 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
         >
           {actor?.stage_name?.[0]}
         </Avatar>
-        <Box>
+        <Box
+          sx={{
+            width: '500px'
+          }}
+        >
           
           <Stack direction="row" spacing={1} alignItems="center">
             <Typography variant="h6">@{actor?.stage_name}</Typography>
