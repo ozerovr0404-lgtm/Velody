@@ -20,10 +20,9 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({
     stage_name: actor?.stage_name || '',
-    experience_year: actor?.experience_year || '',
+    experience_years: actor?.experience_years || '',
     city: actor?.city || '',
-    price_from: actor?.price_from || '',
-    created_at: actor?.created_at || '',
+    price_from: actor?.price_from || ''
   });
   const fileRef = useRef();
 
@@ -131,10 +130,24 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
       {editing && (
         <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
           <TextField label="Сценическое имя" value={form.stage_name} onChange={(e) => setForm({ ...form, stage_name: e.target.value })} />
-          <TextField label="Опыт" value={form.experience_year} onChange={(e) => setForm({ ...form, experience_year: e.target.value })} />
-          <TextField label="Город" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
-          <TextField label="Цена от" value={form.price_from} onChange={(e) => setForm({ ...form, price_from: e.target.value })} />
-          <TextField label="Дата готовности" value={form.created_at} onChange={(e) => setForm({ ...form, created_at: e.target.value })} />
+          <TextField 
+            label="Опыт" 
+            value={form.experience_years} 
+            onChange={(e) => 
+              setForm({ 
+                ...form, 
+                experience_years: e.target.value })} 
+          />
+          <TextField 
+            label="Город" 
+            value={form.city} 
+            onChange={(e) => setForm({ ...form, city: e.target.value })} 
+          />
+          <TextField 
+            label="Цена от" 
+            value={form.price_from} 
+            onChange={(e) => setForm({ ...form, price_from: e.target.value })} 
+          />
           <Box sx={{ display: 'flex', gap: 1 }}>
             <Button 
               variant="contained" 

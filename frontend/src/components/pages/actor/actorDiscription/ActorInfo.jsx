@@ -1,13 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Tabs, Tab, Typography, TextField, Button, Stack } from '@mui/material';
 
 const ActorInfo = ({ actor, onUpdate }) => {
-  const [tab, setTab] = useState(0);
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({
-    secondary_name: actor?.secondary_name || '',
-    description: actor?.description || '',
+    description: actor.description || '',
+    stage_name: actor.stage_name || '',
+    city: actor.city || '',
+    experience_years: actor.experience_years || '',
+    price_from: actor.price_from || ''
   });
+
+  useEffect(() => {
+    if (actor) {
+      setForm({
+        description: actor?.description || '',
+        stage_name: actor.stage_name || '',
+        city: actor.city || '',
+        experience_years: actor.experience_years || '',
+        price_from: actor.price_from || ''
+      });
+    }
+  }, [actor]);
 
   const handleChange = (e, v) => setTab(v);
   const handleSave = () => {
@@ -22,7 +36,6 @@ const ActorInfo = ({ actor, onUpdate }) => {
       </Typography>
 
       <Tabs 
-        value={tab} 
         onChange={handleChange} 
         aria-label="directions tabs"
         sx={{
@@ -47,10 +60,7 @@ const ActorInfo = ({ actor, onUpdate }) => {
           <>
             <Typography variant="body1">{actor?.description}</Typography>
             <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mt: 1 }}>
-              Опыт: {actor?.experience_year} лет • Город: {actor?.city}
-            </Typography>
-            <Typography variant="subtitle2" sx={{ mt: 1 }}>
-              Доп. имя: {actor?.secondary_name}
+              Опыт: {actor?.experience_years} лет • Город: {actor?.city}
             </Typography>
             <Button 
               sx={{ 
@@ -66,7 +76,6 @@ const ActorInfo = ({ actor, onUpdate }) => {
           </>
         ) : (
           <Stack spacing={1}>
-            <TextField label="Сценическое имя" value={form.secondary_name} onChange={(e) => setForm({ ...form, secondary_name: e.target.value })} />
             <TextField label="Описание" multiline minRows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
             <Box sx={{ display: 'flex', gap: 1 }}>
               <Button 

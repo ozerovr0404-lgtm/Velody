@@ -43,7 +43,7 @@ const ActorReviews = ({ actorId }) => {
             fullWidth
             multiline
             minRows={3}
-            placeholder="Leave a comment"
+            placeholder="Место для Вашего комментария..."
             value={text}
             onChange={(e) => setText(e.target.value)}
             sx={{ mt: 1 }}

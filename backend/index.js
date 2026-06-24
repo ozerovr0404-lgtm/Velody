@@ -1,6 +1,8 @@
 import fastify from "fastify";
 import authRoutes from "./routes/authRoutes.js";
 import cors from '@fastify/cors';
+import usersRoutes from "./routes/usersRoutes.js";
+
 
 const app = fastify({ logger: true });
 
@@ -17,5 +19,6 @@ app.get('/', async() => {
 
 app.register(authRoutes, { prefix: '/api/auth' });
 
+app.register(usersRoutes, { prefix: '/actor' });
 
 app.listen({ port: 3000 });

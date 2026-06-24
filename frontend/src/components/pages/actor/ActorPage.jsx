@@ -1,41 +1,68 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Box, Container, Grid } from '@mui/material';
 import ActorDetailInfo from './actorDetailInfo/ActorDetailInfo';
 import ActorInfo from './actorDiscription/ActorInfo';
 import ActorReviews from './actorReviews/ActorReviews';
+import updateUserProfile from '../../../services/updateProfile/updateUserProfile';
+import getUserProfile from '../../../services/getProfile/getUserProfile';
 
 const ActorPage = () => {
-  // actor state lifted here so child components can update
-  const [actor, setActor] = useState({
-    id: 1,
-    stage_name: 'Nick Portman',
-    secondary_name: 'nickportman',
-    avatar: '/avatar-placeholder.jpg',
-    category: 'Гитарист',
-    rating: 5.0,
-    reviewCount: 100,
-    price_from: 10,
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    experience_year: 5,
-    city: 'Moscow',
-    created_at: '2022-01-01',
-  });
+  const { id } = useParams();
 
-  const handleUpdate = (patch) => {
-    setActor((prev) => ({ ...prev, ...patch }));
-  };
+  const [actor, setActor] = useState(null);
+
+    useEffect(() => {
+      console.log('useEffect fired', id)
+      if (!id) return;
+
+      const loadUser = async () => {
+        try {
+          const data = await getUserProfile(id);
+          setActor(data.user);
+        } catch (error) {
+          console.error('Ошибка загрузки профиля', error);
+        }
+      };
+
+    loadUser();
+  }, [id]);
+
+  const handleUpdate = async(payload) => {
+    try {
+      if (!actor.id) return;
+
+      await updateUserProfile(id, payload)
+
+      setActor((prev) => ({ 
+        ...prev, 
+        ...payload 
+      }));
+    } catch (err) {
+      console.error('Ошибка обновления профиля', err);
+    }
+  }
+
+  if (!actor) {
+    return <div>Загрузка...</div>;
+  }
+  
 
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <Container maxWidth="lg" sx={{ py: 6 }}>
         <Grid container spacing={4} justifyContent="center">
           <Grid item xs={12} md={4}>
-            <ActorDetailInfo actor={actor} onUpdate={handleUpdate} />
+            <ActorDetailInfo 
+              actor={actor} 
+              onUpdate={handleUpdate} />
           </Grid>
 
           <Grid item xs={12} md={8}>
-            <ActorInfo actor={actor} onUpdate={handleUpdate} />
+
+            <ActorInfo 
+              actor={actor} 
+              onUpdate={handleUpdate} />
 
             <ActorReviews actorId={actor.id} />
           </Grid>

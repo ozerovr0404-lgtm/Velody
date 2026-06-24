@@ -18,6 +18,25 @@ export class User {
       return new User(result.rows[0]);
   }
 
+  static async getProfileById(id) {
+    const result = await pool.query(
+      `SELECT
+          u.id,
+          u.email,
+          p.stage_name,
+          p.description,
+          p.experience_years,
+          p.city,
+          p.price_from
+        FROM users u
+        LEFT JOIN artist_profile p ON p.user_id = u.id
+        WHERE u.id = $1`, 
+      [id]
+    );
+    if (!result.rows[0]) return null;
+    return result.rows[0];
+  }
+
   static async getByEmail(email) {
     const result = await pool.query(`SELECT * FROM users WHERE email = $1`, [email]);
     if (!result.rows[0]) return null;
