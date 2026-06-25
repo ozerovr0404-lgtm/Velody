@@ -1,10 +1,10 @@
 import bcrypt from 'bcrypt';
 import { User } from '../../models/User.js';
 
-export const registerUser = async ({ email, password, name, phone, role, status }) => {
+export const registerUser = async ({ email, password, stage_name, phone, role, status }) => {
   const ENG_SYMBOL = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_@.';
 
-  if (!email || !password || !name || !phone) {
+  if (!email || !password || !stage_name || !phone) {
     throw new Error("Все поля обязательны!");
   }
 
@@ -23,7 +23,7 @@ export const registerUser = async ({ email, password, name, phone, role, status 
   const user = await User.createWithHashedPassword({
     email,
     password: hashedPassword,
-    name,
+    stage_name,
     phone,
     role,
     status

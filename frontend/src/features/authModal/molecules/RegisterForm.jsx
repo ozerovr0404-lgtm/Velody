@@ -14,7 +14,7 @@ import TextField from '@mui/material/TextField';
 
 const RegisterForm = ({ onClose }) => {
 
-  const [name, setName] = useState('');
+  const [stage_name, setStage_name] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
@@ -36,7 +36,7 @@ const RegisterForm = ({ onClose }) => {
         const response = await fetch('http://localhost:3000/api/auth/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({ name, email, password, status, role, phone })
+            body: JSON.stringify({ stage_name, email, password, status, role, phone })
           });
         
           const data = await response.json();
@@ -97,8 +97,8 @@ const RegisterForm = ({ onClose }) => {
       <AuthUserField
         label="Имя"
         type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
+        value={stage_name}
+        onChange={(e) => setStage_name(e.target.value)}
       />
 
       <AuthUserField

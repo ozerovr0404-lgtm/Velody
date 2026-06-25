@@ -1,11 +1,11 @@
 import pool from "../bd.js";
 
 export class User {
-  constructor({ id, email, password, name, phone, role, status, created_at }) {
+  constructor({ id, email, password, stage_name, phone, role, status, created_at }) {
     this.id = id;
     this.email = email;
     this.password = password;
-    this.name = name;
+    this.stage_name = stage_name;
     this.phone = phone;
     this.role = role;
     this.status = status;
@@ -54,7 +54,7 @@ export class User {
   static async createWithHashedPassword({
     email, 
     password, 
-    name, 
+    stage_name, 
     phone, 
     role, 
     status = 'ACTIVE'
@@ -67,19 +67,19 @@ export class User {
 
       const result = await client.query(
         `INSERT INTO users
-        (email, password, name, phone, role, status)
+        (email, password, stage_name, phone, role, status)
         VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING *`,
-        [email, password, name, phone, role, status]
+        [email, password, stage_name, phone, role, status]
       );
 
       const user = result.rows[0];
 
       const profileResult = await client.query(
-        `INSERT INTO artist_profile (user_id)
-        VALUES ($1)
+        `INSERT INTO artist_profile (user_id, stage_name)
+        VALUES ($1, $2)
         RETURNING *`,
-        [user.id]
+        [user.id, user.stage_name]
       );
 
       const profile = profileResult.rows[0];
