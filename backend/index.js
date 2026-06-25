@@ -2,6 +2,7 @@ import fastify from "fastify";
 import authRoutes from "./routes/authRoutes.js";
 import cors from '@fastify/cors';
 import usersRoutes from "./routes/usersRoutes.js";
+import catalogRoutes from "./routes/catalogRoutes.js";
 
 
 const app = fastify({ logger: true });
@@ -21,4 +22,6 @@ app.register(authRoutes, { prefix: '/api/auth' });
 
 app.register(usersRoutes, { prefix: '/actor' });
 
-app.listen({ port: 3000 });
+app.register(catalogRoutes, { prefix: '/catalog' });
+
+app.listen({ port: 3000, host: '0.0.0.0' });

@@ -13,7 +13,7 @@ const CatalogPage = () => {
     const loadCard = async () => {
       try {
         const data = await getPublishedProfile();
-        setActors(data);
+        setActors(data.data);
       } catch (err) {
         console.error('Ошибка загрузки публикаций!', err);
       }
