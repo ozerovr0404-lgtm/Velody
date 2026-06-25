@@ -3,10 +3,12 @@ import Box from '@mui/material/Box';
 import RegisterForm from './molecules/RegisterForm';
 
 const RegisterModal = ({ open, onClose }) => {
+  
   return (
     <Dialog
       open={!!open}
       onClose={onClose}
+      disableScrollLock
       maxWidth="sm"
       fullWidth
     >
@@ -16,7 +18,9 @@ const RegisterModal = ({ open, onClose }) => {
           backgroundColor: '#ffffffff',
         }}
       >
-        <RegisterForm />
+        <RegisterForm 
+          onClose={onClose}
+        />
 
       </Box>
     </Dialog>

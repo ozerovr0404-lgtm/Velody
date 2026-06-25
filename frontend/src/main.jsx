@@ -7,6 +7,7 @@ import App from "./App.jsx";
 import CatalogPage from "./components/pages/catalog/CatalogPage.jsx";
 import ActorPage from "./components/pages/actor/ActorPage.jsx";
 import { UserProvider } from "./context/UserContext.jsx";
+import Layout from "./components/shared/layout/Layout.jsx";
 
 const theme = createTheme({
   typography: {
@@ -20,9 +21,11 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <UserProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="/catalog" element={<CatalogPage />} />
-          <Route path="/actor" element={<ActorPage />} />
+          <Route element={<Layout />}>
+            <Route path="/" element={<App />} />
+            <Route path="/catalog" element={<CatalogPage />} />
+            <Route path="/actor/profile/:id" element={<ActorPage />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </UserProvider>
