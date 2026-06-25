@@ -31,7 +31,7 @@ const ActorReviews = ({ actorId }) => {
   return (
     <Box sx={{ mt: 4 }}>
       <Typography variant="h6" sx={{ mb: 2 }}>
-        Reviews ({comments.length})
+        Отзывы ({comments.length})
       </Typography>
 
       {/* Comment form */}
@@ -43,14 +43,21 @@ const ActorReviews = ({ actorId }) => {
             fullWidth
             multiline
             minRows={3}
-            placeholder="Leave a comment"
+            placeholder="Место для Вашего комментария..."
             value={text}
             onChange={(e) => setText(e.target.value)}
             sx={{ mt: 1 }}
           />
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-            <Button variant="contained" onClick={handleAdd}>
-              Submit
+            <Button 
+              variant="contained" 
+              onClick={handleAdd}
+              sx={{
+                color: 'white',
+                backgroundColor: 'rgba(8, 94, 75, 1)'
+              }}
+            >
+              Отправить
             </Button>
           </Box>
         </Box>

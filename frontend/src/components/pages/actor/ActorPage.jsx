@@ -1,37 +1,74 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Box, Container, Grid } from '@mui/material';
 import ActorDetailInfo from './actorDetailInfo/ActorDetailInfo';
 import ActorInfo from './actorDiscription/ActorInfo';
 import ActorReviews from './actorReviews/ActorReviews';
-import CatalogPage from '../catalog/CatalogPage';
+import updateUserProfile from '../../../services/updateProfile/updateUserProfile';
+import getUserProfile from '../../../services/getProfile/getUserProfile';
 
 const ActorPage = () => {
-  const actor = {
-    id: 1,
-    name: 'Nick Portman',
-    avatar: '/avatar-placeholder.jpg',
-    category: 'Гитарист',
-    rating: 5.0,
-    reviewCount: 100,
-    price: 10,
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-  };
+  const { id } = useParams();
+
+  const [actor, setActor] = useState(null);
+
+    useEffect(() => {
+      console.log('useEffect fired', id)
+      if (!id) return;
+
+      const loadUser = async () => {
+        try {
+          const data = await getUserProfile(id);
+          setActor(data.user);
+        } catch (error) {
+          console.error('Ошибка загрузки профиля', error);
+        }
+      };
+
+    loadUser();
+  }, [id]);
+
+  const handleUpdate = async(payload) => {
+    try {
+      if (!actor.id) return;
+
+      await updateUserProfile(id, payload)
+
+      setActor((prev) => ({ 
+        ...prev, 
+        ...payload 
+      }));
+    } catch (err) {
+      console.error('Ошибка обновления профиля', err);
+    }
+  }
+
+  if (!actor) {
+    return <div>Загрузка...</div>;
+  }
+  
 
   return (
-    <Container maxWidth="lg" sx={{ py: 6 }}>
-      <Grid container spacing={4}>
-        <Grid item xs={12} md={4}>
-          <ActorDetailInfo actor={actor} />
-        </Grid>
+    <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Container maxWidth="md" sx={{ py: 6, ml: 35 }}>
+        <Grid container spacing={4} justifyContent="center">
+          <Grid item xs={12} md={4}>
+            <ActorDetailInfo 
+              actor={actor} 
+              onUpdate={handleUpdate} />
+          </Grid>
 
-        <Grid item xs={12} md={8}>
-          <ActorInfo actor={actor} />
+          <Grid item xs={12} md={8}>
 
-          <ActorReviews actorId={actor.id} />
+            <ActorInfo 
+              actor={actor} 
+              onUpdate={handleUpdate} />
+
+            <ActorReviews actorId={actor.id} />
+          </Grid>
         </Grid>
-      </Grid>
-    </Container>
+      </Container>
+    </Box>
   );
 };
 

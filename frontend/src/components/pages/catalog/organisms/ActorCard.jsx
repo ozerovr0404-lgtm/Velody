@@ -6,17 +6,15 @@ import ActorFooter from '../molecules/ActorFooter';
 
 const ActorCard = ({
   id,
-  name,
-  image,
-  avatar,
-  category,
-  rating = 4.5,
-  reviewCount = 0,
-  price = 2500,
+  stage_name,
+  avatar_url,
+  rating,
+  reviews_count,
+  price_from,
   description,
   isLiked = false,
-  onContact,
   onToggleLike,
+  onContact
 }) => {
   return (
     <Card
@@ -40,8 +38,7 @@ const ActorCard = ({
     >
       {/* Фото с лайком */}
       <ActorImage
-        avatar={avatar}
-        image={image}
+        image={avatar_url}
         isLiked={isLiked}
         onToggleLike={onToggleLike}
       />
@@ -57,19 +54,7 @@ const ActorCard = ({
         }}
       >
         {/* Ник и рейтинг */}
-        <ActorHeader name={name} rating={rating} reviewCount={reviewCount} />
-
-        {/* Категория */}
-        <Typography
-          variant="caption"
-          sx={{
-            color: 'text.secondary',
-            fontWeight: 500,
-            fontSize: '0.8rem',
-          }}
-        >
-          {category}
-        </Typography>
+        <ActorHeader name={stage_name} rating={rating} reviewCount={reviews_count} />
 
         {/* Описание */}
         <ActorDescription description={description} />
@@ -77,7 +62,7 @@ const ActorCard = ({
         <Divider sx={{ my: 1 }} />
 
         {/* Цена и кнопка */}
-        <ActorFooter price={price} onContact={() => onContact?.(id)} />
+        <ActorFooter price={price_from} onContact={() => onContact?.(id)} />
       </CardContent>
     </Card>
   );

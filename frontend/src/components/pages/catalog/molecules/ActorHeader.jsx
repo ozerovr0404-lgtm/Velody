@@ -35,7 +35,7 @@ const ActorHeader = ({ name, rating, reviewCount = 0 }) => {
             color: 'rgba(0, 0, 0, 0.87)',
           }}
         >
-          {rating.toFixed(1)}
+          {rating}
         </Typography>
         <Typography sx={{ fontSize: '1.2rem' }}>⭐</Typography>
       </Box>
