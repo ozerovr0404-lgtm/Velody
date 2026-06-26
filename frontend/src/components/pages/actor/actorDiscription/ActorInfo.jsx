@@ -4,23 +4,13 @@ import { Box, Tabs, Tab, Typography, TextField, Button, Stack } from '@mui/mater
 const ActorInfo = ({ actor, onUpdate }) => {
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({
-    description: actor.description || '',
-    stage_name: actor.stage_name || '',
-    city: actor.city || '',
-    experience_years: actor.experience_years || '',
-    price_from: actor.price_from || ''
+    description: actor.description || ''
   });
 
   useEffect(() => {
     if (actor) {
       setForm({
-        description: actor?.description || '',
-        stage_name: actor.stage_name || '',
-        city: actor.city || '',
-        experience_years: actor.experience_years || '',
-        price_from: actor.price_from || '',
-        artist_position: actor?.artist_position || '',
-        genre: actor?.genre || ''
+        description: actor?.description || ''
       });
     }
   }, [actor]);

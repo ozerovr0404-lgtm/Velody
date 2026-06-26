@@ -11,6 +11,10 @@ import {
   TextField,
   IconButton,
   Stack,
+  Checkbox,
+  FormControl,
+  InputLabel,
+  Autocomplete
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
@@ -18,6 +22,7 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
   const [openMsg, setOpenMsg] = useState(false);
   const [message, setMessage] = useState('');
   const [editing, setEditing] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
   const [form, setForm] = useState({
     stage_name: actor?.stage_name || '',
     experience_years: actor?.experience_years || '',
@@ -25,9 +30,20 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
     price_from: actor?.price_from || '',
     description: actor?.description || '',
     artist_position: actor?.artist_position || '',
-    genre: actor?.genres || ''
+    genre: actor?.genres || []
   });
   const fileRef = useRef();
+
+  const genresList = [
+    "Рок", "Метал", "Поп", "Джаз", "Блюз", "Классическая",
+    "Хип-Хоп", "Электронная", "Фолк", "Кантри", "Регги",
+    "R&B", "Соул", "Фанк", "Инди", "Панк",
+    "Альтернативная", "Эмбиент", "Латина", "Иное"
+  ];
+
+  const artistPositionList = [
+    "Гитара", "Фортепиано", "Ударные", "Вокал", "Оператор", "Звукорежиссер"
+  ];
 
   console.log("actor avatar:", actor?.avatar_url);
 
@@ -39,11 +55,25 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
     handleClose();
   };
 
+  const hadleEditOpen = () => {
+    setForm({
+      stage_name: actor?.stage_name || '',
+      experience_years: actor?.experience_years || '',
+      city: actor?.city || '',
+      price_from: actor?.price_from || '',
+      description: actor?.description || '',
+      artist_position: actor?.artist_position || '',
+      genre: actor?.genres || ''
+    });
+
+    setEditOpen(true);
+  }
+
   const handleEditToggle = () => setEditing((s) => !s);
 
-  const handleSave = () => {
+  const handleEditClose = () => {
     onUpdate?.(form);
-    setEditing(false);
+    setEditOpen(false);
   };
 
   const handleFile = async (file) => {
@@ -55,8 +85,6 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
     };
     reader.readAsDataURL(file);
   };
-
-  const handleFileClick = () => fileRef.current?.click();
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -85,13 +113,13 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
             >
               @{actor?.stage_name}
             </Typography>
-            <IconButton size="small" onClick={handleEditToggle}>
+            <IconButton size="small" onClick={hadleEditOpen}>
               <EditIcon fontSize="small" />
             </IconButton>
             
           </Stack>
             
-          <>
+                    <>
                       <Typography
                         sx={{
                           fontSize: 20
@@ -119,6 +147,20 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
                         }}
                       >
                         Город: {actor?.city}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: 20
+                        }}
+                      >
+                        Стоимость услуг от:
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: 30
+                        }}
+                      >
+                        ${actor?.price_from}
                       </Typography>
                     </>
         </Box>
@@ -163,77 +205,141 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
         </DialogActions>
       </Dialog>
 
-      {editing && (
-        <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <TextField label="Сценическое имя" value={form.stage_name} onChange={(e) => setForm({ ...form, stage_name: e.target.value })} />
-          <TextField 
-            label="Специализация" 
-            value={form.artist_position} 
-            onChange={(e) => setForm({ ...form, artist_position: e.target.value })} 
+      <Dialog
+        open={editOpen}
+        onClose={handleEditClose}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle>Редактирование профиля</DialogTitle>
+
+        <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 2 }}>
+          <TextField
+            label="Сценическое имя"
+            value={form.stage_name}
+            onChange={(e) => setForm({ ...form, stage_name: e.target.value })}
+            sx={{
+              mt: 1
+            }}
           />
-          <TextField 
-            label="Жанр" 
-            value={form.genre} 
-            onChange={(e) => setForm({ ...form, genres: e.target.value })} 
+
+          <Autocomplete
+              multiple
+              options={artistPositionList}
+              value={form.artistPositionList || []}
+              onChange={(event, newValue) =>
+                setForm({ ...form, artistPositionList: newValue })
+              }
+              disableCloseOnSelect
+              getOptionLabel={(option) => option}
+              renderOption={(props, option, { selected }) => (
+                <li {...props}>
+                  <Checkbox
+                    style={{ marginRight: 8 }}
+                    checked={selected}
+                  />
+                  {option}
+                </li>
+              )}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder="Специализация"
+                />
+              )}
+            />
+
+          <FormControl fullWidth>
+          <InputLabel
+            id="genre-label"
           />
-          <TextField 
-            label="Опыт" 
-            value={form.experience_years} 
-            onChange={(e) => 
-              setForm({ 
-                ...form, 
-                experience_years: e.target.value })} 
+
+            <Autocomplete
+              multiple
+              options={genresList}
+              value={form.genres || []}
+              onChange={(event, newValue) =>
+                setForm({ ...form, genres: newValue })
+              }
+              disableCloseOnSelect
+              getOptionLabel={(option) => option}
+              renderOption={(props, option, { selected }) => (
+                <li {...props}>
+                  <Checkbox
+                    style={{ marginRight: 8 }}
+                    checked={selected}
+                  />
+                  {option}
+                </li>
+              )}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder="Жанр"
+                />
+              )}
+            />
+          </FormControl>
+
+          <TextField
+            label="Опыт"
+            value={form.experience_years}
+            onChange={(e) =>
+              setForm({ ...form, experience_years: e.target.value })
+            }
           />
-          <TextField 
-            label="Город" 
-            value={form.city} 
-            onChange={(e) => setForm({ ...form, city: e.target.value })} 
+
+          <TextField
+            label="Город"
+            value={form.city}
+            onChange={(e) => setForm({ ...form, city: e.target.value })}
           />
-          <TextField 
-            label="Цена от" 
-            value={form.price_from} 
-            onChange={(e) => setForm({ ...form, price_from: e.target.value })} 
+
+          <TextField
+            label="Цена от"
+            value={form.price_from}
+            onChange={(e) => setForm({ ...form, price_from: e.target.value })}
           />
-          <TextField 
-            label="О себе..." 
-            value={form.description} 
+
+          <TextField
+            label="О себе"
+            multiline
+            minRows={3}
+            value={form.description}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
           />
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            <Button 
-              variant="contained" 
-              onClick={handleSave}
-              sx={{
+        </DialogContent>
+
+        <DialogActions>
+          <Button 
+            onClick={handleEditClose}
+            sx={{
+              mb: 1,
+              color: 'rgba(8, 94, 75, 1)',
+              border: '1px solid rgba(8, 94, 75, 1)',
+            }}
+          >
+            Отмена
+          </Button>
+
+          <Button
+            variant="contained"
+            onClick={() => {
+              onUpdate?.(form);
+              handleEditClose();
+            }}
+            sx={{
+              mr: 2,
+              mb: 1,
               color: 'white',
               backgroundColor: 'rgba(8, 94, 75, 1)'
             }}
-            >
-              Сохранить
-            </Button>
-            <Button 
-             variant="outlined" 
-             onClick={handleEditToggle}
-             sx={{
-              color: 'rgba(8, 94, 75, 1)',
-              border: '1px solid rgba(8, 94, 75, 1)'
-            }}
-            >
-              Отменить
-            </Button>
-            <Button 
-              variant="outlined" 
-              size="small" 
-              onClick={handleFileClick}
-              sx={{
-              color: 'rgba(8, 94, 75, 1)',
-              border: '1px solid rgba(8, 94, 75, 1)'
-            }}
-            >
-              Загрузить
-            </Button>
-          </Box>
-        </Box>
-      )}
+          >
+            Сохранить
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       <Button 
         variant="outlined" 
         size="normal" 
