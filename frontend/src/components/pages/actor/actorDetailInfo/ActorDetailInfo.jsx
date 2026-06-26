@@ -22,7 +22,10 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
     stage_name: actor?.stage_name || '',
     experience_years: actor?.experience_years || '',
     city: actor?.city || '',
-    price_from: actor?.price_from || ''
+    price_from: actor?.price_from || '',
+    description: actor?.description || '',
+    artist_position: actor?.artist_position || '',
+    genre: actor?.genres || ''
   });
   const fileRef = useRef();
 
@@ -31,7 +34,6 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
   const handleOpen = () => setOpenMsg(true);
   const handleClose = () => setOpenMsg(false);
   const handleSend = () => {
-    // For now just log the message
     console.log('Send message to actor', actor?.id, message);
     setMessage('');
     handleClose();
@@ -64,7 +66,7 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
         <Avatar
           src={actor?.avatar_url}
           alt={actor?.stage_name}
-          sx={{ width: 160, height: 160 }}
+          sx={{ width: 250, height: 300, borderRadius: 2 }}
         >
           {actor?.stage_name?.[0]}
         </Avatar>
@@ -75,27 +77,50 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
         >
           
           <Stack direction="row" spacing={1} alignItems="center">
-            <Typography variant="h6">@{actor?.stage_name}</Typography>
+            <Typography 
+              variant="h6"
+              sx={{
+                fontSize: 35
+              }}
+            >
+              @{actor?.stage_name}
+            </Typography>
             <IconButton size="small" onClick={handleEditToggle}>
               <EditIcon fontSize="small" />
             </IconButton>
-            <Button 
-              variant="outlined" 
-              size="small" 
-              onClick={handleFileClick}
-              sx={{
-              color: 'rgba(8, 94, 75, 1)',
-              border: '1px solid rgba(8, 94, 75, 1)'
-            }}
-            >
-              Загрузить
-            </Button>
             
           </Stack>
             
-          <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
-            "{actor?.description}"
-          </Typography>
+          <>
+                      <Typography
+                        sx={{
+                          fontSize: 20
+                        }}
+                      >
+                        Специализация: {actor?.artist_position?.join(", ") || 'Не указана'}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: 20
+                        }}
+                      >
+                        Жанр: {actor?.genres?.join(", ") || 'Не указан'}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: 20
+                        }}
+                      >
+                        Опыт: {actor?.experience_years} лет
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: 20
+                        }}
+                      >
+                        Город: {actor?.city}
+                      </Typography>
+                    </>
         </Box>
       </Stack>
 
@@ -108,7 +133,7 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
             minRows={4}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="Write your message..."
+            placeholder="Музыкант ждёт Вашего сообщения..."
           />
         </DialogContent>
         <DialogActions>
@@ -116,7 +141,9 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
             onClick={handleClose}
             sx={{
               color: 'rgba(8, 94, 75, 1)',
-              border: '1px solid rgba(8, 94, 75, 1)'
+              border: '1px solid rgba(8, 94, 75, 1)',
+              mt: 1,
+              mb: 1
             }}
           >
             Отмена</Button>
@@ -126,7 +153,9 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
             sx={{
             color: 'white',
             backgroundColor: 'rgba(8, 94, 75, 1)',
-            mr: 2
+            mr: 2,
+            mt: 1,
+            mb: 1
           }}
           >
             Отправить
@@ -134,10 +163,19 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
         </DialogActions>
       </Dialog>
 
-      {/* Inline edit area */}
       {editing && (
         <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
           <TextField label="Сценическое имя" value={form.stage_name} onChange={(e) => setForm({ ...form, stage_name: e.target.value })} />
+          <TextField 
+            label="Специализация" 
+            value={form.artist_position} 
+            onChange={(e) => setForm({ ...form, artist_position: e.target.value })} 
+          />
+          <TextField 
+            label="Жанр" 
+            value={form.genre} 
+            onChange={(e) => setForm({ ...form, genres: e.target.value })} 
+          />
           <TextField 
             label="Опыт" 
             value={form.experience_years} 
@@ -155,6 +193,11 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
             label="Цена от" 
             value={form.price_from} 
             onChange={(e) => setForm({ ...form, price_from: e.target.value })} 
+          />
+          <TextField 
+            label="О себе..." 
+            value={form.description} 
+            onChange={(e) => setForm({ ...form, description: e.target.value })}
           />
           <Box sx={{ display: 'flex', gap: 1 }}>
             <Button 
@@ -177,6 +220,17 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
             >
               Отменить
             </Button>
+            <Button 
+              variant="outlined" 
+              size="small" 
+              onClick={handleFileClick}
+              sx={{
+              color: 'rgba(8, 94, 75, 1)',
+              border: '1px solid rgba(8, 94, 75, 1)'
+            }}
+            >
+              Загрузить
+            </Button>
           </Box>
         </Box>
       )}
@@ -185,7 +239,7 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
         size="normal" 
         onClick={handleOpen}
         sx={{
-          width: '160px',
+          width: '250px',
           height: '40px',
           color: 'white',
           backgroundColor: 'rgba(8, 94, 75, 1)'

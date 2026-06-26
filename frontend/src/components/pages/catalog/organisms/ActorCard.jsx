@@ -12,6 +12,7 @@ const ActorCard = ({
   reviews_count,
   price_from,
   description,
+  genre,
   isLiked = false,
   onToggleLike,
   onContact
@@ -54,8 +55,10 @@ const ActorCard = ({
         }}
       >
         {/* Ник и рейтинг */}
-        <ActorHeader name={stage_name} rating={rating} reviewCount={reviews_count} />
-
+        <ActorHeader name={stage_name} rating={rating} genre={genre} reviewCount={reviews_count} />
+        <Typography>
+          Тут будет специализация
+        </Typography>
         {/* Описание */}
         <ActorDescription description={description} />
 
