@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -24,28 +24,18 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
   const [editing, setEditing] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [form, setForm] = useState({
-    stage_name: actor?.stage_name || '',
-    experience_years: actor?.experience_years || '',
-    city: actor?.city || '',
-    price_from: actor?.price_from || '',
-    description: actor?.description || '',
-    artist_position: actor?.artist_position || '',
-    genre: actor?.genres || []
+    stage_name: actor?.stage_name ?? '',
+    experience_years: actor?.experience_years ?? '',
+    city: actor?.city ?? '',
+    price_from: actor?.price_from ?? '',
+    description: actor?.description ?? '',
+    artist_position: [],
+    genres: []
   });
   const fileRef = useRef();
 
-  const genresList = [
-    "Рок", "Метал", "Поп", "Джаз", "Блюз", "Классическая",
-    "Хип-Хоп", "Электронная", "Фолк", "Кантри", "Регги",
-    "R&B", "Соул", "Фанк", "Инди", "Панк",
-    "Альтернативная", "Эмбиент", "Латина", "Иное"
-  ];
-
-  const artistPositionList = [
-    "Гитара", "Фортепиано", "Ударные", "Вокал", "Оператор", "Звукорежиссер"
-  ];
-
-  console.log("actor avatar:", actor?.avatar_url);
+  const [artistPositionOptions, setArtistPositionOptions] = useState([]);
+  const [genresOptions, setGenresOptions] = useState([]);
 
   const handleOpen = () => setOpenMsg(true);
   const handleClose = () => setOpenMsg(false);
@@ -55,6 +45,16 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
     handleClose();
   };
 
+  useEffect(() => {
+    const load = async () => {
+      const response = await  fetch('http://localhost:3000/actor/artist-positions');
+      const data = await response.json();
+      setArtistPositionOptions(data);
+    }
+
+    load();
+  }, []);
+
   const hadleEditOpen = () => {
     setForm({
       stage_name: actor?.stage_name || '',
@@ -62,8 +62,8 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
       city: actor?.city || '',
       price_from: actor?.price_from || '',
       description: actor?.description || '',
-      artist_position: actor?.artist_position || '',
-      genre: actor?.genres || ''
+      artist_position: actor?.artist_position ?? [],
+      genres: actor?.genres ?? []
     });
 
     setEditOpen(true);
@@ -125,14 +125,14 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
                           fontSize: 20
                         }}
                       >
-                        Специализация: {actor?.artist_position?.join(", ") || 'Не указана'}
+                        Специализация: {actor?.artist_position?.map(a => a.name).join(", ") || 'Не указана'}
                       </Typography>
                       <Typography
                         sx={{
                           fontSize: 20
                         }}
                       >
-                        Жанр: {actor?.genres?.join(", ") || 'Не указан'}
+                        Жанр: {actor?.genres?.map(g => g.name).join(", ") || 'Не указан'}
                       </Typography>
                       <Typography
                         sx={{
@@ -225,20 +225,20 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
 
           <Autocomplete
               multiple
-              options={artistPositionList}
-              value={form.artistPositionList || []}
+              options={artistPositionOptions}
+              value={form.artist_position || []}
               onChange={(event, newValue) =>
-                setForm({ ...form, artistPositionList: newValue })
+                setForm({ ...form, artist_position: newValue })
               }
               disableCloseOnSelect
-              getOptionLabel={(option) => option}
+              getOptionLabel={(option) => option.name}
               renderOption={(props, option, { selected }) => (
                 <li {...props}>
                   <Checkbox
                     style={{ marginRight: 8 }}
                     checked={selected}
                   />
-                  {option}
+                  {option.name}
                 </li>
               )}
               renderInput={(params) => (
@@ -256,20 +256,21 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
 
             <Autocomplete
               multiple
-              options={genresList}
+              options={genresOptions}
               value={form.genres || []}
               onChange={(event, newValue) =>
                 setForm({ ...form, genres: newValue })
               }
               disableCloseOnSelect
-              getOptionLabel={(option) => option}
+              getOptionLabel={(option) => option.name}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
               renderOption={(props, option, { selected }) => (
                 <li {...props}>
                   <Checkbox
                     style={{ marginRight: 8 }}
                     checked={selected}
                   />
-                  {option}
+                  {option.name}
                 </li>
               )}
               renderInput={(params) => (

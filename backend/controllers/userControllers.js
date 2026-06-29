@@ -1,5 +1,6 @@
 import { getUserById } from '../services/users/getUserById.js'
 import { getUserProfile } from '../services/users/getUserProfile.js';
+import { getArtPositions } from '../services/users/getUserPositions.js';
 
 export const getUser = async (request, reply) => {
   try {
@@ -35,6 +36,19 @@ export const getProfile = async (request, reply) => {
   } catch (err) {
     console.error('Не удалось найти профиль пользователя!', err.message);
 
+    return reply.code(400).send({
+      error: err.message
+    });
+  }
+};
+
+export const getArtistPositions = async (request, reply) => {
+
+  try {
+    const positions = await getArtPositions();
+
+    return reply.code(200).send({positions});
+  } catch (err) {
     return reply.code(400).send({
       error: err.message
     });

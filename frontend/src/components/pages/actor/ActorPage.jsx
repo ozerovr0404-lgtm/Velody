@@ -13,20 +13,33 @@ const ActorPage = () => {
   const [actor, setActor] = useState(null);
 
     useEffect(() => {
-      console.log('useEffect fired', id)
-      if (!id) return;
+      console.log("PARAMS id =", id);
+      if (!id) {
+        console.log("NO ID -> STOP");
+        return;
+      }
 
       const loadUser = async () => {
+        console.log("LOADING USER");
+
         try {
+
+          console.log("fetch start:", id);
+
           const data = await getUserProfile(id);
+
+          console.log("DATA FROM API:", data.user);
+          
           setActor(data.user);
         } catch (error) {
           console.error('Ошибка загрузки профиля', error);
         }
       };
 
-    loadUser();
-  }, [id]);
+      loadUser();
+    }, [id]);
+
+  console.log("actor is:", actor);
 
   const handleUpdate = async(payload) => {
     try {

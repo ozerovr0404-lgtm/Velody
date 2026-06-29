@@ -82,13 +82,23 @@ export class ArtistProfile {
       ph.url AS avatar_url,
 
       COALESCE(
-        json_agg(DISTINCT g.name) 
+        json_agg(
+          DISTINCT jsonb_build_object(
+              'id', g.id,
+              'name', g.name
+          )
+        )
         FILTER (WHERE g.name IS NOT NULL),
         '[]'
       ) AS genres,
 
       COALESCE(
-        json_agg(DISTINCT pos.position_name)
+        json_agg(
+          DISTINCT jsonb_build_object(
+              'id', pos.id,
+              'name', pos.position_name
+          )
+        )
         FILTER (WHERE pos.position_name IS NOT NULL),
         '[]'
       ) AS artist_position
