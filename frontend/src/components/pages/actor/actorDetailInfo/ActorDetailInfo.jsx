@@ -19,6 +19,9 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 
 const ActorDetailInfo = ({ actor, onUpdate }) => {
+
+  console.log("ActorDetailInfo render");
+  
   const [openMsg, setOpenMsg] = useState(false);
   const [message, setMessage] = useState('');
   const [editing, setEditing] = useState(false);
@@ -29,8 +32,8 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
     city: actor?.city ?? '',
     price_from: actor?.price_from ?? '',
     description: actor?.description ?? '',
-    artist_position: [],
-    genres: []
+    genres: actor.genres ?? [],
+    artist_position: actor.artist_profile ?? []
   });
   const fileRef = useRef();
 
@@ -45,15 +48,34 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
     handleClose();
   };
 
+  console.log('Начало проверки');
   useEffect(() => {
     const load = async () => {
-      const response = await  fetch('http://localhost:3000/actor/artist-positions');
-      const data = await response.json();
-      setArtistPositionOptions(data);
-    }
+      const res = await fetch('http://localhost:3000/actor/artist-positions');
+      const data = await res.json();
+      console.log('Покажи', data);
+      setArtistPositionOptions(data.positions);
+    };
 
     load();
   }, []);
+
+
+  useEffect(() => {
+  if (!actor) return;
+
+  setForm({
+      stage_name: actor.stage_name ?? '',
+      experience_years: actor.experience_years ?? '',
+      city: actor.city ?? '',
+      price_from: actor.price_from ?? '',
+      description: actor.description ?? '',
+
+      genres: (actor.genres ?? []).map(g => g.id),
+      artist_position: (actor.artist_position ?? [])
+    });
+  }, [actor]);
+
 
   const hadleEditOpen = () => {
     setForm({
@@ -62,9 +84,13 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
       city: actor?.city || '',
       price_from: actor?.price_from || '',
       description: actor?.description || '',
-      artist_position: actor?.artist_position ?? [],
-      genres: actor?.genres ?? []
+
+      genres: [],
+      artist_position: actor.artist_position
     });
+
+    console.log("POS:", actor.artist_position);
+    console.log("OPTIONS:", artistPositionOptions);
 
     setEditOpen(true);
   }
@@ -72,7 +98,6 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
   const handleEditToggle = () => setEditing((s) => !s);
 
   const handleEditClose = () => {
-    onUpdate?.(form);
     setEditOpen(false);
   };
 
@@ -222,32 +247,35 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
               mt: 1
             }}
           />
-
+    
           <Autocomplete
-              multiple
-              options={artistPositionOptions}
-              value={form.artist_position || []}
-              onChange={(event, newValue) =>
-                setForm({ ...form, artist_position: newValue })
-              }
-              disableCloseOnSelect
-              getOptionLabel={(option) => option.name}
-              renderOption={(props, option, { selected }) => (
-                <li {...props}>
-                  <Checkbox
-                    style={{ marginRight: 8 }}
-                    checked={selected}
-                  />
-                  {option.name}
-                </li>
-              )}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  placeholder="Специализация"
-                />
-              )}
-            />
+            multiple
+            options={artistPositionOptions}
+
+            value={form.artist_position}
+
+            onChange={(event, newValue) =>
+              setForm({
+                ...form,
+                artist_position: newValue
+              })
+            }
+
+            disableCloseOnSelect
+            getOptionLabel={(option) => option.name}
+            isOptionEqualToValue={(option, value) => option.id === value.id}
+
+            renderOption={(props, option, { selected }) => (
+              <li {...props}>
+                <Checkbox checked={selected} style={{ marginRight: 8 }} />
+                {option.name}
+              </li>
+            )}
+
+            renderInput={(params) => (
+              <TextField {...params} placeholder="Специализация" />
+            )}
+          />
 
           <FormControl fullWidth>
           <InputLabel
@@ -256,13 +284,13 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
 
             <Autocomplete
               multiple
-              options={genresOptions}
+              options={artistPositionOptions}
               value={form.genres || []}
               onChange={(event, newValue) =>
                 setForm({ ...form, genres: newValue })
               }
               disableCloseOnSelect
-              getOptionLabel={(option) => option.name}
+              getOptionLabel={(option) => option}
               isOptionEqualToValue={(option, value) => option.id === value.id}
               renderOption={(props, option, { selected }) => (
                 <li {...props}>
@@ -270,7 +298,7 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
                     style={{ marginRight: 8 }}
                     checked={selected}
                   />
-                  {option.name}
+                  {option}
                 </li>
               )}
               renderInput={(params) => (
@@ -326,7 +354,10 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
           <Button
             variant="contained"
             onClick={() => {
-              onUpdate?.(form);
+              onUpdate?.({
+                ...form,
+                artist_position: form.artist_position.map(p => p.id)
+              });
               handleEditClose();
             }}
             sx={{
