@@ -48,13 +48,15 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
     handleClose();
   };
 
-  console.log('Начало проверки');
   useEffect(() => {
     const load = async () => {
-      const res = await fetch('http://localhost:3000/actor/artist-positions');
-      const data = await res.json();
-      console.log('Покажи', data);
-      setArtistPositionOptions(data.positions);
+      const resArtistPosition = await fetch('http://localhost:3000/actor/artist-positions');
+      const resGenres = await fetch('http://localhost:3000/actor/genres');
+      const data1 = await resArtistPosition.json();
+      const data2 = await resGenres.json();
+      console.log('Покажи', data1);
+      setArtistPositionOptions(data1.positions);
+      setGenresOptions(data2.genres)
     };
 
     load();
@@ -71,7 +73,7 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
       price_from: actor.price_from ?? '',
       description: actor.description ?? '',
 
-      genres: (actor.genres ?? []).map(g => g.id),
+      genres: (actor.genres ?? []),
       artist_position: (actor.artist_position ?? [])
     });
   }, [actor]);
@@ -85,7 +87,7 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
       price_from: actor?.price_from || '',
       description: actor?.description || '',
 
-      genres: [],
+      genres: actor.genres,
       artist_position: actor.artist_position
     });
 
@@ -284,13 +286,13 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
 
             <Autocomplete
               multiple
-              options={artistPositionOptions}
-              value={form.genres || []}
+              options={genresOptions}
+              value={form.genres}
               onChange={(event, newValue) =>
                 setForm({ ...form, genres: newValue })
               }
               disableCloseOnSelect
-              getOptionLabel={(option) => option}
+              getOptionLabel={(option) => option.name}
               isOptionEqualToValue={(option, value) => option.id === value.id}
               renderOption={(props, option, { selected }) => (
                 <li {...props}>
@@ -298,7 +300,7 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
                     style={{ marginRight: 8 }}
                     checked={selected}
                   />
-                  {option}
+                  {option.name}
                 </li>
               )}
               renderInput={(params) => (

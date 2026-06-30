@@ -2,6 +2,7 @@ import { getUserById } from '../services/users/getUserById.js'
 import { getUserProfile } from '../services/users/getUserProfile.js';
 import { getArtPositions } from '../services/users/getUserPositions.js';
 import { updateUserProfile } from '../services/users/updateUserProfile.js';
+import { getGenresList } from '../services/users/getGenresList.js';
 
 
 export const getUser = async (request, reply) => {
@@ -51,7 +52,19 @@ export const getArtistPositions = async (request, reply) => {
       error: err.message
     });
   }
-}
+};
+
+export const getGenresForProfile = async (request, reply) => {
+  try {
+    const genres = await getGenresList();
+    console.log("GENRES", genres);
+    return reply.code(200).send({genres});
+  } catch (err) {
+    return reply.code(400).send({
+      error: err.message
+    });
+  }
+};
 
 export const updateProfile = async (request, reply) => {
 
