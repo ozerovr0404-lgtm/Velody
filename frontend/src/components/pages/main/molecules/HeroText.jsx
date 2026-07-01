@@ -13,26 +13,26 @@ const HeroText = () => {
 
       <Box sx={{ display: 'flex', flexDirection: 'row', gap: '20px', margin: '0 10px 40px' }}>
         <ActionButton label="Найти музыканта" navigateTo="/catalog" />
-        <ActionButton label="Предложить услуги" />
+        <ActionButton label="Предложить услуги" /> {/* здесь нужно добавить открытие модалки логина */}
       </Box>
 
       <Box sx={{ display: 'flex', flexDirection: 'row', gap: '20px', padding: '10px' }}>
-        <CategoryImage imageSrc="/GuitarCategory.jpg">
+        <CategoryImage imageSrc="/GuitarCategory.jpg" navigateTo="/catalog">
           Гитара
         </CategoryImage>
-        <CategoryImage imageSrc="/PianoCategory.jpg">
+        <CategoryImage imageSrc="/PianoCategory.jpg" navigateTo="/catalog">
           Фортепиано
         </CategoryImage>
-        <CategoryImage imageSrc="/DrumsCategory.jpg">
+        <CategoryImage imageSrc="/DrumsCategory.jpg" navigateTo="/catalog">
           Ударные
         </CategoryImage>
-        <CategoryImage imageSrc="/VocalCategory.jpg">
+        <CategoryImage imageSrc="/VocalCategory.jpg" navigateTo="/catalog">
           Вокал
         </CategoryImage>
-        <CategoryImage imageSrc="/OperatorCategory.jpg">
+        <CategoryImage imageSrc="/OperatorCategory.jpg" navigateTo="/catalog">
           Оператор
         </CategoryImage>
-        <CategoryImage imageSrc="/SoundOperatorCategory.jpg">
+        <CategoryImage imageSrc="/SoundOperatorCategory.jpg" navigateTo="/catalog">
           Звукорежиссер
         </CategoryImage>
       </Box>

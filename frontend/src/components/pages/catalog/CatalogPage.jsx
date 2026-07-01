@@ -85,7 +85,7 @@ const CatalogPage = () => {
 
       <Box sx={{ flex: 1, py: { xs: 4, md: 4 } }}>
         <Container maxWidth="lg">
-          <Grid container spacing={3} sx={{ justifyContent: 'flex-start' }}>
+          <Grid container spacing={3} sx={{ justifyContent: 'center' }}>
             {actors.map((actor) => (
               <Grid item xs={12} sm={6} md={3} lg={3} key={actor.id}>
                 <ActorCard

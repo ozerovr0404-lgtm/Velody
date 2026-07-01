@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import Ranking from '../atoms/Ranking';
 
-const ActorHeader = ({ name, rating, genre, reviewCount = 0 }) => {
+const ActorHeader = ({ name, rating }) => {
   return (
     <Box
       sx={{
