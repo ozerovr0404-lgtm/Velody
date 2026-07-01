@@ -7,5 +7,5 @@ export const updateProfileSchema = z.object({
   experience_years: z.coerce.number().int().min(0).max(100),
   city: z.string(),
   price_from: z.coerce.number().positive(),
-  description: z.string().max(500)
+  description: z.string().max(1000)
 });

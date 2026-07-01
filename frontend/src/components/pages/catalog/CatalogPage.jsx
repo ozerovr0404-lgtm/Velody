@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Tabs from '@mui/material/Tabs';
-import { Box, Container, Grid } from '@mui/material';
+import { Box, Container, Grid, Pagination, Stack } from '@mui/material';
 import ActorCard from './organisms/ActorCard';
 import CategoryTab from '../../shared/tabs/CategoryTab';
 import getPublishedProfile from '../../../services/getProfile/getPublishedProfile';
@@ -97,6 +97,14 @@ const CatalogPage = () => {
             ))}
           </Grid>
         </Container>
+        <Stack
+          sx={{
+            display: "flex",
+            alignItems: "end"
+          }}
+        >
+          <Pagination />
+        </Stack>
       </Box>
     </Box>
   );
