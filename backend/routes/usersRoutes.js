@@ -4,8 +4,18 @@ import { updateProfileSchema } from "../schemas/profile.schemas.js";
 import { idParamsSchema } from "../schemas/idParams.schema.js";
 
 export default async function usersRoutes(fastify, options) {
-  fastify.get('/:id', getUser);
-  fastify.get('/profile/:id', getProfile);
+  fastify.get(
+    '/:id', 
+    {  preHandler: validate(idParamsSchema, "params") },
+    getUser
+  );
+
+  fastify.get(
+    '/profile/:id',
+    {  preHandler: validate(idParamsSchema, "params") },
+    getProfile
+  );
+
   fastify.get('/artist-positions', getArtistPositions);
   fastify.get('/genres', getGenresForProfile);
 
