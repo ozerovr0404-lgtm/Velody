@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import ActorButton from '../atoms/ActorButton';
 
-const ActorFooter = ({ price, onContact }) => {
+const ActorFooter = ({ price, onClick }) => {
   return (
     <Box
       sx={{
@@ -35,7 +35,7 @@ const ActorFooter = ({ price, onContact }) => {
       </Box>
 
       <Box sx={{ width: '120px' }}>
-        <ActorButton label="Подробнее" onClick={onContact} />
+        <ActorButton label="Подробнее" onClick={onClick} />
       </Box>
     </Box>
   );

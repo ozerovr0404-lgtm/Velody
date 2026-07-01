@@ -16,7 +16,7 @@ const ActorCard = ({
   genres,
   isLiked = false,
   onToggleLike,
-  onContact
+  onOpenProfile
 }) => {
   return (
     <Card
@@ -35,6 +35,8 @@ const ActorCard = ({
         width: '100%',
         maxWidth: '360px',
         minWidth: '350px',
+        maxHeight: '680px',
+        minHeight: '680px',
         margin: '0 auto',
       }}
     >
@@ -71,7 +73,7 @@ const ActorCard = ({
         <Divider sx={{ my: 1 }} />
 
         {/* Цена и кнопка */}
-        <ActorFooter price={price_from} onContact={() => onContact?.(id)} />
+        <ActorFooter price={price_from} onClick={onOpenProfile} />
       </CardContent>
     </Card>
   );

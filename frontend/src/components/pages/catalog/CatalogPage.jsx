@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Tabs from '@mui/material/Tabs';
 import { Box, Container, Grid, Pagination, Stack } from '@mui/material';
 import ActorCard from './organisms/ActorCard';
@@ -9,9 +10,10 @@ const CatalogPage = () => {
   const [tabValue, setTabValue] = useState(0);
   const [actors, setActors] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
-
   const [page, setPage] = useState(1);
   const [limit] = useState(6);
+  const navigate = useNavigate();
+  
 
   useEffect(() => {
     const loadCard = async () => {
@@ -27,9 +29,14 @@ const CatalogPage = () => {
     loadCard();
   }, [page]);
 
-  const handleContact = (id) => {
-    console.log(`Contact requested for actor ${id}`);
+
+  
+  const clickProfile = (id) => {
+    if (clickProfile) {
+      navigate(`/actor/profile/${id}`);
+    }
   };
+
 
   const handleToggleLike = (id, isLiked) => {
     console.log(`Actor ${id} liked: ${isLiked}`);
@@ -95,7 +102,7 @@ const CatalogPage = () => {
               <Grid item xs={12} sm={6} md={3} lg={3} key={actor.id}>
                 <ActorCard
                   {...actor}
-                  onContact={handleContact}
+                  onOpenProfile={() => clickProfile(actor.id)}
                   onToggleLike={(isLiked) => handleToggleLike(actor.id, isLiked)}
                 />
               </Grid>
