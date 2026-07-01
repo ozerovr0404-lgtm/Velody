@@ -111,7 +111,7 @@ const RegisterForm = ({ onClose }) => {
       <AuthUserField 
         label="Номер телефона"
         type="tel"
-        placeholder="+7 999 999 9999"
+        placeholder="+79009009090"
         value={phone}
         onChange={(e) => setPhone(e.target.value)}
       />
