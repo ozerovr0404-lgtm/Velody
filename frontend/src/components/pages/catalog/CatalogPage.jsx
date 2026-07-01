@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Tabs from '@mui/material/Tabs';
-import { Box, Container, Grid } from '@mui/material';
+import { Box, Container, Grid, Pagination, Stack } from '@mui/material';
 import ActorCard from './organisms/ActorCard';
 import CategoryTab from '../../shared/tabs/CategoryTab';
 import getPublishedProfile from '../../../services/getProfile/getPublishedProfile';
@@ -8,19 +8,24 @@ import getPublishedProfile from '../../../services/getProfile/getPublishedProfil
 const CatalogPage = () => {
   const [tabValue, setTabValue] = useState(0);
   const [actors, setActors] = useState([]);
+  const [totalItems, setTotalItems] = useState(0);
+
+  const [page, setPage] = useState(1);
+  const [limit] = useState(6);
 
   useEffect(() => {
     const loadCard = async () => {
       try {
-        const data = await getPublishedProfile();
-        setActors(data.data);
+        const res = await getPublishedProfile(page, limit);
+        setActors(res.data.profile);
+        setTotalItems(res.data.totalItems);
       } catch (err) {
         console.error('Ошибка загрузки публикаций!', err);
       }
     }
 
     loadCard();
-  }, []);
+  }, [page]);
 
   const handleContact = (id) => {
     console.log(`Contact requested for actor ${id}`);
@@ -85,7 +90,7 @@ const CatalogPage = () => {
 
       <Box sx={{ flex: 1, py: { xs: 4, md: 4 } }}>
         <Container maxWidth="lg">
-          <Grid container spacing={3} sx={{ justifyContent: 'flex-start' }}>
+          <Grid container spacing={3} sx={{ justifyContent: 'center' }}>
             {actors.map((actor) => (
               <Grid item xs={12} sm={6} md={3} lg={3} key={actor.id}>
                 <ActorCard
@@ -97,6 +102,20 @@ const CatalogPage = () => {
             ))}
           </Grid>
         </Container>
+        <Stack
+          sx={{
+            mt: 4,
+            width: "100%",
+            display: "flex",
+            alignItems: "flex-end",
+          }}
+        >
+          <Pagination 
+            count={Math.ceil(totalItems / limit)}
+            page={page}
+            onChange={(_, value) => setPage(value)}
+          />
+        </Stack>
       </Box>
     </Box>
   );

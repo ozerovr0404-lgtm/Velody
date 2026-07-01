@@ -1,68 +1,88 @@
 import pool from "../bd.js";
 
 export class ArtistProfile {
-  static async getByPublishedIsTrue(is_published) {
+  static async getByPublishedIsTrue(is_published, page, limit) {
 
     if (typeof is_published !== "boolean") {
       throw new Error('is_published must be boolean');
     }
+
+    const offset = (page - 1) * limit;
     
     const result = await pool.query(
-      `SELECT 
-      p.id,
-      p.stage_name,
-      p.description,
-      p.city,
-      p.price_from,
-      p.rating,
-      p.reviews_count,
-      p.is_published,
+      `SELECT *
+      FROM (
+        SELECT 
+          p.id,
+          p.stage_name,
+          p.description,
+          p.city,
+          p.price_from,
+          p.rating,
+          p.reviews_count,
+          p.is_published,
 
-      ph.url AS avatar_url,
+          ph.url AS avatar_url,
 
-      COALESCE(
-        json_agg(DISTINCT g.name) 
-        FILTER (WHERE g.name IS NOT NULL),
-        '[]'
-      ) AS genres,
+          COALESCE(
+            json_agg(DISTINCT g.name) 
+            FILTER (WHERE g.name IS NOT NULL),
+            '[]'
+          ) AS genres,
 
-      COALESCE(
-        json_agg(DISTINCT pos.position_name)
-        FILTER (WHERE pos.position_name IS NOT NULL),
-        '[]'
-      ) AS positions
+          COALESCE(
+            json_agg(DISTINCT pos.position_name)
+            FILTER (WHERE pos.position_name IS NOT NULL),
+            '[]'
+          ) AS positions
 
-    FROM artist_profile p
+        FROM artist_profile p
 
-    LEFT JOIN LATERAL (
-      SELECT url
-      FROM artist_photo ph
-      WHERE ph.artist_profile_id = p.id
-      ORDER BY ph.order_index ASC
-      LIMIT 1
-    ) ph ON true
+        LEFT JOIN LATERAL (
+          SELECT url
+          FROM artist_photo ph
+          WHERE ph.artist_profile_id = p.id
+          ORDER BY ph.order_index ASC
+          LIMIT 1
+        ) ph ON true
 
-    LEFT JOIN artist_genre ag 
-      ON ag.artist_profile_id = p.id
-    LEFT JOIN genre g 
-      ON g.id = ag.genre_id
+        LEFT JOIN artist_genre ag 
+          ON ag.artist_profile_id = p.id
+        LEFT JOIN genre g 
+          ON g.id = ag.genre_id
 
-    LEFT JOIN artist_profile_position app 
-      ON app.artist_profile_id = p.id
-    LEFT JOIN artist_position pos 
-      ON pos.id = app.artist_position_id
+        LEFT JOIN artist_profile_position app 
+          ON app.artist_profile_id = p.id
+        LEFT JOIN artist_position pos 
+          ON pos.id = app.artist_position_id
 
-    WHERE p.is_published = $1
+        WHERE p.is_published = $1
 
-    GROUP BY 
-      p.id,
-      ph.url
+        GROUP BY p.id, ph.url
+      ) sub
+      ORDER BY sub.id
+      LIMIT $2
+      OFFSET $3
     `,
-    [is_published]
+    [is_published, limit, offset]
   );
     if (!result.rows.length) return null;
     return result.rows;
   };
+
+  
+  static async countPublishedProfile(is_published) {
+    const result = await pool.query(
+      `
+        SELECT COUNT(*) AS total
+        FROM artist_profile
+        WHERE is_published = $1
+      `,
+      [is_published]
+    );
+
+    return Number(result.rows[0].total);
+  }
 
 
   static async getProfileWithSubInfo(id) {

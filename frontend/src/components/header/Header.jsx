@@ -5,6 +5,7 @@ import AuthButtons from './molecules/AuthButtons';
 import MenuIcon from './atoms/MenuIcon';
 
 const Header = ({ onRegisterClick, onLoginClick }) => {
+
   return (
     <AppBar
       position="static"

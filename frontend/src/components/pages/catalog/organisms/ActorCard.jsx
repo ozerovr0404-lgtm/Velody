@@ -12,7 +12,8 @@ const ActorCard = ({
   reviews_count,
   price_from,
   description,
-  genre,
+  positions,
+  genres,
   isLiked = false,
   onToggleLike,
   onContact
@@ -33,7 +34,7 @@ const ActorCard = ({
         flexDirection: 'column',
         width: '100%',
         maxWidth: '360px',
-        minWidth: '360px',
+        minWidth: '350px',
         margin: '0 auto',
       }}
     >
@@ -55,9 +56,14 @@ const ActorCard = ({
         }}
       >
         {/* Ник и рейтинг */}
-        <ActorHeader name={stage_name} rating={rating} genre={genre} reviewCount={reviews_count} />
+        <ActorHeader name={stage_name} rating={rating} reviewCount={reviews_count} />
+        {/* Специализация */}
         <Typography>
-          Тут будет специализация
+          {positions.join(", ")}
+        </Typography>
+        {/* Жанр */}
+        <Typography>
+          Жанр: {genres.join(", ")}
         </Typography>
         {/* Описание */}
         <ActorDescription description={description} />
