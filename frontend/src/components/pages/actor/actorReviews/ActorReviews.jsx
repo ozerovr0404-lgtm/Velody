@@ -29,7 +29,7 @@ const ActorReviews = ({ actorId }) => {
   };
 
   return (
-    <Box sx={{ mt: 4 }}>
+    <Box sx={{ mt: 4, minWidth: '600px' }}>
       <Typography variant="h6" sx={{ mb: 2 }}>
         Отзывы ({comments.length})
       </Typography>

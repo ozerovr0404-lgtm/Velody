@@ -5,45 +5,57 @@ import ActorDetailInfo from './actorDetailInfo/ActorDetailInfo';
 import ActorInfo from './actorDiscription/ActorInfo';
 import ActorReviews from './actorReviews/ActorReviews';
 import updateUserProfile from '../../../services/updateProfile/updateUserProfile';
-import getUserProfile from '../../../services/getProfile/getUserProfile';
+import getUserProfileForId from '../../../services/getProfile/getUserProfileForId';
 
 const ActorPage = () => {
   const { id } = useParams();
+  console.log('ID TYPE:', typeof id, id);
 
   const [actor, setActor] = useState(null);
 
     useEffect(() => {
-      console.log('useEffect fired', id)
       if (!id) return;
 
-      const loadUser = async () => {
-        try {
-          const data = await getUserProfile(id);
-          setActor(data.user);
-        } catch (error) {
-          console.error('Ошибка загрузки профиля', error);
-        }
+      let active = true;
+
+      const load = async () => {
+        const data = await getUserProfileForId(id);
+        if (active) setActor(data);
       };
 
-    loadUser();
-  }, [id]);
+      load();
+    
+      return () => {
+        active = false;
+      };
+    }, [id]);
+
+  
+
 
   const handleUpdate = async(payload) => {
     try {
       if (!actor.id) return;
 
-      await updateUserProfile(id, payload)
+      const cleanPayload = {
+        ...payload,
+        artist_position: payload.artist_position.map(p => p.id),
+        genres: payload.genres.map(g => g.id)
+      };
 
-      setActor((prev) => ({ 
-        ...prev, 
-        ...payload 
-      }));
+      console.log('Clean Payload:', cleanPayload);
+
+      const updated = await updateUserProfile(id, cleanPayload);
+
+      setActor(updated);
+
     } catch (err) {
       console.error('Ошибка обновления профиля', err);
     }
   }
 
-  if (!actor) {
+  
+  if (!actor && id) {
     return <div>Загрузка...</div>;
   }
   

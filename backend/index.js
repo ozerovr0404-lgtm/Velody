@@ -9,7 +9,8 @@ const app = fastify({ logger: true });
 
 
 await app.register(cors, {
-  origin: "http://localhost:5173"
+  origin: "http://localhost:5173",
+  methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS']
 });
 
 
