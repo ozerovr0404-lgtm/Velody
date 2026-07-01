@@ -8,19 +8,24 @@ import getPublishedProfile from '../../../services/getProfile/getPublishedProfil
 const CatalogPage = () => {
   const [tabValue, setTabValue] = useState(0);
   const [actors, setActors] = useState([]);
+  const [totalItems, setTotalItems] = useState(0);
+
+  const [page, setPage] = useState(1);
+  const [limit] = useState(6);
 
   useEffect(() => {
     const loadCard = async () => {
       try {
-        const data = await getPublishedProfile();
-        setActors(data.data);
+        const res = await getPublishedProfile(page, limit);
+        setActors(res.data.profile);
+        setTotalItems(res.data.totalItems);
       } catch (err) {
         console.error('Ошибка загрузки публикаций!', err);
       }
     }
 
     loadCard();
-  }, []);
+  }, [page]);
 
   const handleContact = (id) => {
     console.log(`Contact requested for actor ${id}`);
@@ -99,11 +104,17 @@ const CatalogPage = () => {
         </Container>
         <Stack
           sx={{
+            mt: 4,
+            width: "100%",
             display: "flex",
-            alignItems: "end"
+            alignItems: "flex-end",
           }}
         >
-          <Pagination />
+          <Pagination 
+            count={Math.ceil(totalItems / limit)}
+            page={page}
+            onChange={(_, value) => setPage(value)}
+          />
         </Stack>
       </Box>
     </Box>
