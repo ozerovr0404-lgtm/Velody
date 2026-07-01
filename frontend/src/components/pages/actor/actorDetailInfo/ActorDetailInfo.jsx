@@ -19,8 +19,6 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 
 const ActorDetailInfo = ({ actor, onUpdate }) => {
-
-  console.log("ActorDetailInfo render");
   
   const [openMsg, setOpenMsg] = useState(false);
   const [message, setMessage] = useState('');
@@ -43,7 +41,6 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
   const handleOpen = () => setOpenMsg(true);
   const handleClose = () => setOpenMsg(false);
   const handleSend = () => {
-    console.log('Send message to actor', actor?.id, message);
     setMessage('');
     handleClose();
   };
@@ -54,9 +51,8 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
       const resGenres = await fetch('http://localhost:3000/actor/genres');
       const data1 = await resArtistPosition.json();
       const data2 = await resGenres.json();
-      console.log('Покажи', data1);
       setArtistPositionOptions(data1.positions);
-      setGenresOptions(data2.genres)
+      setGenresOptions(data2.genres);
     };
 
     load();
@@ -73,8 +69,8 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
       price_from: actor.price_from ?? '',
       description: actor.description ?? '',
 
-      genres: (actor.genres ?? []),
-      artist_position: (actor.artist_position ?? [])
+      genres: actor.genres ?? [],
+      artist_position: actor.artist_position ?? []
     });
   }, [actor]);
 
@@ -90,9 +86,6 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
       genres: actor.genres,
       artist_position: actor.artist_position
     });
-
-    console.log("POS:", actor.artist_position);
-    console.log("OPTIONS:", artistPositionOptions);
 
     setEditOpen(true);
   }
@@ -114,6 +107,7 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
   };
 
   return (
+    
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       <input ref={fileRef} type="file" accept="image/*" hidden onChange={(e) => handleFile(e.target.files?.[0])} />
 
@@ -250,6 +244,11 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
             }}
           />
     
+        <FormControl fullWidth>
+          <InputLabel
+            id="artistPosition-label"
+          />
+
           <Autocomplete
             multiple
             options={artistPositionOptions}
@@ -279,17 +278,25 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
             )}
           />
 
+          </FormControl>
+
           <FormControl fullWidth>
           <InputLabel
             id="genre-label"
           />
-
+          
             <Autocomplete
               multiple
               options={genresOptions}
               value={form.genres}
-              onChange={(event, newValue) =>
-                setForm({ ...form, genres: newValue })
+              onChange={(event, newValue) => {
+                console.log("newValue", newValue);
+                setForm({ 
+                  ...form, 
+                  genres: newValue 
+                })
+              }
+                
               }
               disableCloseOnSelect
               getOptionLabel={(option) => option.name}
@@ -357,8 +364,7 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
             variant="contained"
             onClick={() => {
               onUpdate?.({
-                ...form,
-                artist_position: form.artist_position.map(p => p.id)
+                ...form
               });
               handleEditClose();
             }}
