@@ -26,7 +26,7 @@ export const login = async (request, reply) => {
   try {
     const user = await loginUser(request.body);
 
-    return reply.code(201).send({
+    return reply.code(200).send({
       message: 'Авторизация успешна!',
       user: {
         id: user.id,
