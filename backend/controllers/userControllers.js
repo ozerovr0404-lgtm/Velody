@@ -78,9 +78,9 @@ export const updateProfile = async (request, reply) => {
       id,
       request.body
     );
-    return reply.code(200).send({
+    return reply.code(200).send(
       updatedProfile
-    });
+    );
   } catch (err) {
     request.log.error(err);
     return reply.code(500).send({

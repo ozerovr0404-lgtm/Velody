@@ -47,7 +47,7 @@ const ActorPage = () => {
 
       const updated = await updateUserProfile(id, cleanPayload);
 
-      setActor(updated.updateProfile);
+      setActor(updated);
 
     } catch (err) {
       console.error('Ошибка обновления профиля', err);

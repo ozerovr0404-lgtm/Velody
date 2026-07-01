@@ -9,7 +9,7 @@ export const updateUserProfile = async (
     payload
   );
 
-  if (!result.rows.length) {
+  if (!result) {
     throw new Error("Не удалось обновить профиль пользователя!");
   }
 
