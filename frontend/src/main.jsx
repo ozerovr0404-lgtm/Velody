@@ -5,9 +5,9 @@ import CssBaseline from "@mui/material/CssBaseline";
 import "./index.css";
 import App from "./App.jsx";
 import CatalogPage from "./components/pages/catalog/CatalogPage.jsx";
-import ActorPage from "./components/pages/actor/ActorPage.jsx";
 import { UserProvider } from "./context/UserContext.jsx";
 import Layout from "./components/shared/layout/Layout.jsx";
+import ActorPage from "./components/pages/actor/ActorPage.jsx";
 
 const theme = createTheme({
   typography: {

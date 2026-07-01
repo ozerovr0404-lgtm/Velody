@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -11,37 +11,89 @@ import {
   TextField,
   IconButton,
   Stack,
+  Checkbox,
+  FormControl,
+  InputLabel,
+  Autocomplete
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
 const ActorDetailInfo = ({ actor, onUpdate }) => {
+  
   const [openMsg, setOpenMsg] = useState(false);
   const [message, setMessage] = useState('');
   const [editing, setEditing] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
   const [form, setForm] = useState({
-    stage_name: actor?.stage_name || '',
-    experience_years: actor?.experience_years || '',
-    city: actor?.city || '',
-    price_from: actor?.price_from || ''
+    stage_name: actor?.stage_name ?? '',
+    experience_years: actor?.experience_years ?? '',
+    city: actor?.city ?? '',
+    price_from: actor?.price_from ?? '',
+    description: actor?.description ?? '',
+    genres: actor.genres ?? [],
+    artist_position: actor.artist_profile ?? []
   });
   const fileRef = useRef();
 
-  console.log("actor avatar:", actor?.avatar_url);
+  const [artistPositionOptions, setArtistPositionOptions] = useState([]);
+  const [genresOptions, setGenresOptions] = useState([]);
 
   const handleOpen = () => setOpenMsg(true);
   const handleClose = () => setOpenMsg(false);
   const handleSend = () => {
-    // For now just log the message
-    console.log('Send message to actor', actor?.id, message);
     setMessage('');
     handleClose();
   };
 
+  useEffect(() => {
+    const load = async () => {
+      const resArtistPosition = await fetch('http://localhost:3000/actor/artist-positions');
+      const resGenres = await fetch('http://localhost:3000/actor/genres');
+      const data1 = await resArtistPosition.json();
+      const data2 = await resGenres.json();
+      setArtistPositionOptions(data1.positions);
+      setGenresOptions(data2.genres);
+    };
+
+    load();
+  }, []);
+
+
+  useEffect(() => {
+  if (!actor) return;
+
+  setForm({
+      stage_name: actor.stage_name ?? '',
+      experience_years: actor.experience_years ?? '',
+      city: actor.city ?? '',
+      price_from: actor.price_from ?? '',
+      description: actor.description ?? '',
+
+      genres: actor.genres ?? [],
+      artist_position: actor.artist_position ?? []
+    });
+  }, [actor]);
+
+
+  const hadleEditOpen = () => {
+    setForm({
+      stage_name: actor?.stage_name || '',
+      experience_years: actor?.experience_years || '',
+      city: actor?.city || '',
+      price_from: actor?.price_from || '',
+      description: actor?.description || '',
+
+      genres: actor.genres,
+      artist_position: actor.artist_position
+    });
+
+    setEditOpen(true);
+  }
+
   const handleEditToggle = () => setEditing((s) => !s);
 
-  const handleSave = () => {
-    onUpdate?.(form);
-    setEditing(false);
+  const handleEditClose = () => {
+    setEditOpen(false);
   };
 
   const handleFile = async (file) => {
@@ -54,9 +106,8 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
     reader.readAsDataURL(file);
   };
 
-  const handleFileClick = () => fileRef.current?.click();
-
   return (
+    
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       <input ref={fileRef} type="file" accept="image/*" hidden onChange={(e) => handleFile(e.target.files?.[0])} />
 
@@ -64,7 +115,7 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
         <Avatar
           src={actor?.avatar_url}
           alt={actor?.stage_name}
-          sx={{ width: 160, height: 160 }}
+          sx={{ width: 250, height: 300, borderRadius: 2 }}
         >
           {actor?.stage_name?.[0]}
         </Avatar>
@@ -75,27 +126,64 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
         >
           
           <Stack direction="row" spacing={1} alignItems="center">
-            <Typography variant="h6">@{actor?.stage_name}</Typography>
-            <IconButton size="small" onClick={handleEditToggle}>
+            <Typography 
+              variant="h6"
+              sx={{
+                fontSize: 35
+              }}
+            >
+              @{actor?.stage_name}
+            </Typography>
+            <IconButton size="small" onClick={hadleEditOpen}>
               <EditIcon fontSize="small" />
             </IconButton>
-            <Button 
-              variant="outlined" 
-              size="small" 
-              onClick={handleFileClick}
-              sx={{
-              color: 'rgba(8, 94, 75, 1)',
-              border: '1px solid rgba(8, 94, 75, 1)'
-            }}
-            >
-              Загрузить
-            </Button>
             
           </Stack>
             
-          <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
-            "{actor?.description}"
-          </Typography>
+                    <>
+                      <Typography
+                        sx={{
+                          fontSize: 20
+                        }}
+                      >
+                        Специализация: {actor?.artist_position?.map(a => a.name).join(", ") || 'Не указана'}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: 20
+                        }}
+                      >
+                        Жанр: {actor?.genres?.map(g => g.name).join(", ") || 'Не указан'}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: 20
+                        }}
+                      >
+                        Опыт: {actor?.experience_years} лет
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: 20
+                        }}
+                      >
+                        Город: {actor?.city}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: 20
+                        }}
+                      >
+                        Стоимость услуг от:
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: 30
+                        }}
+                      >
+                        ${actor?.price_from}
+                      </Typography>
+                    </>
         </Box>
       </Stack>
 
@@ -108,7 +196,7 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
             minRows={4}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="Write your message..."
+            placeholder="Музыкант ждёт Вашего сообщения..."
           />
         </DialogContent>
         <DialogActions>
@@ -116,7 +204,9 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
             onClick={handleClose}
             sx={{
               color: 'rgba(8, 94, 75, 1)',
-              border: '1px solid rgba(8, 94, 75, 1)'
+              border: '1px solid rgba(8, 94, 75, 1)',
+              mt: 1,
+              mb: 1
             }}
           >
             Отмена</Button>
@@ -126,7 +216,9 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
             sx={{
             color: 'white',
             backgroundColor: 'rgba(8, 94, 75, 1)',
-            mr: 2
+            mr: 2,
+            mt: 1,
+            mb: 1
           }}
           >
             Отправить
@@ -134,58 +226,166 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
         </DialogActions>
       </Dialog>
 
-      {/* Inline edit area */}
-      {editing && (
-        <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <TextField label="Сценическое имя" value={form.stage_name} onChange={(e) => setForm({ ...form, stage_name: e.target.value })} />
-          <TextField 
-            label="Опыт" 
-            value={form.experience_years} 
-            onChange={(e) => 
-              setForm({ 
-                ...form, 
-                experience_years: e.target.value })} 
+      <Dialog
+        open={editOpen}
+        onClose={handleEditClose}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle>Редактирование профиля</DialogTitle>
+
+        <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 2 }}>
+          <TextField
+            label="Сценическое имя"
+            value={form.stage_name}
+            onChange={(e) => setForm({ ...form, stage_name: e.target.value })}
+            sx={{
+              mt: 1
+            }}
           />
-          <TextField 
-            label="Город" 
-            value={form.city} 
-            onChange={(e) => setForm({ ...form, city: e.target.value })} 
+    
+        <FormControl fullWidth>
+          <InputLabel
+            id="artistPosition-label"
           />
-          <TextField 
-            label="Цена от" 
-            value={form.price_from} 
-            onChange={(e) => setForm({ ...form, price_from: e.target.value })} 
+
+          <Autocomplete
+            multiple
+            options={artistPositionOptions}
+
+            value={form.artist_position}
+
+            onChange={(event, newValue) =>
+              setForm({
+                ...form,
+                artist_position: newValue
+              })
+            }
+
+            disableCloseOnSelect
+            getOptionLabel={(option) => option.name}
+            isOptionEqualToValue={(option, value) => option.id === value.id}
+
+            renderOption={(props, option, { selected }) => (
+              <li {...props}>
+                <Checkbox checked={selected} style={{ marginRight: 8 }} />
+                {option.name}
+              </li>
+            )}
+
+            renderInput={(params) => (
+              <TextField {...params} placeholder="Специализация" />
+            )}
           />
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            <Button 
-              variant="contained" 
-              onClick={handleSave}
-              sx={{
+
+          </FormControl>
+
+          <FormControl fullWidth>
+          <InputLabel
+            id="genre-label"
+          />
+          
+            <Autocomplete
+              multiple
+              options={genresOptions}
+              value={form.genres}
+              onChange={(event, newValue) => {
+                console.log("newValue", newValue);
+                setForm({ 
+                  ...form, 
+                  genres: newValue 
+                })
+              }
+                
+              }
+              disableCloseOnSelect
+              getOptionLabel={(option) => option.name}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+              renderOption={(props, option, { selected }) => (
+                <li {...props}>
+                  <Checkbox
+                    style={{ marginRight: 8 }}
+                    checked={selected}
+                  />
+                  {option.name}
+                </li>
+              )}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder="Жанр"
+                />
+              )}
+            />
+          </FormControl>
+
+          <TextField
+            label="Опыт"
+            value={form.experience_years}
+            onChange={(e) =>
+              setForm({ ...form, experience_years: e.target.value })
+            }
+          />
+
+          <TextField
+            label="Город"
+            value={form.city}
+            onChange={(e) => setForm({ ...form, city: e.target.value })}
+          />
+
+          <TextField
+            label="Цена от"
+            value={form.price_from}
+            onChange={(e) => setForm({ ...form, price_from: e.target.value })}
+          />
+
+          <TextField
+            label="О себе"
+            multiline
+            minRows={3}
+            value={form.description}
+            onChange={(e) => setForm({ ...form, description: e.target.value })}
+          />
+        </DialogContent>
+
+        <DialogActions>
+          <Button 
+            onClick={handleEditClose}
+            sx={{
+              mb: 1,
+              color: 'rgba(8, 94, 75, 1)',
+              border: '1px solid rgba(8, 94, 75, 1)',
+            }}
+          >
+            Отмена
+          </Button>
+
+          <Button
+            variant="contained"
+            onClick={() => {
+              onUpdate?.({
+                ...form
+              });
+              handleEditClose();
+            }}
+            sx={{
+              mr: 2,
+              mb: 1,
               color: 'white',
               backgroundColor: 'rgba(8, 94, 75, 1)'
             }}
-            >
-              Сохранить
-            </Button>
-            <Button 
-             variant="outlined" 
-             onClick={handleEditToggle}
-             sx={{
-              color: 'rgba(8, 94, 75, 1)',
-              border: '1px solid rgba(8, 94, 75, 1)'
-            }}
-            >
-              Отменить
-            </Button>
-          </Box>
-        </Box>
-      )}
+          >
+            Сохранить
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       <Button 
         variant="outlined" 
         size="normal" 
         onClick={handleOpen}
         sx={{
-          width: '160px',
+          width: '250px',
           height: '40px',
           color: 'white',
           backgroundColor: 'rgba(8, 94, 75, 1)'
