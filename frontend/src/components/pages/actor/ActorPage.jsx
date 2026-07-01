@@ -30,7 +30,10 @@ const ActorPage = () => {
       };
     }, [id]);
 
-  
+    
+    useEffect(() => {
+      window.scroll(0, 0);
+    }, []);
 
 
   const handleUpdate = async(payload) => {

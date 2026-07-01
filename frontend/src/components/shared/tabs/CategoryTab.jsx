@@ -13,6 +13,7 @@ const CategoryTab = ({ value, label }) => {
         padding: '8px 40px',
         margin: '0 10px',
         color: '#000000ff',
+        fontSize: '16px',
 
         borderBottom: '2px solid transparent',
         transition: 'border-color 0.2s ease',
