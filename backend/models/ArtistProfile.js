@@ -98,6 +98,7 @@ export class ArtistProfile {
         p.reviews_count,
         p.is_published,
         p.experience_years,
+        p.is_published,
 
         (
           SELECT ph.url
@@ -137,8 +138,6 @@ export class ArtistProfile {
       [id]
     );
 
-    console.log('user', result.rows[0]);
-
     if (!result.rows.length) return null;
 
     return result.rows[0];
@@ -157,11 +156,9 @@ export class ArtistProfile {
         price_from,
         description,
         artist_position,
-        genres
+        genres,
+        is_published
       } = payload;
-
-      console.log("genres:", genres);
-      console.log("positions:", artist_position);
 
       const client = await pool.connect();
 
@@ -176,8 +173,9 @@ export class ArtistProfile {
             experience_years = $2,
             city = $3,
             price_from = $4,
-            description = $5
-          WHERE id = $6
+            description = $5,
+            is_published = $6
+          WHERE id = $7
           RETURNING *
           `,
           [
@@ -186,6 +184,7 @@ export class ArtistProfile {
             city,
             price_from,
             description,
+            is_published,
             id
           ]
         );
@@ -279,9 +278,10 @@ export class ArtistProfile {
         return fullProfileResult.rows[0];
 
       } catch (err) {
-        console.error('DB ERROR', err);
+
         await client.query('ROLLBACK');
         throw err;
+
       } finally {
         client.release();
       }

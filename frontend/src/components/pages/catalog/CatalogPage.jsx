@@ -94,12 +94,11 @@ const CatalogPage = () => {
           />
         </Tabs>
       </Box>
-
       <Box sx={{ flex: 1, py: { xs: 4, md: 4 } }}>
         <Container maxWidth="lg">
           <Grid container spacing={3} sx={{ justifyContent: 'center' }}>
             {actors.map((actor) => (
-              <Grid item xs={12} sm={6} md={3} lg={3} key={actor.id}>
+              <Grid size={{xs: 12, sm: 6, md: 3, lg: 4}}  key={actor.id}>
                 <ActorCard
                   {...actor}
                   onOpenProfile={() => clickProfile(actor.id)}
@@ -114,7 +113,7 @@ const CatalogPage = () => {
             mt: 4,
             width: "100%",
             display: "flex",
-            alignItems: "flex-end",
+            alignItems: "center"
           }}
         >
           <Pagination 
