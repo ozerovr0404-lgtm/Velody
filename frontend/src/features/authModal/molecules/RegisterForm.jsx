@@ -1,16 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Box } from '@mui/material';
 import AuthTitle from '../atoms/AuthTitle';
 import AuthUserField from '../atoms/AuthUserField';
 import MainButton from '../../../components/shared/buttons/MainButton';
-import {
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem
-} from '@mui/material';
-import InputMask from 'react-input-mask';
-import TextField from '@mui/material/TextField';
+import { registerUser } from '../../../services/authUser/registerUser';
 
 const RegisterForm = ({ onClose }) => {
 
@@ -18,10 +12,9 @@ const RegisterForm = ({ onClose }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
-  const [role, setRole] = useState(null);
   const [phone, setPhone] = useState('');
   const [error, setError] = useState('');
-  const status = 'ACTIVE'
+  const navigate = useNavigate();
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,28 +26,15 @@ const RegisterForm = ({ onClose }) => {
     }
 
     try {
-        const response = await fetch('http://localhost:3000/api/auth/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({ stage_name, email, password, phone })
-          });
-        
-          const data = await response.json();
+      const res = await registerUser(stage_name, email, password, phone);
+      
+        onClose?.();
 
-          if (!response.ok) {
-            setError(data.error || 'Ошибка регистрации!')
-            return;
-          }
+        navigate(`/profile/${res.profile.id}`);
 
-          console.log(data);
-
-          if (response.ok) {
-            onClose?.();
-          }
-
-      } catch (err) {
-        setError('Ошибка соединения с сервером!');
-      }
+    } catch (err) {
+      setError('Ошибка регистрации!');
+    }
   }
 
   return (

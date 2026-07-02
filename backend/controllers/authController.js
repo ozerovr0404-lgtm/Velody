@@ -3,14 +3,12 @@ import { loginUser } from "../services/authServices/loginUser.js";
 
 export const register = async (request, reply) => {
   try {
-    const user = await registerUser(request.body);
+    const result = await registerUser(request.body);
     
     return reply.code(201).send({
       message: 'Пользователь зарегистрирован!',
-      user: {
-        id: user.id,
-        email: user.email
-      }
+      user: result.user,
+      profile: result.profile
     });
 
   } catch (err) {
