@@ -60,7 +60,7 @@ export class ArtistProfile {
 
         GROUP BY p.id, ph.url
       ) sub
-      ORDER BY sub.id
+      ORDER BY sub.id DESC
       LIMIT $2
       OFFSET $3
     `,

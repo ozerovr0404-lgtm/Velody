@@ -55,9 +55,7 @@ export class User {
     email, 
     password, 
     stage_name, 
-    phone, 
-    role, 
-    status = 'ACTIVE'
+    phone
   }) {
 
     const client = await pool.connect();
@@ -67,10 +65,10 @@ export class User {
 
       const result = await client.query(
         `INSERT INTO users
-        (email, password, stage_name, phone, role, status)
-        VALUES ($1, $2, $3, $4, $5, $6)
+        (email, password, stage_name, phone)
+        VALUES ($1, $2, $3, $4)
         RETURNING *`,
-        [email, password, stage_name, phone, role, status]
+        [email, password, stage_name, phone]
       );
 
       const user = result.rows[0];
