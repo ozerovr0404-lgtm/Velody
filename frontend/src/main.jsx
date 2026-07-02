@@ -24,7 +24,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route element={<Layout />}>
             <Route path="/" element={<App />} />
             <Route path="/catalog" element={<CatalogPage />} />
-            <Route path="/actor/profile/:id" element={<ActorPage />} />
+            <Route path="/profile/:id" element={<ActorPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

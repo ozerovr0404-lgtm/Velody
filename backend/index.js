@@ -21,7 +21,7 @@ app.get('/', async() => {
 
 app.register(authRoutes, { prefix: '/api/auth' });
 
-app.register(usersRoutes, { prefix: '/actor' });
+app.register(usersRoutes, { prefix: '/' });
 
 app.register(catalogRoutes, { prefix: '/catalog' });
 
