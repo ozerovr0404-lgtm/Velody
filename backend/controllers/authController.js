@@ -20,6 +20,7 @@ export const register = async (request, reply) => {
   }
 };
 
+
 export const login = async (request, reply) => {
   try {
     const user = await loginUser(request.body);
@@ -40,3 +41,20 @@ export const login = async (request, reply) => {
     })
   }
 };
+
+
+export const me = async (request, reply) => {
+  if (!request.session.user) {
+    return reply.code(401).send({
+      user: null
+    });
+  }
+
+  return reply.send({ user: request.session.user });
+};
+
+
+export const logout = async (request, reply) => {
+  request.session.destroy();
+  return reply.send({ ok: true });
+}
