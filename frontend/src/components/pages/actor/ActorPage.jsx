@@ -9,7 +9,6 @@ import getUserProfileForId from '../../../services/getProfile/getUserProfileForI
 
 const ActorPage = () => {
   const { id } = useParams();
-  console.log('ID TYPE:', typeof id, id);
 
   const [actor, setActor] = useState(null);
 
@@ -46,8 +45,6 @@ const ActorPage = () => {
         genres: payload.genres.map(g => g.id)
       };
 
-      console.log('Clean Payload:', cleanPayload);
-
       const updated = await updateUserProfile(id, cleanPayload);
 
       setActor(updated);
@@ -66,14 +63,14 @@ const ActorPage = () => {
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <Container maxWidth="md" sx={{ py: 6, ml: 35 }}>
-        <Grid container spacing={4} justifyContent="center">
-          <Grid item xs={12} md={4}>
+        <Grid container spacing={4}>
+          <Grid size={{ xs: 12, md: 10.8 }}>
             <ActorDetailInfo 
               actor={actor} 
               onUpdate={handleUpdate} />
           </Grid>
 
-          <Grid item xs={12} md={8}>
+          <Grid size={{ xs: 12, md: 10.8 }}>
 
             <ActorInfo 
               actor={actor} 

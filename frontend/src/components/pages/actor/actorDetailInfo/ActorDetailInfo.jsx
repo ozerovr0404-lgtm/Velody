@@ -14,7 +14,9 @@ import {
   Checkbox,
   FormControl,
   InputLabel,
-  Autocomplete
+  Autocomplete,
+  Switch,
+  FormControlLabel
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
@@ -31,7 +33,8 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
     price_from: actor?.price_from ?? '',
     description: actor?.description ?? '',
     genres: actor.genres ?? [],
-    artist_position: actor.artist_profile ?? []
+    artist_position: actor.artist_profile ?? [],
+    is_published: actor?.is_published ?? false
   });
   const fileRef = useRef();
 
@@ -60,6 +63,7 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
 
 
   useEffect(() => {
+    
   if (!actor) return;
 
   setForm({
@@ -70,9 +74,11 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
       description: actor.description ?? '',
 
       genres: actor.genres ?? [],
-      artist_position: actor.artist_position ?? []
+      artist_position: actor.artist_position ?? [],
+
+      is_published: actor?.is_published ?? false
     });
-  }, [actor]);
+  }, [actor, editOpen]);
 
 
   const hadleEditOpen = () => {
@@ -111,7 +117,7 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       <input ref={fileRef} type="file" accept="image/*" hidden onChange={(e) => handleFile(e.target.files?.[0])} />
 
-      <Stack direction="row" spacing={2} alignItems="center">
+      <Stack direction="row" spacing={2}>
         <Avatar
           src={actor?.avatar_url}
           alt={actor?.stage_name}
@@ -125,7 +131,7 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
           }}
         >
           
-          <Stack direction="row" spacing={1} alignItems="center">
+          <Stack direction="row" spacing={1}>
             <Typography 
               variant="h6"
               sx={{
@@ -290,7 +296,6 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
               options={genresOptions}
               value={form.genres}
               onChange={(event, newValue) => {
-                console.log("newValue", newValue);
                 setForm({ 
                   ...form, 
                   genres: newValue 
@@ -346,6 +351,21 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
             value={form.description}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
           />
+
+          <FormControl>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={form.is_published}
+                  onChange={(e) => setForm({...form, is_published: e.target.checked})}
+                  label={"Опубликовать профиль"}
+                />
+              }
+              label={"Опубликовать профиль"}
+            />
+            
+          </FormControl>
+
         </DialogContent>
 
         <DialogActions>

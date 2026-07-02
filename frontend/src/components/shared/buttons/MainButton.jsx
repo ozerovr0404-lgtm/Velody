@@ -1,7 +1,6 @@
 import { Button } from '@mui/material';
 
 const MainButton = ({ label, color, backgroundColor, onClick, type }) => {
-  console.log("BUTTON TYPE:", type);
   return (
     <Button
       type={type}
