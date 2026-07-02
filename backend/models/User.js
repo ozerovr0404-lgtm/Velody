@@ -85,7 +85,10 @@ export class User {
       await client.query('COMMIT');
 
       return {
-        user: new User(user),
+        user: {
+          id: user.id,
+          email: user.email
+        },
         profile
       }
     } catch (err) {

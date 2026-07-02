@@ -33,7 +33,7 @@ const CatalogPage = () => {
   
   const clickProfile = (id) => {
     if (clickProfile) {
-      navigate(`/actor/profile/${id}`);
+      navigate(`/profile/${id}`);
     }
   };
 

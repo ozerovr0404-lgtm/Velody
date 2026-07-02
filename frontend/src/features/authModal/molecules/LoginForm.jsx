@@ -83,7 +83,7 @@ const LoginForm = ({ onClose, onSwitchToRegister }) => {
           type="button"
           label="Регистрация"
           onClick={onSwitchToRegister}
-          color="green" backgroundColor="rgba(255, 255, 255, 1)"
+          color="rgba(8, 94, 75, 1)" backgroundColor="rgba(255, 255, 255, 1)"
         />
       </Box>
 

@@ -11,7 +11,7 @@ export default async function usersRoutes(fastify, options) {
   );
 
   fastify.get(
-    '/profile/:id',
+    'profile/:id',
     {  preHandler: validate(idParamsSchema, "params") },
     getProfile
   );
@@ -20,7 +20,7 @@ export default async function usersRoutes(fastify, options) {
   fastify.get('/genres', getGenresForProfile);
 
   fastify.patch(
-    '/profile/:id',
+    'profile/:id',
     {
       preHandler: [
         validate(idParamsSchema, "params"),

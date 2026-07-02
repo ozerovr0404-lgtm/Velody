@@ -50,8 +50,8 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
 
   useEffect(() => {
     const load = async () => {
-      const resArtistPosition = await fetch('http://localhost:3000/actor/artist-positions');
-      const resGenres = await fetch('http://localhost:3000/actor/genres');
+      const resArtistPosition = await fetch('http://localhost:3000/artist-positions');
+      const resGenres = await fetch('http://localhost:3000/genres');
       const data1 = await resArtistPosition.json();
       const data2 = await resGenres.json();
       setArtistPositionOptions(data1.positions);
