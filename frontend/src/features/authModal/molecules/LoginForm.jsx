@@ -4,10 +4,9 @@ import AuthTitle from '../atoms/AuthTitle';
 import AuthUserField from '../atoms/AuthUserField';
 import MainButton from '../../../components/shared/buttons/MainButton';
 
-const LoginForm = ({ onClose}) => {
+const LoginForm = ({ onClose, onSwitchToRegister }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isOpen, setIsOpen] = useState(true);
   const [error, setError] = useState('');
 
 
@@ -45,7 +44,6 @@ const LoginForm = ({ onClose}) => {
       sx={{ 
         display: 'flex', 
         flexDirection: 'column', 
-        alignItems: 'center',
         width: '100%',
         height: '250px',
         gap: '25px'
@@ -67,11 +65,27 @@ const LoginForm = ({ onClose}) => {
         onChange={(e) => setPassword(e.target.value)}
       />
 
-      <MainButton 
-        type="submit"
-        label="Войти"
-        color="white" backgroundColor="rgba(8, 94, 75, 1)"
-      />
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          gap: 2,
+          justifyContent: 'flex-end'
+        }}
+      >
+        <MainButton 
+          type="submit"
+          label="Войти"
+          color="white" backgroundColor="rgba(8, 94, 75, 1)"
+        />
+
+        <MainButton 
+          type="button"
+          label="Регистрация"
+          onClick={onSwitchToRegister}
+          color="green" backgroundColor="rgba(255, 255, 255, 1)"
+        />
+      </Box>
 
     </Box>
   );

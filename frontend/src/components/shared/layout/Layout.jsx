@@ -8,24 +8,50 @@ import './Layout.css'
 
 const Layout = () => {
 
-  const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
-  const [isOpenLoginModal, setIsOpenLoginModal] = useState(false);
+  const [authModal, setUathModal] = useState({
+    open: false,
+    mode: 'login'
+  });
+  
+  const openLogin = () => {
+    setUathModal({
+      open: true,
+      mode: 'login'
+    });
+  };
 
-  const handleOpenRegister = () => setRegisterModalOpen(true);
-  const handleCloseRegister = () => setRegisterModalOpen(false);
-  const handleOpenLoginModal = () => setIsOpenLoginModal(true);
-  const handleCloseLoginModal = () => setIsOpenLoginModal(false);
+  const openRegister = () => {
+    setUathModal({
+      open: true,
+      mode: 'register'
+    });
+  };
+
+  const closeAuth = () => {
+    setUathModal({
+      open: false,
+      mode: 'login'
+    });
+  };
 
   return (
     <>
-      <Header onRegisterClick={handleOpenRegister} onLoginClick={handleOpenLoginModal} />
+      <Header onRegisterClick={openRegister} onLoginClick={openLogin} />
         <div className="appLayout">
           <Outlet />
         </div>
       <Footer />
 
-      <RegisterModal open={isRegisterModalOpen} onClose={handleCloseRegister} />
-      <LoginModal open={isOpenLoginModal} onClose={handleCloseLoginModal} />
+      <RegisterModal 
+        open={authModal.open && authModal.mode === 'register'} 
+        onClose={closeAuth} 
+        onSwitchToLogin={openLogin}
+      />
+      <LoginModal 
+        open={authModal.open && authModal.mode === 'login'} 
+        onClose={closeAuth} 
+        onSwitchToRegister={openRegister}
+      />
       
     </>
   )

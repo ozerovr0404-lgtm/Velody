@@ -36,7 +36,7 @@ const RegisterForm = ({ onClose }) => {
         const response = await fetch('http://localhost:3000/api/auth/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({ stage_name, email, password, status, role, phone })
+            body: JSON.stringify({ stage_name, email, password, phone })
           });
         
           const data = await response.json();
@@ -66,33 +66,12 @@ const RegisterForm = ({ onClose }) => {
           flexDirection: 'column', 
           alignItems: 'center',
           width: '100%',
-          height: '510px',
+          height: '430px',
           gap: '22px'
         }}
     >
 
       <AuthTitle title="Регистрация" />
-
-      <FormControl fullWidth>
-        <InputLabel id='role-label'>
-          В качестве кого?
-        </InputLabel>
-
-        <Select
-          label="Ищу или предлагаю?"
-          type="select"
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
-          sx={{
-            width: '100%',
-            height: '50px',
-            borderColor: '#979797'
-          }}
-        >
-          <MenuItem value='CLIENT'>Ищу</MenuItem>
-          <MenuItem value='ARTIST'>Предлагаю</MenuItem>
-        </Select>
-      </FormControl>
 
       <AuthUserField
         label="Имя"

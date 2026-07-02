@@ -2,7 +2,7 @@ import Dialog from '@mui/material/Dialog';
 import Box from '@mui/material/Box';
 import LoginForm from './molecules/LoginForm';
 
-const LoginModal = ({ open, onClose }) => {
+const LoginModal = ({ open, onClose, onSwitchToRegister }) => {
   return (
     <Dialog
       open={!!open}
@@ -17,7 +17,10 @@ const LoginModal = ({ open, onClose }) => {
           backgroundColor: '#ffffffff',
         }}
       >
-        <LoginForm onClose={onClose} />
+        <LoginForm 
+          onClose={onClose} 
+          onSwitchToRegister={onSwitchToRegister}
+        />
 
       </Box>
     </Dialog>

@@ -6,7 +6,6 @@ export const loginSchema = z.object({
 });
 
 export const registerSchema = z.object({
-  role: z.enum(["CLIENT", "ARTIST"]),
   stage_name: z.string().min(5),
   email: z.string().email(),
   phone: z.string().regex(/^\+?[1-9]\d{7,14}$/),
