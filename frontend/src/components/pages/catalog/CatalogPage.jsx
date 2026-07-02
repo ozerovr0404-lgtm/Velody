@@ -59,7 +59,6 @@ const CatalogPage = () => {
         <Tabs
           value={tabValue}
           onChange={(_, newValue) => {
-            console.log(newValue);
             setTabValue(newValue);
           }}
           sx={{
