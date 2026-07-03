@@ -3,11 +3,14 @@ import Box from '@mui/material/Box';
 import AuthTitle from '../atoms/AuthTitle';
 import AuthUserField from '../atoms/AuthUserField';
 import MainButton from '../../../components/shared/buttons/MainButton';
+import { useContext } from 'react';
+import { UserContext } from '../../../context/UserContext';
 
 const LoginForm = ({ onClose, onSwitchToRegister }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const { loadUser } = useContext(UserContext);
 
 
   const handleSubmit = async (e) => {
@@ -17,6 +20,7 @@ const LoginForm = ({ onClose, onSwitchToRegister }) => {
     try {
       const response = await fetch('http://localhost:3000/api/auth/login', {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
@@ -29,6 +33,7 @@ const LoginForm = ({ onClose, onSwitchToRegister }) => {
       }
 
       if (response.ok) {
+        await loadUser();
         onClose?.();
       }
 

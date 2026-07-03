@@ -21,7 +21,7 @@ const Header = ({ onRegisterClick, onLoginClick }) => {
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Logo />
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-          <NavMenu />
+          <NavMenu onOpenLogin={onLoginClick} />
           <AuthButtons onRegisterClick={onRegisterClick} onLoginClick={onLoginClick}/>
           <MenuIcon />
         </Box>

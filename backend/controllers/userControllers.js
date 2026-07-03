@@ -45,7 +45,6 @@ export const getArtistPositions = async (request, reply) => {
 
   try {
     const positions = await getArtPositions();
-    console.log("USER POSITION:", positions);
     return reply.code(200).send({positions});
   } catch (err) {
     return reply.code(400).send({
@@ -57,7 +56,6 @@ export const getArtistPositions = async (request, reply) => {
 export const getGenresForProfile = async (request, reply) => {
   try {
     const genres = await getGenresList();
-    console.log("GENRES", genres);
     return reply.code(200).send({genres});
   } catch (err) {
     return reply.code(400).send({

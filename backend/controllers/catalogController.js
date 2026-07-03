@@ -5,7 +5,6 @@ export const getPublishedProfile = async (request, reply) => {
 
     const page = Number(request.query.page) || 1;
     const limit = Number(request.query.limit) || 6;
-    console.log({ page, limit });
 
     const profile = await getCatalogProfiles(true, page, limit);
 
@@ -15,8 +14,6 @@ export const getPublishedProfile = async (request, reply) => {
     });
   } catch (err) {
 
-    console.log('FULL ERROR:');
-    console.log(err);
     return reply.code(500).send({
       error: err.message
     });

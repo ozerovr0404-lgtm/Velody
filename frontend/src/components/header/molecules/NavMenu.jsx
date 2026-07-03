@@ -3,13 +3,20 @@ import {
   Button
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../../../context/UserContext';
+import { useContext } from 'react';
 
-const NavMenu = () => {
+const NavMenu = ({ onOpenLogin }) => {
   const navigate = useNavigate();
+  const { user } = useContext(UserContext);
 
-  const clickToProfile = (id) => {
-    {/*  */}
-    navigate(`/profile/${id}`);
+  const clickToProfile = () => {
+    if (!user) {
+      onOpenLogin?.();
+      return
+    }
+
+    navigate(`/profile/${user.profileId}`);
   }
 
   const clickToMainPage = () => {
@@ -40,7 +47,9 @@ const NavMenu = () => {
       >
         Поиск
       </Button>
-      <Button>
+      <Button
+        onClick={clickToProfile}
+      >
         Кабинет
       </Button>
     </Box>

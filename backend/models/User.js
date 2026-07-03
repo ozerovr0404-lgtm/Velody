@@ -51,6 +51,15 @@ export class User {
     return new User(result.rows[0]);
   }
 
+  static async getProfileByUserId(userId) {
+    const result = await pool.query(
+      `SELECT * FROM artist_profile WHERE user_id = $1`,
+      [userId]
+    );
+
+    return result.rows[0] ?? null;
+  }
+
   static async createWithHashedPassword({
     email, 
     password, 

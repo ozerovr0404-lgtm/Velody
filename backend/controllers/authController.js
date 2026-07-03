@@ -23,15 +23,18 @@ export const register = async (request, reply) => {
 
 export const login = async (request, reply) => {
   try {
-    const user = await loginUser(request.body);
+    const result = await loginUser(request.body);
+
+    request.session.user = {
+      id: result.user.id,
+      email: result.user.email,
+      profileId: result.profile.id
+    };
 
     return reply.code(200).send({
       message: 'Авторизация успешна!',
-      user: {
-        id: user.id,
-        email: user.email
-      }
-    })
+      user: request.session.user
+    });
 
   } catch (err) {
     console.error("Ошибка авторизации", err.message);
