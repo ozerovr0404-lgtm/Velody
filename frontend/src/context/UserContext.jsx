@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
+import { logoutUser } from "../services/authUser/logoutUser";
 
 
 const UserContext = createContext(null);
@@ -30,16 +31,31 @@ const UserProvider = ({ children }) => {
       setLoading(false);
     }
   };
+  
 
   useEffect(() => {
     loadUser();
+
+    const interval = setInterval(() => {
+      loadUser();
+    }, 60_000);
+
+    return () => clearInterval(interval);
   }, []);
+
+
+  const logout = async () => {
+    await logoutUser();
+    setUser(null);
+  };
+
 
   const contextValue = {
     user,
     setUser,
     loadUser,
-    loading
+    loading,
+    logout
   }
 
   return (

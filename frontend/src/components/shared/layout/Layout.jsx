@@ -4,39 +4,46 @@ import Header from "../../header/Header";
 import Footer from "../../footer/Footer";
 import RegisterModal from "../../../features/authModal/RegisterModal";
 import LoginModal from "../../../features/authModal/LoginModal";
+import { useContext } from "react";
+import { UserContext } from "../../../context/UserContext";
 import './Layout.css'
 
 const Layout = () => {
 
-  const [authModal, setUathModal] = useState({
+  const { logout } = useContext(UserContext);
+
+  const [authModal, setAuthModal] = useState({
     open: false,
     mode: 'login'
   });
   
   const openLogin = () => {
-    setUathModal({
+    setAuthModal({
       open: true,
       mode: 'login'
     });
   };
 
+
   const openRegister = () => {
-    setUathModal({
+    setAuthModal({
       open: true,
       mode: 'register'
     });
   };
 
+
   const closeAuth = () => {
-    setUathModal({
+    setAuthModal({
       open: false,
       mode: 'login'
     });
   };
 
+
   return (
     <>
-      <Header onRegisterClick={openRegister} onLoginClick={openLogin} />
+      <Header onRegisterClick={openRegister} onLoginClick={openLogin} onLogoutClick={logout} />
         <div className="appLayout">
           <Outlet />
         </div>

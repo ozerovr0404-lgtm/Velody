@@ -1,7 +1,18 @@
 import { Box } from '@mui/material';
 import MainButton from '../../shared/buttons/MainButton';
+import { useContext } from 'react';
+import { UserContext } from '../../../context/UserContext';
 
-const AuthButtons = ({ onRegisterClick, onLoginClick }) => {
+
+const AuthButtons = ({ onRegisterClick, onLoginClick, onLogoutClick }) => {
+  const { user } = useContext(UserContext);
+
+  if (user) {
+    return (
+      <MainButton label="Выйти" color="rgba(8, 94, 75, 1)" backgroundColor="rgba(255, 255, 255, 1)" onClick={onLogoutClick} />
+    )
+  }
+
   return (
     <Box sx={{ display: 'flex', gap: 2 }}>
       <MainButton label="Войти" color="rgba(8, 94, 75, 1)" backgroundColor="rgba(255, 255, 255, 1)" onClick={onLoginClick} />

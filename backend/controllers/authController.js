@@ -59,5 +59,6 @@ export const me = async (request, reply) => {
 
 export const logout = async (request, reply) => {
   request.session.destroy();
+  
   return reply.send({ ok: true });
 }
