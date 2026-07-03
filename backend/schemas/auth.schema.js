@@ -11,3 +11,7 @@ export const registerSchema = z.object({
   phone: z.string().regex(/^\+?[1-9]\d{7,14}$/),
   password: z.string().min(12).regex(/[a-z]/).regex(/[A-Z]/).regex(/[0-9]/)
 });
+
+export const me = z.object({
+
+});

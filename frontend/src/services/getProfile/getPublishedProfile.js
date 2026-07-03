@@ -6,8 +6,6 @@ const getPublishedProfile = async (page, limit) => {
   }
 
   const data = await response.json();
-
-  console.log(data);
   
   return data;
 }

@@ -4,7 +4,7 @@ import NavMenu from './molecules/NavMenu';
 import AuthButtons from './molecules/AuthButtons';
 import MenuIcon from './atoms/MenuIcon';
 
-const Header = ({ onRegisterClick, onLoginClick }) => {
+const Header = ({ onRegisterClick, onLoginClick, onLogoutClick }) => {
 
   return (
     <AppBar
@@ -21,8 +21,8 @@ const Header = ({ onRegisterClick, onLoginClick }) => {
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Logo />
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-          <NavMenu />
-          <AuthButtons onRegisterClick={onRegisterClick} onLoginClick={onLoginClick}/>
+          <NavMenu onOpenLogin={onLoginClick} />
+          <AuthButtons onRegisterClick={onRegisterClick} onLoginClick={onLoginClick} onLogoutClick={onLogoutClick} />
           <MenuIcon />
         </Box>
       </Toolbar>
@@ -30,4 +30,4 @@ const Header = ({ onRegisterClick, onLoginClick }) => {
   );
 };
 
-export default Header;
+export default Header; 
