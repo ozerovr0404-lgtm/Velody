@@ -388,10 +388,11 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
 
           <Button
             variant="contained"
-            onClick={() => {
-              onUpdate?.({
+            onClick={async () => {
+              await onUpdate?.({
                 ...form
               });
+              document.activeElement?.blur();
               handleEditClose();
             }}
             sx={{

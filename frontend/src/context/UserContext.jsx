@@ -34,13 +34,23 @@ const UserProvider = ({ children }) => {
   
 
   useEffect(() => {
-    loadUser();
+    let interval;
 
-    const interval = setInterval(() => {
-      loadUser();
-    }, 60_000);
+    const init = async () => {
+      const user = await loadUser();
 
-    return () => clearInterval(interval);
+      if (user) {
+        interval = setInterval(() => {
+          loadUser();
+        }, 60_000);
+      }
+    };
+
+    init();
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, []);
 
 
