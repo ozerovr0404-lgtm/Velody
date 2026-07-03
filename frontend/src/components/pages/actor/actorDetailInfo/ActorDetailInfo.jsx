@@ -19,9 +19,12 @@ import {
   FormControlLabel
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import { useContext } from 'react';
+import { UserContext } from '../../../../context/UserContext';
 
 const ActorDetailInfo = ({ actor, onUpdate }) => {
-  
+
+  const { user } = useContext(UserContext);
   const [openMsg, setOpenMsg] = useState(false);
   const [message, setMessage] = useState('');
   const [editing, setEditing] = useState(false);
@@ -96,11 +99,11 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
     setEditOpen(true);
   }
 
-  const handleEditToggle = () => setEditing((s) => !s);
 
   const handleEditClose = () => {
     setEditOpen(false);
   };
+
 
   const handleFile = async (file) => {
     if (!file) return;
@@ -111,6 +114,7 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
     };
     reader.readAsDataURL(file);
   };
+
 
   return (
     
@@ -140,56 +144,58 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
             >
               @{actor?.stage_name}
             </Typography>
-            <IconButton size="small" onClick={hadleEditOpen}>
-              <EditIcon fontSize="small" />
-            </IconButton>
-            
+
+            {user?.profileId === actor.id && 
+                <IconButton size="small" onClick={hadleEditOpen}>
+                  <EditIcon fontSize="small" />
+                </IconButton>
+            }
           </Stack>
             
-                    <>
-                      <Typography
-                        sx={{
-                          fontSize: 20
-                        }}
-                      >
-                        Специализация: {actor?.artist_position?.map(a => a.name).join(", ") || 'Не указана'}
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: 20
-                        }}
-                      >
-                        Жанр: {actor?.genres?.map(g => g.name).join(", ") || 'Не указан'}
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: 20
-                        }}
-                      >
-                        Опыт: {actor?.experience_years} лет
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: 20
-                        }}
-                      >
-                        Город: {actor?.city}
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: 20
-                        }}
-                      >
-                        Стоимость услуг от:
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: 30
-                        }}
-                      >
-                        ${actor?.price_from}
-                      </Typography>
-                    </>
+            <>
+              <Typography
+                sx={{
+                  fontSize: 20
+                }}
+              >
+                Специализация: {actor?.artist_position?.map(a => a.name).join(", ") || 'Не указана'}
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: 20
+                }}
+              >
+                Жанр: {actor?.genres?.map(g => g.name).join(", ") || 'Не указан'}
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: 20
+                }}
+              >
+                Опыт: {actor?.experience_years} лет
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: 20
+                }}
+              >
+                Город: {actor?.city}
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: 20
+                }}
+              >
+                Стоимость услуг от:
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: 30
+                }}
+              >
+                ${actor?.price_from}
+              </Typography>
+            </>
         </Box>
       </Stack>
 
@@ -400,6 +406,7 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
         </DialogActions>
       </Dialog>
 
+            {/* После подключения CDN сюда добавить условие - если user && */}
       <Button 
         variant="outlined" 
         size="normal" 
