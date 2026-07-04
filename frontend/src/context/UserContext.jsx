@@ -7,7 +7,23 @@ const UserContext = createContext(null);
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [authModal, setAuthModal] = useState({
+    open: false,
+    mode: "login",
+  });
 
+  const openLogin = () => {
+    setAuthModal({ open: true, mode: "login" });
+  };
+
+  const openRegister = () => {
+    setAuthModal({ open: true, mode: "register" });
+  };
+
+  const closeAuth = () => {
+    setAuthModal({ open: false, mode: "login" });
+  };
+  
 
   const loadUser = async () => {
     setLoading(true);
@@ -67,7 +83,11 @@ const UserProvider = ({ children }) => {
     setUser,
     loadUser,
     loading,
-    logout
+    logout,
+    authModal,
+    openLogin,
+    openRegister,
+    closeAuth
   }
 
   return (
