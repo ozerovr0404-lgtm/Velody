@@ -21,6 +21,8 @@ const UserProvider = ({ children }) => {
 
       if (result.ok && data.user) {
         setUser(data.user);
+        return data.user;
+        
       } else {
         setUser(null);
       }

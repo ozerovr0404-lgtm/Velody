@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box } from '@mui/material';
 import AuthTitle from '../atoms/AuthTitle';
 import AuthUserField from '../atoms/AuthUserField';
 import MainButton from '../../../components/shared/buttons/MainButton';
 import { registerUser } from '../../../services/authUser/registerUser';
+import { UserContext } from '../../../context/UserContext';
 
 const RegisterForm = ({ onClose }) => {
 
+  const { loadUser } = useContext(UserContext);
   const [stage_name, setStage_name] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -27,6 +29,8 @@ const RegisterForm = ({ onClose }) => {
 
     try {
       const res = await registerUser(stage_name, email, password, phone);
+
+        await loadUser();
       
         onClose?.();
 

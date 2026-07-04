@@ -4,10 +4,16 @@ import { loginUser } from "../services/authServices/loginUser.js";
 export const register = async (request, reply) => {
   try {
     const result = await registerUser(request.body);
+
+    request.session.user = {
+      id: result.user.id,
+      email: result.user.email,
+      profileId: result.profile.id
+    }
     
     return reply.code(201).send({
       message: 'Пользователь зарегистрирован!',
-      user: result.user,
+      user: request.session.user,
       profile: result.profile
     });
 
