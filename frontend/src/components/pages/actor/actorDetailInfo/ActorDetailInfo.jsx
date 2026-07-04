@@ -24,7 +24,7 @@ import { UserContext } from '../../../../context/UserContext';
 
 const ActorDetailInfo = ({ actor, onUpdate }) => {
 
-  const { user } = useContext(UserContext);
+  const { user, openLogin } = useContext(UserContext);
   const [openMsg, setOpenMsg] = useState(false);
   const [message, setMessage] = useState('');
   const [editing, setEditing] = useState(false);
@@ -114,7 +114,6 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
     };
     reader.readAsDataURL(file);
   };
-
 
   return (
     
@@ -408,19 +407,46 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
       </Dialog>
 
             {/* После подключения CDN сюда добавить условие - если user && */}
-      <Button 
-        variant="outlined" 
-        size="normal" 
-        onClick={handleOpen}
-        sx={{
-          width: '250px',
-          height: '40px',
-          color: 'white',
-          backgroundColor: 'rgba(8, 94, 75, 1)'
-        }}
-      >
-        Связаться
-      </Button>
+
+
+      {user?.profileId === actor.id ? <Button 
+          variant="outlined" 
+          size="normal" 
+          onClick={handleFile}
+          sx={{
+            width: '250px',
+            height: '40px',
+            color: 'white',
+            backgroundColor: 'rgba(8, 94, 75, 1)'
+          }}
+        >
+          Загрузить фото
+        </Button> : 
+        user ? <Button 
+          variant="outlined" 
+          size="normal" 
+          onClick={handleOpen}
+          sx={{
+            width: '250px',
+            height: '40px',
+            color: 'white',
+            backgroundColor: 'rgba(8, 94, 75, 1)'
+          }}
+        >
+          Связаться
+        </Button> : <Button 
+          variant="outlined" 
+          size="normal" 
+          onClick={openLogin}
+          sx={{
+            width: '250px',
+            height: '40px',
+            color: 'white',
+            backgroundColor: 'rgba(8, 94, 75, 1)'
+          }}
+        >
+          Ожидается авторизация
+        </Button>}
     </Box>
   );
 };
