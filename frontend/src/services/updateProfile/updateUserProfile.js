@@ -4,6 +4,7 @@ const updateUserProfile = async (
 ) => {
   const response = await fetch(`http://localhost:3000/profile/${id}`, {
       method: 'PATCH',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json'
       },

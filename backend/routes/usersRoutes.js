@@ -2,6 +2,7 @@ import { getUser, getProfile, getArtistPositions, updateProfile, getGenresForPro
 import { validate } from "../middlewares/validate.js";
 import { updateProfileSchema } from "../schemas/profile.schemas.js";
 import { idParamsSchema } from "../schemas/idParams.schema.js";
+import { checkProfileOwner } from "../middlewares/checkProfileOwner.js";
 
 export default async function usersRoutes(fastify, options) {
   fastify.get(
@@ -23,6 +24,7 @@ export default async function usersRoutes(fastify, options) {
     'profile/:id',
     {
       preHandler: [
+        checkProfileOwner((request) => Number(request.params.id)),
         validate(idParamsSchema, "params"),
         validate(updateProfileSchema, "body")
       ]
