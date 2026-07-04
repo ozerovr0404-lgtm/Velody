@@ -7,7 +7,23 @@ const UserContext = createContext(null);
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [authModal, setAuthModal] = useState({
+    open: false,
+    mode: "login",
+  });
 
+  const openLogin = () => {
+    setAuthModal({ open: true, mode: "login" });
+  };
+
+  const openRegister = () => {
+    setAuthModal({ open: true, mode: "register" });
+  };
+
+  const closeAuth = () => {
+    setAuthModal({ open: false, mode: "login" });
+  };
+  
 
   const loadUser = async () => {
     setLoading(true);
@@ -21,6 +37,8 @@ const UserProvider = ({ children }) => {
 
       if (result.ok && data.user) {
         setUser(data.user);
+        return data.user;
+        
       } else {
         setUser(null);
       }
@@ -34,13 +52,23 @@ const UserProvider = ({ children }) => {
   
 
   useEffect(() => {
-    loadUser();
+    let interval;
 
-    const interval = setInterval(() => {
-      loadUser();
-    }, 60_000);
+    const init = async () => {
+      const user = await loadUser();
 
-    return () => clearInterval(interval);
+      if (user) {
+        interval = setInterval(() => {
+          loadUser();
+        }, 60_000);
+      }
+    };
+
+    init();
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, []);
 
 
@@ -55,7 +83,11 @@ const UserProvider = ({ children }) => {
     setUser,
     loadUser,
     loading,
-    logout
+    logout,
+    authModal,
+    openLogin,
+    openRegister,
+    closeAuth
   }
 
   return (

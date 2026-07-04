@@ -19,9 +19,12 @@ import {
   FormControlLabel
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import { useContext } from 'react';
+import { UserContext } from '../../../../context/UserContext';
 
 const ActorDetailInfo = ({ actor, onUpdate }) => {
-  
+
+  const { user, openLogin } = useContext(UserContext);
   const [openMsg, setOpenMsg] = useState(false);
   const [message, setMessage] = useState('');
   const [editing, setEditing] = useState(false);
@@ -96,11 +99,11 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
     setEditOpen(true);
   }
 
-  const handleEditToggle = () => setEditing((s) => !s);
 
   const handleEditClose = () => {
     setEditOpen(false);
   };
+
 
   const handleFile = async (file) => {
     if (!file) return;
@@ -140,56 +143,58 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
             >
               @{actor?.stage_name}
             </Typography>
-            <IconButton size="small" onClick={hadleEditOpen}>
-              <EditIcon fontSize="small" />
-            </IconButton>
-            
+
+            {user?.profileId === actor.id && 
+                <IconButton size="small" onClick={hadleEditOpen}>
+                  <EditIcon fontSize="small" />
+                </IconButton>
+            }
           </Stack>
             
-                    <>
-                      <Typography
-                        sx={{
-                          fontSize: 20
-                        }}
-                      >
-                        Специализация: {actor?.artist_position?.map(a => a.name).join(", ") || 'Не указана'}
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: 20
-                        }}
-                      >
-                        Жанр: {actor?.genres?.map(g => g.name).join(", ") || 'Не указан'}
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: 20
-                        }}
-                      >
-                        Опыт: {actor?.experience_years} лет
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: 20
-                        }}
-                      >
-                        Город: {actor?.city}
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: 20
-                        }}
-                      >
-                        Стоимость услуг от:
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: 30
-                        }}
-                      >
-                        ${actor?.price_from}
-                      </Typography>
-                    </>
+            <>
+              <Typography
+                sx={{
+                  fontSize: 20
+                }}
+              >
+                Специализация: {actor?.artist_position?.map(a => a.name).join(", ") || 'Не указана'}
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: 20
+                }}
+              >
+                Жанр: {actor?.genres?.map(g => g.name).join(", ") || 'Не указан'}
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: 20
+                }}
+              >
+                Опыт: {actor?.experience_years} лет
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: 20
+                }}
+              >
+                Город: {actor?.city}
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: 20
+                }}
+              >
+                Стоимость услуг от:
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: 30
+                }}
+              >
+                ${actor?.price_from}
+              </Typography>
+            </>
         </Box>
       </Stack>
 
@@ -382,10 +387,11 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
 
           <Button
             variant="contained"
-            onClick={() => {
-              onUpdate?.({
+            onClick={async () => {
+              await onUpdate?.({
                 ...form
               });
+              document.activeElement?.blur();
               handleEditClose();
             }}
             sx={{
@@ -400,19 +406,47 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
         </DialogActions>
       </Dialog>
 
-      <Button 
-        variant="outlined" 
-        size="normal" 
-        onClick={handleOpen}
-        sx={{
-          width: '250px',
-          height: '40px',
-          color: 'white',
-          backgroundColor: 'rgba(8, 94, 75, 1)'
-        }}
-      >
-        Связаться
-      </Button>
+            {/* После подключения CDN сюда добавить условие - если user && */}
+
+
+      {user?.profileId === actor.id ? <Button 
+          variant="outlined" 
+          size="normal" 
+          onClick={handleFile}
+          sx={{
+            width: '250px',
+            height: '40px',
+            color: 'white',
+            backgroundColor: 'rgba(8, 94, 75, 1)'
+          }}
+        >
+          Загрузить фото
+        </Button> : 
+        user ? <Button 
+          variant="outlined" 
+          size="normal" 
+          onClick={handleOpen}
+          sx={{
+            width: '250px',
+            height: '40px',
+            color: 'white',
+            backgroundColor: 'rgba(8, 94, 75, 1)'
+          }}
+        >
+          Связаться
+        </Button> : <Button 
+          variant="outlined" 
+          size="normal" 
+          onClick={openLogin}
+          sx={{
+            width: '250px',
+            height: '40px',
+            color: 'white',
+            backgroundColor: 'rgba(8, 94, 75, 1)'
+          }}
+        >
+          Ожидается авторизация
+        </Button>}
     </Box>
   );
 };

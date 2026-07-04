@@ -68,9 +68,7 @@ export const updateProfile = async (request, reply) => {
 
   try {
 
-    const { 
-      id
-    } = request.params;
+    const { id } = request.params;
 
     const updatedProfile = await updateUserProfile(
       id,

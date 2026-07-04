@@ -3,10 +3,15 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 
-const ActionButton = ({ label, variant = 'contained', navigateTo }) => {
+const ActionButton = ({ label, variant = 'contained', navigateTo, onClick }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
+    if (onClick) {
+      onClick();
+      return;
+    }
+
     if (navigateTo) {
       navigate(navigateTo);
     }
