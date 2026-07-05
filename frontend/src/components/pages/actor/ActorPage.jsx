@@ -6,7 +6,7 @@ import ActorInfo from './actorDiscription/ActorInfo';
 import ActorReviews from './actorReviews/ActorReviews';
 import updateUserProfile from '../../../services/updateProfile/updateUserProfile';
 import getUserProfileForId from '../../../services/getProfile/getUserProfileForId';
-import getReviewsByProfileId from '../../../services/getProfile/getReviewsByProfileId';
+import getReviewsByProfileId from '../../../services/artistFeedback/getReviewsByProfileId';
 
 
 const ActorPage = () => {
