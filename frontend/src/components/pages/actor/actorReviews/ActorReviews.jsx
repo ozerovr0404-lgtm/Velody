@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
   Box,
@@ -13,28 +12,17 @@ import {
   Divider,
 } from '@mui/material';
 
-const ActorReviews = ({ actorId }) => {
-  const [comments, setComments] = useState([
-    { id: 1, user: 'marlonruiz300', rating: 5, text: 'Great work!', date: '20.06.2022' },
-  ]);
+const ActorReviews = ({ actor, reviews, addReview }) => {
   const [text, setText] = useState('');
   const [rating, setRating] = useState(5);
 
-  const handleAdd = () => {
-    if (!text.trim()) return;
-    const next = { id: Date.now(), user: 'anon', rating, text, date: new Date().toLocaleDateString() };
-    setComments((s) => [next, ...s]);
-    setText('');
-    setRating(5);
-  };
 
   return (
     <Box sx={{ mt: 4, minWidth: '600px' }}>
       <Typography variant="h6" sx={{ mb: 2 }}>
-        Отзывы ({comments.length})
+        Отзывы ({reviews?.length ?? 0})
       </Typography>
 
-      {/* Comment form */}
       <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
         <Avatar sx={{ bgcolor: 'rgba(8,94,75,1)' }}>A</Avatar>
         <Box sx={{ flex: 1 }}>
@@ -51,7 +39,14 @@ const ActorReviews = ({ actorId }) => {
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
             <Button 
               variant="contained" 
-              onClick={handleAdd}
+              onClick={() => {
+                addReview({
+                  rating,
+                  comment: text
+                });
+                setText('');
+                setRating(5);
+              }}
               sx={{
                 color: 'white',
                 backgroundColor: 'rgba(8, 94, 75, 1)'
@@ -66,20 +61,31 @@ const ActorReviews = ({ actorId }) => {
       <Divider sx={{ mb: 2 }} />
 
       <List>
-        {comments.map((c) => (
-          <ListItem key={c.id} alignItems="flex-start" sx={{ mb: 1 }}>
-            <Avatar sx={{ mr: 2, bgcolor: 'rgba(8,94,75,1)' }}>{c.user?.charAt(0).toUpperCase()}</Avatar>
+        {reviews.map((r) => (
+          <ListItem key={r.id} alignItems='flex-start' sx={{ mb: 1 }} >
+            <Avatar sx={{ mr: 2, bgcolor: 'rgba(8,94,75,1)' }}>
+              {r.author_name?.charAt(0).toUpperCase()}
+            </Avatar>
+
             <ListItemText
               primary={
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Typography sx={{ fontWeight: 700 }}>{c.user}</Typography>
-                  <Rating value={c.rating} readOnly size="small" />
+                  <Typography sx={{ fontWeight: 700 }}>
+                    {r.author_name}
+                  </Typography>
+
+                  <Rating value={r.rating} readOnly size="small" />
+
                   <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                    {c.date}
+                    {new Date(r.created_at).toLocaleDateString()}
                   </Typography>
                 </Box>
               }
-              secondary={<Typography sx={{ mt: 1 }}>{c.text}</Typography>}
+              secondary={
+                <Typography sx={{ mt: 1 }}>
+                  {r.comment}
+                </Typography>
+              }
             />
           </ListItem>
         ))}

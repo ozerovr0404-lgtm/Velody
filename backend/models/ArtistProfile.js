@@ -286,4 +286,95 @@ export class ArtistProfile {
         client.release();
       }
     }
+
+
+    static async getReviewsById(artistProfileId) {
+      const result = await pool.query(
+        `
+          SELECT
+          r.id,
+          r.rating,
+          r.comment,
+          r.created_at,
+          r.artist_profile_id,
+          r.author_profile_id,
+
+          u.stage_name AS author_name
+
+          FROM review r
+          JOIN artist_profile u ON u.id = r.author_profile_id
+
+          WHERE r.artist_profile_id = $1
+          ORDER BY r.created_at DESC
+        `, [artistProfileId]
+      )
+
+      return result.rows;
+    }
+
+
+    static async createReviewByProfileId(
+      rating,
+      comment,
+      artist_profile_id,
+      author_profile_id
+    ) {
+      const client = await pool.connect();
+      
+      try {
+
+        await client.query('BEGIN');
+
+        await client.query(
+          `
+            INSERT INTO review (
+              rating,
+              comment,
+              artist_profile_id,
+              author_profile_id,
+              created_at
+            )
+              VALUES ($1, $2, $3, $4, NOW())
+          `,
+          [rating, comment, artist_profile_id, author_profile_id]
+        );
+
+        const agg = await client.query(
+          `
+            SELECT 
+              COALESCE(ROUND(AVG(rating)::numeric, 2), 0) AS avg_rating,
+              COUNT(*) AS reviews_count
+            FROM review
+            WHERE artist_profile_id = $1
+          `,
+          [artist_profile_id]
+        );
+
+        const { avg_rating, reviews_count } = agg.rows[0];
+
+        await client.query(
+          `
+            UPDATE artist_profile
+            SET rating = $1,
+              reviews_count = $2
+            WHERE id = $3
+          `,
+          [avg_rating, reviews_count, artist_profile_id]
+        );
+
+        await client.query('COMMIT');
+
+        return {
+          success: true,
+          rating: avg_rating,
+          reviews_count
+        };
+
+      } catch (err) {
+        await client.query('ROLLBACK');
+        throw err;
+      } finally {
+        client.release();
+      }
+    };
 }

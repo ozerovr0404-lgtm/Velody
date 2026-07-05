@@ -1,14 +1,14 @@
 // src/components/main/molecules/HeroText.jsx
 import { Box, colors } from '@mui/material';
-import Title from '../atoms/Title';
-import Subtitle from '../atoms/Subtitle';
-import ActionButton from '../atoms/ActionButton';
-import CategoryImage from '../atoms/CategoryImage';
+import Title from '../heroComponents/Title';
+import Subtitle from '../heroComponents/Subtitle';
+import ActionButton from '../heroComponents/ActionButton';
+import CategoryImage from '../heroComponents/CategoryImage';
 import { UserContext } from '../../../../context/UserContext';
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const HeroText = () => {
+const FirstPage = () => {
 
   const { user, openLogin } = useContext(UserContext);
   const navigate = useNavigate();
@@ -58,4 +58,4 @@ const HeroText = () => {
   );
 };
 
-export default HeroText;
+export default FirstPage;

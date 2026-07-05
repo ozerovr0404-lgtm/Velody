@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import LikeChecker from '../atoms/LikeChecker';
+import LikeChecker from '../actorComponents/LikeChecker';
 
 const ActorImage = ({ image, isLiked = false, onToggleLike }) => {
   return (

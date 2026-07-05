@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import ActorButton from '../atoms/ActorButton';
+import ActorButton from '../actorComponents/ActorButton';
 
 const ActorFooter = ({ price, onClick }) => {
   return (

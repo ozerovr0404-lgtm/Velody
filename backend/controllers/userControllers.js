@@ -3,6 +3,8 @@ import { getUserProfile } from '../services/users/getUserProfile.js';
 import { getArtPositions } from '../services/users/getUserPositions.js';
 import { updateUserProfile } from '../services/users/updateUserProfile.js';
 import { getGenresList } from '../services/users/getGenresList.js';
+import { getReviewsByArtistProfileId } from '../services/users/getArtistReviews.js';
+import { createReview } from '../services/users/createReview.js';
 
 
 export const getUser = async (request, reply) => {
@@ -84,4 +86,40 @@ export const updateProfile = async (request, reply) => {
       stack: err.stack
     });
   }
-}
+};
+
+export const getReviewsByArtistProfile = async (request, reply) => {
+    try {
+      const { id } = request.params;
+
+      const reviews = await getReviewsByArtistProfileId(id);
+
+      return reply.code(200).send({reviews});
+
+    } catch (err) {
+      return reply.code(500).send({
+        message: err.message
+      })
+    }
+  };
+
+  export const addReviewsByProfileId = async (request, reply) => {
+    try {
+      const { id } = request.params;
+      const { rating, comment } = request.body;
+
+      const author_profile_id = request.session.user.profileId;
+
+      const result = await createReview({
+        rating,
+        comment,
+        artist_profile_id: Number(id),
+        author_profile_id
+      });
+
+      return reply.code(201).send(result);
+    } catch (err) {
+      console.error(err);
+      return reply.code(500).send({ error: err.message });
+    }
+  };
