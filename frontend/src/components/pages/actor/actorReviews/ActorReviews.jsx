@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
   Box,
@@ -13,26 +12,17 @@ import {
   Divider,
 } from '@mui/material';
 
-const ActorReviews = ({ actor }) => {
-  const [reviewsCount, setReviewsCount] = useState(actor?.reviews_count ?? 0);
+const ActorReviews = ({ actor, reviews }) => {
   const [text, setText] = useState('');
   const [rating, setRating] = useState(5);
 
-  const handleAdd = () => {
-    if (!text.trim()) return;
-    const next = { id: Date.now(), user: 'anon', rating, text, date: new Date().toLocaleDateString() };
-    setComments((s) => [next, ...s]);
-    setText('');
-    setRating(5);
-  };
 
   return (
     <Box sx={{ mt: 4, minWidth: '600px' }}>
       <Typography variant="h6" sx={{ mb: 2 }}>
-        Отзывы ({reviewsCount})
+        Отзывы ({reviews?.length ?? 0})
       </Typography>
 
-      {/* Comment form */}
       <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
         <Avatar sx={{ bgcolor: 'rgba(8,94,75,1)' }}>A</Avatar>
         <Box sx={{ flex: 1 }}>
@@ -49,7 +39,7 @@ const ActorReviews = ({ actor }) => {
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
             <Button 
               variant="contained" 
-              onClick={handleAdd}
+              
               sx={{
                 color: 'white',
                 backgroundColor: 'rgba(8, 94, 75, 1)'
@@ -64,23 +54,34 @@ const ActorReviews = ({ actor }) => {
       <Divider sx={{ mb: 2 }} />
 
       <List>
-        {/* {comments.map((c) => (
-          <ListItem key={c.id} alignItems="flex-start" sx={{ mb: 1 }}>
-            <Avatar sx={{ mr: 2, bgcolor: 'rgba(8,94,75,1)' }}>{c.user?.charAt(0).toUpperCase()}</Avatar>
+        {reviews.map((r) => (
+          <ListItem key={r.id} alignItems='flex-start' sx={{ mb: 1 }} >
+            <Avatar sx={{ mr: 2, bgcolor: 'rgba(8,94,75,1)' }}>
+              {r.author_name?.charAt(0).toUpperCase()}
+            </Avatar>
+
             <ListItemText
               primary={
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Typography sx={{ fontWeight: 700 }}>{c.user}</Typography>
-                  <Rating value={c.rating} readOnly size="small" />
+                  <Typography sx={{ fontWeight: 700 }}>
+                    {r.author_name}
+                  </Typography>
+
+                  <Rating value={r.rating} readOnly size="small" />
+
                   <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                    {c.date}
+                    {new Date(r.created_at).toLocaleDateString()}
                   </Typography>
                 </Box>
               }
-              secondary={<Typography sx={{ mt: 1 }}>{c.text}</Typography>}
+              secondary={
+                <Typography sx={{ mt: 1 }}>
+                  {r.comment}
+                </Typography>
+              }
             />
           </ListItem>
-        ))} */}
+        ))}
       </List>
     </Box>
   );

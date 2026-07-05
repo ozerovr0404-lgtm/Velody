@@ -286,4 +286,29 @@ export class ArtistProfile {
         client.release();
       }
     }
+
+
+    static async getReviewsById(artistProfileId) {
+      const result = await pool.query(
+        `
+          SELECT
+          r.id,
+          r.rating,
+          r.comment,
+          r.created_at,
+          r.artist_profile_id,
+          r.author_profile_id,
+
+          u.stage_name AS author_name
+
+          FROM review r
+          JOIN artist_profile u ON u.id = r.author_profile_id
+
+          WHERE r.artist_profile_id = $1
+          ORDER BY r.created_at DESC
+        `, [artistProfileId]
+      )
+
+      return result.rows;
+    }
 }

@@ -6,20 +6,30 @@ import ActorInfo from './actorDiscription/ActorInfo';
 import ActorReviews from './actorReviews/ActorReviews';
 import updateUserProfile from '../../../services/updateProfile/updateUserProfile';
 import getUserProfileForId from '../../../services/getProfile/getUserProfileForId';
+import getReviewsByProfileId from '../../../services/getProfile/getReviewsByProfileId';
+
 
 const ActorPage = () => {
   const { id } = useParams();
 
   const [actor, setActor] = useState(null);
+  const [reviews, setReviews] = useState([]);
 
     useEffect(() => {
       if (!id) return;
+
+      setActor(null);
+      setReviews([]);
 
       let active = true;
 
       const load = async () => {
         const data = await getUserProfileForId(id);
         if (active) setActor(data);
+
+        const reviews = await getReviewsByProfileId(id);
+
+        if (reviews) setReviews(reviews);
       };
 
       load();
@@ -76,7 +86,7 @@ const ActorPage = () => {
               actor={actor} 
               onUpdate={handleUpdate} />
 
-            <ActorReviews actor={actor} />
+            <ActorReviews actor={actor} reviews={reviews} />
           </Grid>
         </Grid>
       </Container>

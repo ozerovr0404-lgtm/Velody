@@ -41,7 +41,6 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
     is_published: actor?.is_published ?? false
   });
   const [rating, setRating] = useState(actor?.rating);
-  const [reviewsCount, setReviewCount] = useState(actor?.reviews_count);
   const fileRef = useRef();
 
   const [artistPositionOptions, setArtistPositionOptions] = useState([]);
