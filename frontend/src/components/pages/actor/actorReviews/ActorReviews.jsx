@@ -13,10 +13,8 @@ import {
   Divider,
 } from '@mui/material';
 
-const ActorReviews = ({ actorId }) => {
-  const [comments, setComments] = useState([
-    { id: 1, user: 'marlonruiz300', rating: 5, text: 'Great work!', date: '20.06.2022' },
-  ]);
+const ActorReviews = ({ actor }) => {
+  const [reviewsCount, setReviewsCount] = useState(actor?.reviews_count ?? 0);
   const [text, setText] = useState('');
   const [rating, setRating] = useState(5);
 
@@ -31,7 +29,7 @@ const ActorReviews = ({ actorId }) => {
   return (
     <Box sx={{ mt: 4, minWidth: '600px' }}>
       <Typography variant="h6" sx={{ mb: 2 }}>
-        Отзывы ({comments.length})
+        Отзывы ({reviewsCount})
       </Typography>
 
       {/* Comment form */}
@@ -66,7 +64,7 @@ const ActorReviews = ({ actorId }) => {
       <Divider sx={{ mb: 2 }} />
 
       <List>
-        {comments.map((c) => (
+        {/* {comments.map((c) => (
           <ListItem key={c.id} alignItems="flex-start" sx={{ mb: 1 }}>
             <Avatar sx={{ mr: 2, bgcolor: 'rgba(8,94,75,1)' }}>{c.user?.charAt(0).toUpperCase()}</Avatar>
             <ListItemText
@@ -82,7 +80,7 @@ const ActorReviews = ({ actorId }) => {
               secondary={<Typography sx={{ mt: 1 }}>{c.text}</Typography>}
             />
           </ListItem>
-        ))}
+        ))} */}
       </List>
     </Box>
   );

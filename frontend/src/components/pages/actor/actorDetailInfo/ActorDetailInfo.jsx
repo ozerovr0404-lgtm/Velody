@@ -16,7 +16,8 @@ import {
   InputLabel,
   Autocomplete,
   Switch,
-  FormControlLabel
+  FormControlLabel,
+  Rating
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { useContext } from 'react';
@@ -39,6 +40,8 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
     artist_position: actor.artist_profile ?? [],
     is_published: actor?.is_published ?? false
   });
+  const [rating, setRating] = useState(actor?.rating);
+  const [reviewsCount, setReviewCount] = useState(actor?.reviews_count);
   const fileRef = useRef();
 
   const [artistPositionOptions, setArtistPositionOptions] = useState([]);
@@ -135,6 +138,8 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
         >
           
           <Stack direction="row" spacing={1}>
+
+          <Box>
             <Typography 
               variant="h6"
               sx={{
@@ -143,6 +148,25 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
             >
               @{actor?.stage_name}
             </Typography>
+
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row'
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: '22px',
+                  fontWeight: '500',
+                  mr: 1
+                }}
+              >
+                {rating}
+              </Typography>
+              <Rating value={rating} readOnly sx={{ mt: '4px' }} />
+            </Box>
+          </Box>
 
             {user?.profileId === actor.id && 
                 <IconButton size="small" onClick={hadleEditOpen}>

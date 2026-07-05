@@ -76,7 +76,7 @@ const ActorPage = () => {
               actor={actor} 
               onUpdate={handleUpdate} />
 
-            <ActorReviews actorId={actor.id} />
+            <ActorReviews actor={actor} />
           </Grid>
         </Grid>
       </Container>
