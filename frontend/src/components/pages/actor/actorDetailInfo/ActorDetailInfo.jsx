@@ -28,7 +28,6 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
   const { user, openLogin } = useContext(UserContext);
   const [openMsg, setOpenMsg] = useState(false);
   const [message, setMessage] = useState('');
-  const [editing, setEditing] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [form, setForm] = useState({
     stage_name: actor?.stage_name ?? '',
@@ -40,7 +39,6 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
     artist_position: actor.artist_profile ?? [],
     is_published: actor?.is_published ?? false
   });
-  const [rating, setRating] = useState(actor?.rating);
   const fileRef = useRef();
 
   const [artistPositionOptions, setArtistPositionOptions] = useState([]);
@@ -161,9 +159,9 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
                   mr: 1
                 }}
               >
-                {rating}
+                {actor?.rating}
               </Typography>
-              <Rating value={rating} readOnly sx={{ mt: '4px' }} />
+              <Rating value={actor?.rating} readOnly sx={{ mt: '4px' }} />
             </Box>
           </Box>
 

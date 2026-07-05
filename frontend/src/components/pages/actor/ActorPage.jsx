@@ -7,6 +7,7 @@ import ActorReviews from './actorReviews/ActorReviews';
 import updateUserProfile from '../../../services/updateProfile/updateUserProfile';
 import getUserProfileForId from '../../../services/getProfile/getUserProfileForId';
 import getReviewsByProfileId from '../../../services/artistFeedback/getReviewsByProfileId';
+import addReviewByProfileId from '../../../services/artistFeedback/addReviewByProfileId';
 
 
 const ActorPage = () => {
@@ -64,6 +65,27 @@ const ActorPage = () => {
     }
   }
 
+
+  const handleAddReview = async ({ rating, comment }) => {
+    try {
+      const result = await addReviewByProfileId(id, {
+        rating,
+        comment
+      });
+
+      const updateReviews = await getReviewsByProfileId(id);
+      setReviews(updateReviews.reviews ?? updateReviews);
+
+      setActor(prev => ({
+        ...prev,
+        rating: result.rating,
+        reviews_count: result.reviews_count
+      }));
+
+    } catch (err) {
+      console.error(err);
+    }
+  }
   
   if (!actor && id) {
     return <div>Загрузка...</div>;
@@ -86,7 +108,7 @@ const ActorPage = () => {
               actor={actor} 
               onUpdate={handleUpdate} />
 
-            <ActorReviews actor={actor} reviews={reviews} />
+            <ActorReviews actor={actor} reviews={reviews} addReview={handleAddReview} />
           </Grid>
         </Grid>
       </Container>

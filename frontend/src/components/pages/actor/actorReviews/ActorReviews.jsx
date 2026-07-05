@@ -12,7 +12,7 @@ import {
   Divider,
 } from '@mui/material';
 
-const ActorReviews = ({ actor, reviews }) => {
+const ActorReviews = ({ actor, reviews, addReview }) => {
   const [text, setText] = useState('');
   const [rating, setRating] = useState(5);
 
@@ -39,7 +39,14 @@ const ActorReviews = ({ actor, reviews }) => {
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
             <Button 
               variant="contained" 
-              
+              onClick={() => {
+                addReview({
+                  rating,
+                  comment: text
+                });
+                setText('');
+                setRating(5);
+              }}
               sx={{
                 color: 'white',
                 backgroundColor: 'rgba(8, 94, 75, 1)'
