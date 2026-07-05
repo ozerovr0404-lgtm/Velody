@@ -1,6 +1,6 @@
 // src/components/main/molecules/HeroImage.jsx
 import React from 'react';
-import MainImage from '../atoms/MainImage';
+import MainImage from '../heroComponents/MainImage';
 import { Box } from '@mui/material';
 
 const HeroImage = () => {

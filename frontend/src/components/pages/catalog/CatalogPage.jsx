@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Tabs from '@mui/material/Tabs';
 import { Box, Container, Grid, Pagination, Stack } from '@mui/material';
-import ActorCard from './organisms/ActorCard';
+import ActorCard from './actorCard/ActorCard';
 import CategoryTab from '../../shared/tabs/CategoryTab';
 import getPublishedProfile from '../../../services/getProfile/getPublishedProfile';
 

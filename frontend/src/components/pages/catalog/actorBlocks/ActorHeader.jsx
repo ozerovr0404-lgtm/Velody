@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-import Ranking from '../atoms/Ranking';
+import Ranking from '../actorComponents/Ranking';
 
 const ActorHeader = ({ name, rating }) => {
   return (

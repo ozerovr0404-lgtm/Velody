@@ -1,7 +1,5 @@
-import React from 'react';
 import { Box, Container } from '@mui/material';
-import HeroText from './molecules/HeroText';
-import HeroImage from './molecules/HeroImage';
+import FirstPage from './heroBlocks/HeroText';
 
 const Main = () => {
   return (
@@ -18,7 +16,7 @@ const Main = () => {
           gap: 4,
         }}
       >
-        <HeroText />
+        <FirstPage />
       </Container>
     </Box>
   );

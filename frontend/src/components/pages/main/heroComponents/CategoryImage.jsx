@@ -31,7 +31,12 @@ const CategoryImage = ({ children, imageSrc, navigateTo, width = '185px', height
         },
         '&:hover .category-text': {
           opacity: 1,
-        }
+        },
+        transition: 'all 0.3s ease',
+        '&:hover': {
+          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)',
+          transform: 'translateY(-4px)',
+        },
       }}>
         <img 
           src={imageSrc} 

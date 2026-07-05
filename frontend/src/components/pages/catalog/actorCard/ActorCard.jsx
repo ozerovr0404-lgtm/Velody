@@ -1,8 +1,8 @@
 import { Card, CardContent, Typography, Divider, Box } from '@mui/material';
-import ActorImage from '../molecules/ActorImage';
-import ActorHeader from '../molecules/ActorHeader';
-import ActorDescription from '../molecules/ActorDescription';
-import ActorFooter from '../molecules/ActorFooter';
+import ActorImage from '../actorBlocks/ActorImage';
+import ActorHeader from '../actorBlocks/ActorHeader';
+import ActorDescription from '../actorBlocks/ActorDescription';
+import ActorFooter from '../actorBlocks/ActorFooter';
 
 const ActorCard = ({
   id,
