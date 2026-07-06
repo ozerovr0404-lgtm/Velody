@@ -5,9 +5,21 @@ import { Box, Container, Grid, Pagination, Stack } from '@mui/material';
 import ActorCard from './actorCard/ActorCard';
 import CategoryTab from '../../shared/tabs/CategoryTab';
 import getPublishedProfile from '../../../services/getProfile/getPublishedProfile';
+import CatalogFilter from '../../shared/filter/filterPanel';
+import PremiumPanel from '../../shared/premiumPanel/PremiumPanel';
 
 const CatalogPage = () => {
   const [tabValue, setTabValue] = useState(0);
+  const [filters, setFilters] = useState({
+    ratingFrom: 0,
+    ratingTo: 5,
+    genres: [],
+    experienceFrom: "",
+    experienceTo: "",
+    priceFrom: "",
+    priceTo: "",
+    likeOnly: false
+  });
   const [actors, setActors] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
   const [page, setPage] = useState(1);
@@ -93,34 +105,62 @@ const CatalogPage = () => {
           />
         </Tabs>
       </Box>
-      <Box sx={{ flex: 1, py: { xs: 4, md: 4 } }}>
-        <Container maxWidth="lg">
-          <Grid container spacing={3} sx={{ justifyContent: 'center' }}>
-            {actors.map((actor) => (
-              <Grid size={{xs: 12, sm: 6, md: 3, lg: 4}}  key={actor.id}>
-                <ActorCard
-                  {...actor}
-                  onOpenProfile={() => clickProfile(actor.id)}
-                  onToggleLike={(isLiked) => handleToggleLike(actor.id, isLiked)}
-                />
+      <Box sx={{ flex: 1, py: 4 }}>
+        <Container maxWidth={false}>
+          <Grid container spacing={3}>
+
+            {/* Левая панель */}
+            <Grid size={{ md: 2 }}>
+              <CatalogFilter
+                filters={filters}
+                onChange={setFilters}
+              />
+            </Grid>
+
+            {/* Центр */}
+            <Grid size={{ md: 8 }}>
+              <Grid
+                container
+                spacing={3}
+                sx={{ justifyContent: 'center' }}
+              >
+                {actors.map((actor) => (
+                  <Grid
+                    key={actor.id}
+                    size={{ xs: 12, sm: 6, lg: 4 }}
+                  >
+                    <ActorCard
+                      {...actor}
+                      onOpenProfile={() => clickProfile(actor.id)}
+                      onToggleLike={(isLiked) =>
+                        handleToggleLike(actor.id, isLiked)
+                      }
+                    />
+                  </Grid>
+                ))}
               </Grid>
-            ))}
+
+              <Stack
+                sx={{
+                  mt: 4,
+                  alignItems: 'center'
+                }}
+              >
+                <Pagination
+                  count={Math.ceil(totalItems / limit)}
+                  page={page}
+                  onChange={(_, value) => setPage(value)}
+                />
+              </Stack>
+            </Grid>
+
+            {/* Правая панель */}
+            <Grid size={{ md: 2 }}>
+              <PremiumPanel />
+            </Grid>
+
           </Grid>
         </Container>
-        <Stack
-          sx={{
-            mt: 4,
-            width: "100%",
-            display: "flex",
-            alignItems: "center"
-          }}
-        >
-          <Pagination 
-            count={Math.ceil(totalItems / limit)}
-            page={page}
-            onChange={(_, value) => setPage(value)}
-          />
-        </Stack>
       </Box>
     </Box>
   );
