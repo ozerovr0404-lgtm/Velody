@@ -10,7 +10,7 @@ import PremiumPanel from '../../shared/premiumPanel/PremiumPanel';
 
 const CatalogPage = () => {
   const [tabValue, setTabValue] = useState(0);
-  const [filters, setFilters] = useState({
+  const [filtersDraft , setFiltersDraft ] = useState({
     ratingFrom: 0,
     ratingTo: 5,
     genres: [],
@@ -20,6 +20,7 @@ const CatalogPage = () => {
     priceTo: "",
     likeOnly: false
   });
+  const [filtersApplied, setFiltersApplied] = useState(filtersDraft);
   const [actors, setActors] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
   const [page, setPage] = useState(1);
@@ -30,21 +31,29 @@ const CatalogPage = () => {
   useEffect(() => {
     const loadCard = async () => {
       try {
-        const res = await getPublishedProfile(page, limit);
+        const res = await getPublishedProfile(page, limit, {
+          ...filtersApplied,
+          tab: tabValue
+        });
+
         setActors(res.data.profile);
         setTotalItems(res.data.totalItems);
       } catch (err) {
         console.error('Ошибка загрузки публикаций!', err);
       }
-    }
+    };
 
     loadCard();
-  }, [page]);
+  }, [page, filtersApplied, tabValue]);
 
+
+  useEffect(() => {
+    setPage(1);
+  }, [filtersApplied, tabValue]);
 
   
   const clickProfile = (id) => {
-    if (clickProfile) {
+    if (id) {
       navigate(`/profile/${id}`);
     }
   };
@@ -112,8 +121,9 @@ const CatalogPage = () => {
             {/* Левая панель */}
             <Grid size={{ md: 2 }}>
               <CatalogFilter
-                filters={filters}
-                onChange={setFilters}
+                filters={filtersDraft}
+                onChange={setFiltersDraft}
+                onApply={() => setFiltersApplied(filtersDraft)}
               />
             </Grid>
 

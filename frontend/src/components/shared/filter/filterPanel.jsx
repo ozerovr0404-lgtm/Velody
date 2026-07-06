@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Box, Typography, Paper, Slider, TextField, Divider, FormControlLabel, Switch, Autocomplete } from '@mui/material';
 import MainButton from '../buttons/MainButton';
 
-const CatalogFilter = ({ filters, onChange }) => {
+const CatalogFilter = ({ filters, onChange, onApply }) => {
 
   const [genresOptions, setGenresOptions] = useState([]);
 
@@ -175,7 +175,7 @@ const CatalogFilter = ({ filters, onChange }) => {
         label="Понравившиеся мне"
       />
       <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }} >
-        <MainButton label="Применить" color="white" backgroundColor="rgba(8, 94, 75, 1)" onClick={handleCharge} sx={{  }} />
+        <MainButton label="Применить" color="white" backgroundColor="rgba(8, 94, 75, 1)" onClick={onApply} />
       </Box>
     </Paper>
   );
