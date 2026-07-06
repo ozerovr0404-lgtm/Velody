@@ -325,19 +325,48 @@ export class ArtistProfile {
 
         await client.query('BEGIN');
 
-        await client.query(
+        const existingReview = await client.query(
           `
-            INSERT INTO review (
-              rating,
-              comment,
-              artist_profile_id,
-              author_profile_id,
-              created_at
-            )
-              VALUES ($1, $2, $3, $4, NOW())
+            SELECT id, rating
+            FROM review
+            WHERE artist_profile_id = $1
+              AND author_profile_id = $2
           `,
-          [rating, comment, artist_profile_id, author_profile_id]
-        );
+          [artist_profile_id, author_profile_id]
+        )
+
+        if (existingReview.rows.length > 0) {
+          await client.query(
+            `
+              UPDATE review
+              SET
+                comment = $1,
+                rating = $2,
+                created_at = NOW()
+              WHERE id = $3
+            `,
+            [
+              comment, 
+              rating,
+              existingReview.rows[0].id
+            ]
+          );
+        } else {
+          await client.query(
+            `
+              INSERT INTO review (
+                rating,
+                comment,
+                artist_profile_id,
+                author_profile_id,
+                created_at
+              )
+                VALUES ($1, $2, $3, $4, NOW())
+            `,
+            [rating, comment, artist_profile_id, author_profile_id]
+          );
+        }
+        
 
         const agg = await client.query(
           `
