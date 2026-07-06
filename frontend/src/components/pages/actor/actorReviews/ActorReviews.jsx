@@ -31,7 +31,7 @@ const ActorReviews = ({ actor, reviews, addReview }) => {
             fullWidth
             multiline
             minRows={3}
-            placeholder="Место для Вашего комментария..."
+            placeholder="Оставьте свой комментарий или обновите созданный раннее..."
             value={text}
             onChange={(e) => setText(e.target.value)}
             sx={{ mt: 1 }}
