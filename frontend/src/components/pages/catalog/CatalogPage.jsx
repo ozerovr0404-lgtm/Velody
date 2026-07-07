@@ -10,7 +10,7 @@ import PremiumPanel from '../../shared/premiumPanel/PremiumPanel';
 
 const CatalogPage = () => {
   const [tabValue, setTabValue] = useState(false);
-  const [filtersDraft , setFiltersDraft ] = useState({
+  const getDefulatFilter = () => ({
     ratingFrom: 0,
     ratingTo: 5,
     genres: [],
@@ -20,7 +20,8 @@ const CatalogPage = () => {
     priceTo: "",
     likeOnly: false
   });
-  const [filtersApplied, setFiltersApplied] = useState(filtersDraft);
+  const [filtersDraft , setFiltersDraft ] = useState(getDefulatFilter());
+  const [filtersApplied, setFiltersApplied] = useState(getDefulatFilter());
   const [actors, setActors] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
   const [page, setPage] = useState(1);
@@ -73,10 +74,20 @@ const CatalogPage = () => {
   };
 
 
+  const handleReset = () => {
+    const emptyFilters = getDefulatFilter();
+
+    setFiltersDraft(emptyFilters);
+    setFiltersApplied(emptyFilters);
+    setTabValue(false);
+    setPage(1);
+  };
+
+
   const handleToggleLike = (id, isLiked) => {
     console.log(`Actor ${id} liked: ${isLiked}`);
   };
-
+  
   return (
     <Box
       sx={{
@@ -130,16 +141,15 @@ const CatalogPage = () => {
         <Container maxWidth={false}>
           <Grid container spacing={3}>
 
-            {/* Левая панель */}
             <Grid size={{ md: 2 }}>
               <CatalogFilter
                 filters={filtersDraft}
                 onChange={setFiltersDraft}
                 onApply={handleApply}
+                onReset={handleReset}
               />
             </Grid>
 
-            {/* Центр */}
             <Grid size={{ md: 8 }}>
               <Grid
                 container

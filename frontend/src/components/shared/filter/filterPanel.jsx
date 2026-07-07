@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Box, Typography, Paper, Slider, TextField, Divider, FormControlLabel, Switch, Autocomplete } from '@mui/material';
 import MainButton from '../buttons/MainButton';
 
-const CatalogFilter = ({ filters, onChange, onApply }) => {
+const CatalogFilter = ({ filters, onChange, onApply, onReset }) => {
 
   const [genresOptions, setGenresOptions] = useState([]);
 
@@ -24,6 +24,7 @@ const CatalogFilter = ({ filters, onChange, onApply }) => {
     });
   };
 
+
   return (
     <Paper
       elevation={2}
@@ -38,7 +39,6 @@ const CatalogFilter = ({ filters, onChange, onApply }) => {
         Фильтр
       </Typography>
 
-      {/* Рейтинг */}
       <Box sx={{ mb: 3 }}>
         <Typography gutterBottom>
           Рейтинг
@@ -72,7 +72,7 @@ const CatalogFilter = ({ filters, onChange, onApply }) => {
       <Autocomplete
         multiple
         options={genresOptions}
-        value={genresOptions.filter(g => filters.genres.includes(g.id))}
+        value={genresOptions.filter(g => (filters.genres ?? []).includes(g.id))}
         disableCloseOnSelect
         onChange={(event, value) =>
           handleCharge("genres", value.map(v => v.id))
@@ -162,7 +162,6 @@ const CatalogFilter = ({ filters, onChange, onApply }) => {
 
       <Divider sx={{ mb: 3 }} />
 
-      {/* Понравившиеся */}
       <FormControlLabel
         control={
           <Switch
@@ -174,8 +173,9 @@ const CatalogFilter = ({ filters, onChange, onApply }) => {
         }
         label="Понравившиеся мне"
       />
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }} >
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 2, gap: 1 }} >
         <MainButton label="Применить" color="white" backgroundColor="rgba(8, 94, 75, 1)" onClick={onApply} />
+        <MainButton label="Сбросить" color="rgba(8, 94, 75, 1)" backgroundColor="rgba(255, 255, 255, 1)" onClick={onReset} />
       </Box>
     </Paper>
   );
