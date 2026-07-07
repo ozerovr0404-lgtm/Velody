@@ -22,14 +22,17 @@ export const getPublishedProfile = async (request, reply) => {
 
     const profile = await getCatalogProfiles(filters, page, limit, userId);
 
+    console.log('profile', profile);
+
     return reply.code(200).send({
       message: 'Публикации получены!',
       data: profile
     });
 
   } catch (err) {
+        console.error(err);
     return reply.code(500).send({
-      error: err.message
+      error: err.message,
     });
   }
 };

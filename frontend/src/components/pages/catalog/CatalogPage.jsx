@@ -9,7 +9,7 @@ import CatalogFilter from '../../shared/filter/filterPanel';
 import PremiumPanel from '../../shared/premiumPanel/PremiumPanel';
 
 const CatalogPage = () => {
-  const [tabValue, setTabValue] = useState(0);
+  const [tabValue, setTabValue] = useState(false);
   const [filtersDraft , setFiltersDraft ] = useState({
     ratingFrom: 0,
     ratingTo: 5,
