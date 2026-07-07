@@ -36,10 +36,11 @@ export class ArtistProfile {
         )
       `);
 
-      values.push(filters.genres.map(g => Number(g.id ?? g)));
+      const genres = await JSON.parse(filters.genres);
+      values.push(genres.map(Number));
     }
-
-    if (filters.tab !== undefined && filters.tab !== null && filters.tab !== '') {
+    
+    if (filters.tab && filters.tab !== "false") {
       where.push(`
         EXISTS (
           SELECT 1
