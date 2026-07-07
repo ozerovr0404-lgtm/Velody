@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 import { Box, Container, Grid, Pagination, Stack } from '@mui/material';
 import ActorCard from './actorCard/ActorCard';
 import CategoryTab from '../../shared/tabs/CategoryTab';
@@ -14,9 +15,9 @@ const CatalogPage = () => {
     ratingFrom: 0,
     ratingTo: 5,
     genres: [],
-    experienceFrom: "",
+    experienceFrom: 0,
     experienceTo: "",
-    priceFrom: "",
+    priceFrom: 0,
     priceTo: "",
     likeOnly: false
   });
@@ -31,19 +32,13 @@ const CatalogPage = () => {
 
   useEffect(() => {
 
-    console.log("USE EFFECT CATALOG");
-
     const loadCard = async () => {
-      console.log("LOAD CARD START");
 
       try {
         const res = await getPublishedProfile(page, limit, {
           ...filtersApplied,
           tab: tabValue
         });
-
-        console.log("RESPONSE:", res);
-
 
         setActors(res.data.profile);
         setTotalItems(res.data.totalItems);
@@ -56,7 +51,7 @@ const CatalogPage = () => {
   }, [page, filtersApplied, tabValue]);
 
 
-  const handleTabChange = (_, value) => {
+  const handleTabChange = (event, value) => {
     setTabValue(value);
     setPage(1);
   };
@@ -87,7 +82,7 @@ const CatalogPage = () => {
   const handleToggleLike = (id, isLiked) => {
     console.log(`Actor ${id} liked: ${isLiked}`);
   };
-  
+
   return (
     <Box
       sx={{
@@ -107,8 +102,9 @@ const CatalogPage = () => {
           onChange={handleTabChange}
           sx={{
             '& .MuiTabs-indicator': {
-              display: 'none',
-            },
+              backgroundColor: 'rgba(8, 94, 75, 1)',
+              height: 3,
+            }
           }}
         >
           <CategoryTab
@@ -139,7 +135,7 @@ const CatalogPage = () => {
       </Box>
       <Box sx={{ flex: 1, py: 4 }}>
         <Container maxWidth={false}>
-          <Grid container spacing={3}>
+          <Grid container spacing={3} sx={{justifyContent: 'center'}} >
 
             <Grid size={{ md: 2 }}>
               <CatalogFilter
@@ -150,11 +146,11 @@ const CatalogPage = () => {
               />
             </Grid>
 
-            <Grid size={{ md: 8 }}>
+            <Grid size={{ md: 7 }}>
               <Grid
                 container
                 spacing={3}
-                sx={{ justifyContent: 'center' }}
+                sx={{ justifyContent: 'start' }}
               >
                 {actors.map((actor) => (
                   <Grid
@@ -186,8 +182,7 @@ const CatalogPage = () => {
               </Stack>
             </Grid>
 
-            {/* Правая панель */}
-            <Grid size={{ md: 2 }}>
+            <Grid size={{ md: 2.5 }}>
               <PremiumPanel />
             </Grid>
 

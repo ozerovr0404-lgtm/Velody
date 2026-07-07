@@ -40,15 +40,12 @@ export class ArtistProfile {
       values.push(genres.map(Number));
     }
     
-    if (filters.tab && filters.tab !== "false") {
-      where.push(`
-        EXISTS (
-          SELECT 1
-          FROM artist_profile_position app
-          WHERE app.artist_profile_id = p.id
-          AND app.artist_position_id = $${i++}
-        )
-      `);
+    if (
+      filters.tab !== "false" &&
+      filters.tab !== null &&
+      filters.tab !== undefined &&
+      filters.tab !== ""
+    ) {
 
       const TAB_MAP = {
         0: 1,
@@ -59,7 +56,20 @@ export class ArtistProfile {
         5: 6
       };
 
-      values.push(TAB_MAP[filters.tab]);
+      const positionId = TAB_MAP[filters.tab];
+
+      if (positionId) {
+        where.push(`
+          EXISTS (
+            SELECT 1
+            FROM artist_profile_position app
+            WHERE app.artist_profile_id = p.id
+            AND app.artist_position_id = $${i++}
+          )
+        `);
+      }
+
+      values.push(positionId);
     }
 
     // 👉 userId фиксируем отдельно

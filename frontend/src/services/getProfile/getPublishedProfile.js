@@ -27,14 +27,11 @@ const getPublishedProfile = async (page, limit, filters = {}) => {
   if (filters.likeOnly)
     params.append("likeOnly", "true");
 
-  // 🔥 КЛЮЧЕВОЕ ИЗМЕНЕНИЕ
   if (filters.genres?.length) {
     params.append("genres", JSON.stringify(filters.genres));
   }
 
   const url = `http://localhost:3000/catalog?${params.toString()}`;
-
-  console.log("REQUEST URL:", url); // 👈 ОЧЕНЬ ВАЖНО
 
   const response = await fetch(url, {
     method: "GET",
