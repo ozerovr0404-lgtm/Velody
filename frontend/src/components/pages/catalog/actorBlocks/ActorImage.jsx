@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box } from '@mui/material';
 import LikeChecker from '../actorComponents/LikeChecker';
 
@@ -8,7 +7,7 @@ const ActorImage = ({ image, isLiked = false, onToggleLike }) => {
       sx={{
         position: 'relative',
         width: '100%',
-        paddingTop: '100%', // 1:1 aspect ratio
+        paddingTop: '100%', // 
         backgroundColor: 'rgba(200, 200, 200, 0.3)',
         backgroundImage: `url(${image})`,
         backgroundSize: 'cover',
@@ -16,7 +15,6 @@ const ActorImage = ({ image, isLiked = false, onToggleLike }) => {
         borderRadius: '12px 12px 0 0',
       }}
     >
-      {/* Лайк кнопка в правом углу */}
       <Box
         sx={{
           position: 'absolute',

@@ -14,7 +14,7 @@ const ActorCard = ({
   description,
   positions,
   genres,
-  isLiked = false,
+  is_liked = false,
   onToggleLike,
   onOpenProfile
 }) => {
@@ -42,7 +42,7 @@ const ActorCard = ({
     >
       <ActorImage
         image={avatar_url}
-        isLiked={isLiked}
+        isLiked={is_liked}
         onToggleLike={onToggleLike}
       />
 
@@ -55,7 +55,11 @@ const ActorCard = ({
           p: 2,
         }}
       >
-        <ActorHeader name={stage_name} rating={rating} reviewCount={reviews_count} />
+        <ActorHeader 
+          name={stage_name} 
+          rating={rating} 
+          reviewCount={reviews_count} 
+        />
         <Typography>
           {positions?.map(p => p.name).join(', ')}
         </Typography>

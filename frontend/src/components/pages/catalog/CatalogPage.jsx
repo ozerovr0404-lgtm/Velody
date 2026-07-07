@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 import { Box, Container, Grid, Pagination, Stack } from '@mui/material';
 import ActorCard from './actorCard/ActorCard';
 import CategoryTab from '../../shared/tabs/CategoryTab';
 import getPublishedProfile from '../../../services/getProfile/getPublishedProfile';
 import CatalogFilter from '../../shared/filter/filterPanel';
 import PremiumPanel from '../../shared/premiumPanel/PremiumPanel';
+import toggleFavorite from '../../../services/catalogServices/toggleFavorite';
+import { useContext } from 'react';
+import { UserContext } from '../../../context/UserContext';
 
 const CatalogPage = () => {
+  const { user } = useContext(UserContext);
   const [tabValue, setTabValue] = useState(false);
-  const [filtersDraft , setFiltersDraft ] = useState({
+  const getDefualtFilter = () => ({
     ratingFrom: 0,
     ratingTo: 5,
     genres: [],
@@ -20,7 +25,8 @@ const CatalogPage = () => {
     priceTo: "",
     likeOnly: false
   });
-  const [filtersApplied, setFiltersApplied] = useState(filtersDraft);
+  const [filtersDraft , setFiltersDraft ] = useState(getDefualtFilter());
+  const [filtersApplied, setFiltersApplied] = useState(getDefualtFilter());
   const [actors, setActors] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
   const [page, setPage] = useState(1);
@@ -30,19 +36,13 @@ const CatalogPage = () => {
 
   useEffect(() => {
 
-    console.log("USE EFFECT CATALOG");
-
     const loadCard = async () => {
-      console.log("LOAD CARD START");
 
       try {
         const res = await getPublishedProfile(page, limit, {
           ...filtersApplied,
           tab: tabValue
         });
-
-        console.log("RESPONSE:", res);
-
 
         setActors(res.data.profile);
         setTotalItems(res.data.totalItems);
@@ -52,10 +52,13 @@ const CatalogPage = () => {
     };
 
     loadCard();
-  }, [page, filtersApplied, tabValue]);
+  }, [page, filtersApplied, tabValue, user]);
 
+  useEffect(() => {
+    setPage(1);
+  }, [user]);
 
-  const handleTabChange = (_, value) => {
+  const handleTabChange = (event, value) => {
     setTabValue(value);
     setPage(1);
   };
@@ -73,8 +76,41 @@ const CatalogPage = () => {
   };
 
 
-  const handleToggleLike = (id, isLiked) => {
-    console.log(`Actor ${id} liked: ${isLiked}`);
+  const handleReset = () => {
+    const emptyFilters = getDefualtFilter();
+
+    setFiltersDraft(emptyFilters);
+    setFiltersApplied(emptyFilters);
+    setTabValue(false);
+    setPage(1);
+  };
+
+
+  const handleToggleLike = async (id) => {
+    try {
+      const result = await toggleFavorite(id);
+
+      if (filtersApplied.likeOnly && !result.data.liked) {
+        setActors(prev =>
+          prev.filter(actor => actor.id !== id)
+        );
+
+        return;
+      }
+
+      setActors(prev =>
+        prev.map(actor =>
+          actor.id === id
+            ? {
+                ...actor,
+                is_liked: result.data.liked
+              }
+            : actor
+        )
+      );
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -96,8 +132,9 @@ const CatalogPage = () => {
           onChange={handleTabChange}
           sx={{
             '& .MuiTabs-indicator': {
-              display: 'none',
-            },
+              backgroundColor: 'rgba(8, 94, 75, 1)',
+              height: 3,
+            }
           }}
         >
           <CategoryTab
@@ -128,23 +165,22 @@ const CatalogPage = () => {
       </Box>
       <Box sx={{ flex: 1, py: 4 }}>
         <Container maxWidth={false}>
-          <Grid container spacing={3}>
+          <Grid container spacing={3} sx={{justifyContent: 'center'}} >
 
-            {/* Левая панель */}
             <Grid size={{ md: 2 }}>
               <CatalogFilter
                 filters={filtersDraft}
                 onChange={setFiltersDraft}
                 onApply={handleApply}
+                onReset={handleReset}
               />
             </Grid>
 
-            {/* Центр */}
-            <Grid size={{ md: 8 }}>
+            <Grid size={{ md: 7 }}>
               <Grid
                 container
                 spacing={3}
-                sx={{ justifyContent: 'center' }}
+                sx={{ justifyContent: 'start' }}
               >
                 {actors.map((actor) => (
                   <Grid
@@ -154,8 +190,8 @@ const CatalogPage = () => {
                     <ActorCard
                       {...actor}
                       onOpenProfile={() => clickProfile(actor.id)}
-                      onToggleLike={(isLiked) =>
-                        handleToggleLike(actor.id, isLiked)
+                      onToggleLike={() =>
+                        handleToggleLike(actor.id)
                       }
                     />
                   </Grid>
@@ -176,8 +212,7 @@ const CatalogPage = () => {
               </Stack>
             </Grid>
 
-            {/* Правая панель */}
-            <Grid size={{ md: 2 }}>
+            <Grid size={{ md: 2.5 }}>
               <PremiumPanel />
             </Grid>
 

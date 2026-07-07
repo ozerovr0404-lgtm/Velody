@@ -8,6 +8,8 @@ export class ArtistProfile {
     const values = [];
     let i = 1;
 
+    const userIdParam = userId ? Number(userId) : null;
+
     where.push(`p.is_published = $${i++}`);
     values.push(true);
 
@@ -16,14 +18,24 @@ export class ArtistProfile {
       values.push(Number(filters.ratingFrom), Number(filters.ratingTo));
     }
 
-    if (filters.experienceFrom && filters.experienceTo) {
-      where.push(`p.experience_years BETWEEN $${i++} AND $${i++}`);
-      values.push(Number(filters.experienceFrom), Number(filters.experienceTo));
+
+    if (filters.experienceFrom) {
+      where.push(`p.experience_years >= $${i++}`);
+      values.push(Number(filters.experienceFrom));
+    }
+    if (filters.experienceTo) {
+      where.push(`p.experience_years <= $${i++}`);
+      values.push(Number(filters.experienceTo));
     }
 
-    if (filters.priceFrom && filters.priceTo) {
-      where.push(`p.price_from BETWEEN $${i++} AND $${i++}`);
-      values.push(filters.priceFrom, filters.priceTo);
+
+    if (filters.priceFrom) {
+      where.push(`p.price_from >= $${i++}`);
+      values.push(Number(filters.priceFrom));
+    }
+    if (filters.priceTo) {
+      where.push(`p.price_from <= $${i++}`);
+      values.push(Number(filters.priceTo));
     }
 
     if (filters.genres?.length) {
@@ -40,15 +52,12 @@ export class ArtistProfile {
       values.push(genres.map(Number));
     }
     
-    if (filters.tab && filters.tab !== "false") {
-      where.push(`
-        EXISTS (
-          SELECT 1
-          FROM artist_profile_position app
-          WHERE app.artist_profile_id = p.id
-          AND app.artist_position_id = $${i++}
-        )
-      `);
+    if (
+      filters.tab !== "false" &&
+      filters.tab !== null &&
+      filters.tab !== undefined &&
+      filters.tab !== ""
+    ) {
 
       const TAB_MAP = {
         0: 1,
@@ -59,11 +68,34 @@ export class ArtistProfile {
         5: 6
       };
 
-      values.push(TAB_MAP[filters.tab]);
+      const positionId = TAB_MAP[filters.tab];
+
+      if (positionId) {
+        where.push(`
+          EXISTS (
+            SELECT 1
+            FROM artist_profile_position app
+            WHERE app.artist_profile_id = p.id
+            AND app.artist_position_id = $${i++}
+          )
+        `);
+      }
+
+      values.push(positionId);
     }
 
-    // 👉 userId фиксируем отдельно
-    const userIdParam = userId ? Number(userId) : null;
+    if (filters.likeOnly && userIdParam) {
+        where.push(`
+            EXISTS (
+              SELECT 1
+              FROM user_favorites uf
+              WHERE uf.user_id = $${i++}
+                AND uf.artist_id = p.id
+            )
+          `);
+
+          values.push(userIdParam);
+      }
 
     const query = `
       SELECT *
@@ -142,10 +174,6 @@ export class ArtistProfile {
     values.push(limit, offset);
 
     const result = await pool.query(query, values);
-    console.log("SQL:", query);
-      console.log("VALUES:", values);
-      console.log("CATALOG SQL RESULT:", result.rows.length);
-      console.log(result.rows);
 
     const countQuery = `
       SELECT COUNT(*) FROM artist_profile p
@@ -161,7 +189,7 @@ export class ArtistProfile {
   }
 
 
-  static async addToLikeById(userId, id) {
+  static async addToLikeById(userId, artistId) {
     const client = await pool.connect();
 
     try {
