@@ -1,14 +1,11 @@
 import { ArtistProfile } from "../../models/ArtistProfile.js";
 
-export const getCatalogProfiles = async (is_published, page, limit) => {
+export const getCatalogProfiles = async (filters, page, limit, userId) => {
 
-  const totalItems = await ArtistProfile.countPublishedProfile(is_published);
+  const result = await ArtistProfile.getByPublishedIsTrue(filters, page, limit, userId);
 
-  const profile = await ArtistProfile.getByPublishedIsTrue(is_published, page, limit);
-
-  if (!profile.length) {
-    throw new Error('Публикация не найдена!');
-  }
-
-  return {profile, totalItems};
+  return {
+    profile: result.profile,
+    totalItems: result.totalItems
+  };
 }

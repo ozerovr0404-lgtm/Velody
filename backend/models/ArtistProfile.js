@@ -1,16 +1,71 @@
 import pool from "../bd.js";
 
 export class ArtistProfile {
-  static async getByPublishedIsTrue(is_published, page, limit) {
+  static async getByPublishedIsTrue(filters, page, limit, userId) {
+    const offset = (page - 1) * limit;
 
-    if (typeof is_published !== "boolean") {
-      throw new Error('is_published must be boolean');
+    const where = [];
+    const values = [];
+    let i = 1;
+
+    where.push(`p.is_published = $${i++}`);
+    values.push(true);
+
+    if (filters.ratingFrom !== undefined && filters.ratingTo !== undefined) {
+      where.push(`p.rating BETWEEN $${i++} AND $${i++}`);
+      values.push(Number(filters.ratingFrom), Number(filters.ratingTo));
     }
 
-    const offset = (page - 1) * limit;
-    
-    const result = await pool.query(
-      `SELECT *
+    if (filters.experienceFrom && filters.experienceTo) {
+      where.push(`p.experience_years BETWEEN $${i++} AND $${i++}`);
+      values.push(Number(filters.experienceFrom), Number(filters.experienceTo));
+    }
+
+    if (filters.priceFrom && filters.priceTo) {
+      where.push(`p.price_from BETWEEN $${i++} AND $${i++}`);
+      values.push(filters.priceFrom, filters.priceTo);
+    }
+
+    if (filters.genres?.length) {
+      where.push(`
+        EXISTS (
+          SELECT 1
+          FROM artist_genre ag
+          WHERE ag.artist_profile_id = p.id
+          AND ag.genre_id = ANY($${i++})
+        )
+      `);
+
+      values.push(filters.genres.map(g => Number(g.id ?? g)));
+    }
+
+    if (filters.tab !== undefined && filters.tab !== null && filters.tab !== '') {
+      where.push(`
+        EXISTS (
+          SELECT 1
+          FROM artist_profile_position app
+          WHERE app.artist_profile_id = p.id
+          AND app.artist_position_id = $${i++}
+        )
+      `);
+
+      const TAB_MAP = {
+        0: 1,
+        1: 2,
+        2: 3,
+        3: 4,
+        4: 5,
+        5: 6
+      };
+
+      values.push(TAB_MAP[filters.tab]);
+    }
+
+    // 👉 userId фиксируем отдельно
+    const userIdParam = userId ? Number(userId) : null;
+
+    const query = `
+      SELECT *
       FROM (
         SELECT 
           p.id,
@@ -21,20 +76,42 @@ export class ArtistProfile {
           p.rating,
           p.reviews_count,
           p.is_published,
+          p.experience_years,
 
           ph.url AS avatar_url,
 
           COALESCE(
-            json_agg(DISTINCT g.name) 
-            FILTER (WHERE g.name IS NOT NULL),
+            json_agg(
+              DISTINCT jsonb_build_object(
+                'id', g.id,
+                'name', g.name
+              )
+            ) FILTER (WHERE g.id IS NOT NULL),
             '[]'
           ) AS genres,
 
           COALESCE(
-            json_agg(DISTINCT pos.position_name)
-            FILTER (WHERE pos.position_name IS NOT NULL),
+            json_agg(
+              DISTINCT jsonb_build_object(
+                'id', pos.id,
+                'name', pos.position_name
+              )
+            ) FILTER (WHERE pos.id IS NOT NULL),
             '[]'
-          ) AS positions
+          ) AS positions,
+
+          ${
+            userIdParam
+              ? `
+                EXISTS (
+                  SELECT 1
+                  FROM user_favorites uf
+                  WHERE uf.user_id = ${userIdParam}
+                    AND uf.artist_id = p.id
+                ) AS is_liked
+              `
+              : `false AS is_liked`
+          }
 
         FROM artist_profile p
 
@@ -46,29 +123,90 @@ export class ArtistProfile {
           LIMIT 1
         ) ph ON true
 
-        LEFT JOIN artist_genre ag 
-          ON ag.artist_profile_id = p.id
-        LEFT JOIN genre g 
-          ON g.id = ag.genre_id
+        LEFT JOIN artist_genre ag ON ag.artist_profile_id = p.id
+        LEFT JOIN genre g ON g.id = ag.genre_id
 
-        LEFT JOIN artist_profile_position app 
-          ON app.artist_profile_id = p.id
-        LEFT JOIN artist_position pos 
-          ON pos.id = app.artist_position_id
+        LEFT JOIN artist_profile_position app ON app.artist_profile_id = p.id
+        LEFT JOIN artist_position pos ON pos.id = app.artist_position_id
 
-        WHERE p.is_published = $1
+        ${where.length ? `WHERE ${where.join(' AND ')}` : ''}
 
         GROUP BY p.id, ph.url
       ) sub
       ORDER BY sub.id DESC
-      LIMIT $2
-      OFFSET $3
-    `,
-    [is_published, limit, offset]
-  );
-    if (!result.rows.length) return null;
-    return result.rows;
-  };
+      LIMIT $${i++}
+      OFFSET $${i++}
+    `;
+
+    values.push(limit, offset);
+
+    const result = await pool.query(query, values);
+    console.log("SQL:", query);
+      console.log("VALUES:", values);
+      console.log("CATALOG SQL RESULT:", result.rows.length);
+      console.log(result.rows);
+
+    const countQuery = `
+      SELECT COUNT(*) FROM artist_profile p
+      ${where.length ? `WHERE ${where.join(' AND ')}` : ''}
+    `;
+
+    const countResult = await pool.query(countQuery, values.slice(0, -2));
+
+    return {
+      profile: result.rows,
+      totalItems: Number(countResult.rows[0].count)
+    };
+  }
+
+
+  static async addToLikeById(userId, id) {
+    const client = await pool.connect();
+
+    try {
+      await client.query('BEGIN');
+
+      const existing = await client.query(
+        `
+        SELECT 1 FROM user_favorites
+        WHERE user_id = $1 AND artist_id = $2
+        `,
+        [userId, artistId]
+      );
+
+      if (existing.rows.length) {
+        await client.query(
+          `
+          DELETE FROM user_favorites
+          WHERE user_id = $1 AND artist_id = $2
+          `,
+          [userId, artistId]
+        );
+
+        await client.query('COMMIT');
+
+        return { liked: false };
+      }
+
+      await client.query(
+        `
+        INSERT INTO user_favorites (user_id, artist_id)
+        VALUES ($1, $2)
+        `,
+        [userId, artistId]
+      );
+
+      await client.query('COMMIT');
+
+      return { liked: true };
+
+    } catch (err) {
+      await client.query('ROLLBACK');
+      throw err;
+    } finally {
+      client.release();
+    }
+  }
 
   
   static async countPublishedProfile(is_published) {

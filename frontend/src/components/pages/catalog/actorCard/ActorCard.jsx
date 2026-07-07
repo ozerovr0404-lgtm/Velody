@@ -40,14 +40,12 @@ const ActorCard = ({
         margin: '0 auto',
       }}
     >
-      {/* Фото с лайком */}
       <ActorImage
         image={avatar_url}
         isLiked={isLiked}
         onToggleLike={onToggleLike}
       />
 
-      {/* Основной контент */}
       <CardContent
         sx={{
           flex: 1,
@@ -57,22 +55,17 @@ const ActorCard = ({
           p: 2,
         }}
       >
-        {/* Ник и рейтинг */}
         <ActorHeader name={stage_name} rating={rating} reviewCount={reviews_count} />
-        {/* Специализация */}
         <Typography>
-          {positions.join(", ")}
+          {positions?.map(p => p.name).join(', ')}
         </Typography>
-        {/* Жанр */}
         <Typography>
-          Жанр: {genres.join(", ")}
+          Жанр: {genres?.map(g => g.name).join(', ')}
         </Typography>
-        {/* Описание */}
         <ActorDescription description={description} />
 
         <Divider sx={{ my: 1 }} />
 
-        {/* Цена и кнопка */}
         <ActorFooter price={price_from} onClick={onOpenProfile} />
       </CardContent>
     </Card>

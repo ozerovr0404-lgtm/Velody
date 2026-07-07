@@ -29,12 +29,20 @@ const CatalogPage = () => {
   
 
   useEffect(() => {
+
+    console.log("USE EFFECT CATALOG");
+
     const loadCard = async () => {
+      console.log("LOAD CARD START");
+
       try {
         const res = await getPublishedProfile(page, limit, {
           ...filtersApplied,
           tab: tabValue
         });
+
+        console.log("RESPONSE:", res);
+
 
         setActors(res.data.profile);
         setTotalItems(res.data.totalItems);
@@ -47,9 +55,15 @@ const CatalogPage = () => {
   }, [page, filtersApplied, tabValue]);
 
 
-  useEffect(() => {
+  const handleTabChange = (_, value) => {
+    setTabValue(value);
     setPage(1);
-  }, [filtersApplied, tabValue]);
+  };
+
+  const handleApply = () => {
+    setFiltersApplied(filtersDraft);
+    setPage(1);
+  }
 
   
   const clickProfile = (id) => {
@@ -79,9 +93,7 @@ const CatalogPage = () => {
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <Tabs
           value={tabValue}
-          onChange={(_, newValue) => {
-            setTabValue(newValue);
-          }}
+          onChange={handleTabChange}
           sx={{
             '& .MuiTabs-indicator': {
               display: 'none',
@@ -123,7 +135,7 @@ const CatalogPage = () => {
               <CatalogFilter
                 filters={filtersDraft}
                 onChange={setFiltersDraft}
-                onApply={() => setFiltersApplied(filtersDraft)}
+                onApply={handleApply}
               />
             </Grid>
 

@@ -72,10 +72,10 @@ const CatalogFilter = ({ filters, onChange, onApply }) => {
       <Autocomplete
         multiple
         options={genresOptions}
-        value={filters.genres}
+        value={genresOptions.filter(g => filters.genres.includes(g.id))}
         disableCloseOnSelect
         onChange={(event, value) =>
-          handleCharge("genres", value)
+          handleCharge("genres", value.map(v => v.id))
         }
         getOptionLabel={(option) => option.name}
         isOptionEqualToValue={(option, value) => 
