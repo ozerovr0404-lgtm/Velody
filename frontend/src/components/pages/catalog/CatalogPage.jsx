@@ -8,6 +8,7 @@ import CategoryTab from '../../shared/tabs/CategoryTab';
 import getPublishedProfile from '../../../services/getProfile/getPublishedProfile';
 import CatalogFilter from '../../shared/filter/filterPanel';
 import PremiumPanel from '../../shared/premiumPanel/PremiumPanel';
+import toggleFavorite from '../../../services/catalogServices/toggleFavorite';
 
 const CatalogPage = () => {
   const [tabValue, setTabValue] = useState(false);
@@ -15,9 +16,9 @@ const CatalogPage = () => {
     ratingFrom: 0,
     ratingTo: 5,
     genres: [],
-    experienceFrom: 0,
+    experienceFrom: "",
     experienceTo: "",
-    priceFrom: 0,
+    priceFrom: "",
     priceTo: "",
     likeOnly: false
   });
@@ -79,8 +80,23 @@ const CatalogPage = () => {
   };
 
 
-  const handleToggleLike = (id, isLiked) => {
-    console.log(`Actor ${id} liked: ${isLiked}`);
+  const handleToggleLike = async (id) => {
+    try {
+      const result = await toggleFavorite(id);
+
+      setActors(prev =>
+        prev.map(actor =>
+          actor.id === id
+            ? {
+                ...actor,
+                is_liked: result.data.liked
+              }
+            : actor
+        )
+      );
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (

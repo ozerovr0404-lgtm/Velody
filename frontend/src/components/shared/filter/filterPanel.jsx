@@ -58,7 +58,12 @@ const CatalogFilter = ({ filters, onChange, onApply, onReset }) => {
           step={1}
           valueLabelDisplay="auto"
           sx={{
-            color: "rgba(8, 94, 75, 1)"
+            color: "rgba(8, 94, 75, 1)",
+            userSelect: 'none',
+            "& .MuiSlider-valueLabel": {
+              backgroundColor: "rgba(8, 94, 75, 1)",
+              color: "#fff",
+            },
           }}
         />
       </Box>

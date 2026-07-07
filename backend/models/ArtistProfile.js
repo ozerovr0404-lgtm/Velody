@@ -16,14 +16,24 @@ export class ArtistProfile {
       values.push(Number(filters.ratingFrom), Number(filters.ratingTo));
     }
 
-    if (filters.experienceFrom && filters.experienceTo) {
-      where.push(`p.experience_years BETWEEN $${i++} AND $${i++}`);
-      values.push(Number(filters.experienceFrom), Number(filters.experienceTo));
+
+    if (filters.experienceFrom) {
+      where.push(`p.experience_years >= $${i++}`);
+      values.push(Number(filters.experienceFrom));
+    }
+    if (filters.experienceTo) {
+      where.push(`p.experience_years <= $${i++}`);
+      values.push(Number(filters.experienceTo));
     }
 
-    if (filters.priceFrom && filters.priceTo) {
-      where.push(`p.price_from BETWEEN $${i++} AND $${i++}`);
-      values.push(filters.priceFrom, filters.priceTo);
+
+    if (filters.priceFrom) {
+      where.push(`p.price_from >= $${i++}`);
+      values.push(Number(filters.priceFrom));
+    }
+    if (filters.priceTo) {
+      where.push(`p.price_from <= $${i++}`);
+      values.push(Number(filters.priceTo));
     }
 
     if (filters.genres?.length) {
@@ -72,9 +82,8 @@ export class ArtistProfile {
       values.push(positionId);
     }
 
-    // 👉 userId фиксируем отдельно
     const userIdParam = userId ? Number(userId) : null;
-
+    
     const query = `
       SELECT *
       FROM (
@@ -152,10 +161,6 @@ export class ArtistProfile {
     values.push(limit, offset);
 
     const result = await pool.query(query, values);
-    console.log("SQL:", query);
-      console.log("VALUES:", values);
-      console.log("CATALOG SQL RESULT:", result.rows.length);
-      console.log(result.rows);
 
     const countQuery = `
       SELECT COUNT(*) FROM artist_profile p
@@ -171,7 +176,7 @@ export class ArtistProfile {
   }
 
 
-  static async addToLikeById(userId, id) {
+  static async addToLikeById(userId, artistId) {
     const client = await pool.connect();
 
     try {

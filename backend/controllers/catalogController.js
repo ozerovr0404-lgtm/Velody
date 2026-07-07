@@ -6,7 +6,7 @@ export const getPublishedProfile = async (request, reply) => {
     const page = Number(request.query.page) || 1;
     const limit = Number(request.query.limit) || 6;
 
-    const userId = request.session?.userId || null;
+    const userId = request.session?.user?.profileId || null;
 
     const filters = {
       is_published: true,
@@ -21,8 +21,6 @@ export const getPublishedProfile = async (request, reply) => {
     };
 
     const profile = await getCatalogProfiles(filters, page, limit, userId);
-
-    console.log('profile', profile);
 
     return reply.code(200).send({
       message: 'Публикации получены!',
@@ -40,7 +38,7 @@ export const getPublishedProfile = async (request, reply) => {
 
 export const addToLikeCard = async (request, reply) => {
   try {
-    const userId = request.session?.userId;
+    const userId = request.session?.user?.profileId;
 
     if (!userId) {
       return reply.code(401).send({
