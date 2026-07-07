@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 import { Box, Container, Grid, Pagination, Stack } from '@mui/material';
 import ActorCard from './actorCard/ActorCard';
 import CategoryTab from '../../shared/tabs/CategoryTab';
@@ -14,7 +13,11 @@ import { UserContext } from '../../../context/UserContext';
 
 const CatalogPage = () => {
   const { user } = useContext(UserContext);
-  const [tabValue, setTabValue] = useState(false);
+  const [searchParams] = useSearchParams();
+  const initialTab = searchParams.get('tab');
+  const [tabValue, setTabValue] = useState(
+    initialTab !== null ? Number(initialTab) : false
+  );
   const getDefualtFilter = () => ({
     ratingFrom: 0,
     ratingTo: 5,
@@ -61,6 +64,8 @@ const CatalogPage = () => {
   const handleTabChange = (event, value) => {
     setTabValue(value);
     setPage(1);
+
+    navigate(`/catalog?tab=${value}`);
   };
 
   const handleApply = () => {

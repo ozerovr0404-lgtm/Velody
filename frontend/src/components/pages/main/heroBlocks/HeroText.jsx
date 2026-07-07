@@ -1,4 +1,3 @@
-// src/components/main/molecules/HeroText.jsx
 import { Box, colors } from '@mui/material';
 import Title from '../heroComponents/Title';
 import Subtitle from '../heroComponents/Subtitle';
@@ -30,26 +29,26 @@ const FirstPage = () => {
 
       <Box sx={{ display: 'flex', flexDirection: 'row', gap: '20px', margin: '0 10px 40px' }}>
         <ActionButton label="Найти музыканта" navigateTo="/catalog" />
-        <ActionButton label="Предложить услуги" onClick={redirectToMyProfile} /> {/* здесь нужно добавить открытие модалки логина */}
+        <ActionButton label="Предложить услуги" onClick={redirectToMyProfile} />
       </Box>
 
       <Box sx={{ display: 'flex', flexDirection: 'row', gap: '20px', padding: '10px' }}>
-        <CategoryImage imageSrc="/GuitarCategory.jpg" navigateTo="/catalog">
+        <CategoryImage imageSrc="/GuitarCategory.jpg" navigateTo="/catalog?tab=0">
           Гитара
         </CategoryImage>
-        <CategoryImage imageSrc="/PianoCategory.jpg" navigateTo="/catalog">
+        <CategoryImage imageSrc="/PianoCategory.jpg" navigateTo="/catalog?tab=1">
           Фортепиано
         </CategoryImage>
-        <CategoryImage imageSrc="/DrumsCategory.jpg" navigateTo="/catalog">
+        <CategoryImage imageSrc="/DrumsCategory.jpg" navigateTo="/catalog?tab=2">
           Ударные
         </CategoryImage>
-        <CategoryImage imageSrc="/VocalCategory.jpg" navigateTo="/catalog">
+        <CategoryImage imageSrc="/VocalCategory.jpg" navigateTo="/catalog?tab=3">
           Вокал
         </CategoryImage>
-        <CategoryImage imageSrc="/OperatorCategory.jpg" navigateTo="/catalog">
+        <CategoryImage imageSrc="/OperatorCategory.jpg" navigateTo="/catalog?tab=4">
           Оператор
         </CategoryImage>
-        <CategoryImage imageSrc="/SoundOperatorCategory.jpg" navigateTo="/catalog">
+        <CategoryImage imageSrc="/SoundOperatorCategory.jpg" navigateTo="/catalog?tab=5">
           Звукорежиссер
         </CategoryImage>
       </Box>
