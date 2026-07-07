@@ -9,8 +9,11 @@ import getPublishedProfile from '../../../services/getProfile/getPublishedProfil
 import CatalogFilter from '../../shared/filter/filterPanel';
 import PremiumPanel from '../../shared/premiumPanel/PremiumPanel';
 import toggleFavorite from '../../../services/catalogServices/toggleFavorite';
+import { useContext } from 'react';
+import { UserContext } from '../../../context/UserContext';
 
 const CatalogPage = () => {
+  const { user } = useContext(UserContext);
   const [tabValue, setTabValue] = useState(false);
   const getDefualtFilter = () => ({
     ratingFrom: 0,
@@ -49,8 +52,11 @@ const CatalogPage = () => {
     };
 
     loadCard();
-  }, [page, filtersApplied, tabValue]);
+  }, [page, filtersApplied, tabValue, user]);
 
+  useEffect(() => {
+    setPage(1);
+  }, [user]);
 
   const handleTabChange = (event, value) => {
     setTabValue(value);

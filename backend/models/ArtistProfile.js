@@ -8,6 +8,8 @@ export class ArtistProfile {
     const values = [];
     let i = 1;
 
+    const userIdParam = userId ? Number(userId) : null;
+
     where.push(`p.is_published = $${i++}`);
     values.push(true);
 
@@ -79,22 +81,22 @@ export class ArtistProfile {
         `);
       }
 
-      if (filters.likeOnly && userIdParam) {
+      values.push(positionId);
+    }
+
+    if (filters.likeOnly && userIdParam) {
         where.push(`
             EXISTS (
               SELECT 1
-              FROM user_favorite uf
+              FROM user_favorites uf
               WHERE uf.user_id = $${i++}
                 AND uf.artist_id = p.id
             )
           `);
+
+          values.push(userIdParam);
       }
 
-      values.push(positionId);
-    }
-
-    const userIdParam = userId ? Number(userId) : null;
-    
     const query = `
       SELECT *
       FROM (
