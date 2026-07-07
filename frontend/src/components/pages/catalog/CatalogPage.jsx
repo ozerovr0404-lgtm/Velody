@@ -12,7 +12,7 @@ import toggleFavorite from '../../../services/catalogServices/toggleFavorite';
 
 const CatalogPage = () => {
   const [tabValue, setTabValue] = useState(false);
-  const getDefulatFilter = () => ({
+  const getDefualtFilter = () => ({
     ratingFrom: 0,
     ratingTo: 5,
     genres: [],
@@ -22,8 +22,8 @@ const CatalogPage = () => {
     priceTo: "",
     likeOnly: false
   });
-  const [filtersDraft , setFiltersDraft ] = useState(getDefulatFilter());
-  const [filtersApplied, setFiltersApplied] = useState(getDefulatFilter());
+  const [filtersDraft , setFiltersDraft ] = useState(getDefualtFilter());
+  const [filtersApplied, setFiltersApplied] = useState(getDefualtFilter());
   const [actors, setActors] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
   const [page, setPage] = useState(1);
@@ -71,7 +71,7 @@ const CatalogPage = () => {
 
 
   const handleReset = () => {
-    const emptyFilters = getDefulatFilter();
+    const emptyFilters = getDefualtFilter();
 
     setFiltersDraft(emptyFilters);
     setFiltersApplied(emptyFilters);
@@ -83,6 +83,14 @@ const CatalogPage = () => {
   const handleToggleLike = async (id) => {
     try {
       const result = await toggleFavorite(id);
+
+      if (filtersApplied.likeOnly && !result.data.liked) {
+        setActors(prev =>
+          prev.filter(actor => actor.id !== id)
+        );
+
+        return;
+      }
 
       setActors(prev =>
         prev.map(actor =>
@@ -176,8 +184,8 @@ const CatalogPage = () => {
                     <ActorCard
                       {...actor}
                       onOpenProfile={() => clickProfile(actor.id)}
-                      onToggleLike={(isLiked) =>
-                        handleToggleLike(actor.id, isLiked)
+                      onToggleLike={() =>
+                        handleToggleLike(actor.id)
                       }
                     />
                   </Grid>

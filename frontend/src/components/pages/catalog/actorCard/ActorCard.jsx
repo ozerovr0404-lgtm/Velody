@@ -43,7 +43,7 @@ const ActorCard = ({
       <ActorImage
         image={avatar_url}
         isLiked={is_liked}
-        onToggleLike={() => onToggleLike(is_liked)}
+        onToggleLike={onToggleLike}
       />
 
       <CardContent

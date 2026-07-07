@@ -172,7 +172,10 @@ const CatalogFilter = ({ filters, onChange, onApply, onReset }) => {
           <Switch
             checked={filters.likeOnly}
             onChange={(e) =>
-              handleCharge("likeOnly", e.target.checked)
+              onChange({
+                ...filters,
+                likeOnly: e.target.checked
+              })
             }
           />
         }

@@ -79,6 +79,17 @@ export class ArtistProfile {
         `);
       }
 
+      if (filters.likeOnly && userIdParam) {
+        where.push(`
+            EXISTS (
+              SELECT 1
+              FROM user_favorite uf
+              WHERE uf.user_id = $${i++}
+                AND uf.artist_id = p.id
+            )
+          `);
+      }
+
       values.push(positionId);
     }
 

@@ -17,7 +17,8 @@ export const getPublishedProfile = async (request, reply) => {
       experienceTo: request.query.experienceTo,
       priceFrom: request.query.priceFrom,
       priceTo: request.query.priceTo,
-      genres: request.query.genres
+      genres: request.query.genres,
+      likeOnly: request.query.likeOnly == "true"
     };
 
     const profile = await getCatalogProfiles(filters, page, limit, userId);
