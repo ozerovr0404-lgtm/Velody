@@ -22,6 +22,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import { useContext } from 'react';
 import { UserContext } from '../../../../context/UserContext';
+import sendMessage from '../../../../services/email/sendMessage';
 
 const ActorDetailInfo = ({ actor, onUpdate }) => {
 
@@ -46,9 +47,24 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
 
   const handleOpen = () => setOpenMsg(true);
   const handleClose = () => setOpenMsg(false);
-  const handleSend = () => {
-    setMessage('');
-    handleClose();
+
+  const handleSend = async () => {
+
+    if (!message.trim()) {
+      return;
+    }
+
+    try {
+      await sendMessage({
+        recipientId: actor.id,
+        message
+      });
+      
+      setMessage('');
+      handleClose();
+    } catch (err) {
+      console.error('Ошибка отправки сообщения!', err);
+    }
   };
 
   useEffect(() => {

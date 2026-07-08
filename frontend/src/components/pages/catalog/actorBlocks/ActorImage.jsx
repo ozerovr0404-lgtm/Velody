@@ -1,7 +1,12 @@
 import { Box } from '@mui/material';
 import LikeChecker from '../actorComponents/LikeChecker';
+import { useContext } from 'react';
+import { UserContext } from '../../../../context/UserContext';
 
 const ActorImage = ({ image, isLiked = false, onToggleLike }) => {
+
+  const { user } = useContext(UserContext);
+
   return (
     <Box
       sx={{
@@ -28,7 +33,7 @@ const ActorImage = ({ image, isLiked = false, onToggleLike }) => {
           p: 1,
         }}
       >
-        <LikeChecker isLiked={isLiked} onToggleLike={onToggleLike} />
+        {!!user && <LikeChecker isLiked={isLiked} onToggleLike={onToggleLike} />}
       </Box>
     </Box>
   );
