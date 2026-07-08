@@ -21,16 +21,17 @@ export class User {
   static async getProfileById(id) {
     const result = await pool.query(
       `SELECT
-          u.id,
+          u.id AS user_id,
           u.email,
+          p.id AS profile_id,
           p.stage_name,
           p.description,
           p.experience_years,
           p.city,
           p.price_from,
           ph.url AS avatar_url
-        FROM users u
-        LEFT JOIN artist_profile p ON p.user_id = u.id
+        FROM artist_profile p
+        LEFT JOIN users u ON p.user_id
         LEFT JOIN LATERAL (
           SELECT url
           FROM artist_photo ph
@@ -106,5 +107,21 @@ export class User {
     } finally {
       client.release();
     }
+  }
+
+  static async getEmailById(id) {
+    const result = await pool.query(
+      `
+        SELECT
+          u.email,
+          u.stage_name
+        FROM artist_profile p
+        JOIN users u
+          ON u.id = p.user_id
+        WHERE p.id = $1
+      `,
+      [id]
+    );
+    return result.rows[0];
   }
 }

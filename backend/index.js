@@ -5,6 +5,7 @@ import usersRoutes from "./routes/usersRoutes.js";
 import catalogRoutes from "./routes/catalogRoutes.js";
 import fastifyCookie from "@fastify/cookie";
 import fastifySession from "@fastify/session";
+import mailRoutes from "./routes/mailRoutes.js";
 
 const app = fastify({ logger: true });
 
@@ -40,5 +41,7 @@ app.register(authRoutes, { prefix: '/api/auth' });
 app.register(usersRoutes, { prefix: '/' });
 
 app.register(catalogRoutes, { prefix: '/catalog' });
+
+app.register(mailRoutes,  { prefix: '/mail' });
 
 app.listen({ port: 3000, host: '0.0.0.0' });
