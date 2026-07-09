@@ -30,7 +30,7 @@ const ActorFooter = ({ price, onClick }) => {
             color: 'rgba(8, 94, 75, 1)',
           }}
         >
-          {price}$
+          {price}₽
         </Typography>
       </Box>
 

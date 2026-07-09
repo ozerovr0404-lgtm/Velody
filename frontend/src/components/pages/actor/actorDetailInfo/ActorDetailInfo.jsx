@@ -229,7 +229,7 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
                   fontSize: 30
                 }}
               >
-                ${actor?.price_from}
+                ₽{actor?.price_from}
               </Typography>
             </>
         </Box>
