@@ -573,4 +573,25 @@ export class ArtistProfile {
         client.release();
       }
     };
+
+
+    static async extendSubscription(client, artist_id) {
+      const result = await client.query(
+        `
+          UPDATE artist_profile
+          SET subscription_expires_at =
+          CASE
+            WHEN subscription_expires_at > NOW()
+              THEN subscription_expires_at + interval '30 days'
+            ELSE
+              NOW() + interval '30 days'
+          END
+          WHERE id = $1
+          RETURNING *
+        `,
+        [artist_id]
+      );
+
+      return result.rows[0];
+    }
 }

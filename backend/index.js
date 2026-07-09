@@ -6,6 +6,8 @@ import catalogRoutes from "./routes/catalogRoutes.js";
 import fastifyCookie from "@fastify/cookie";
 import fastifySession from "@fastify/session";
 import mailRoutes from "./routes/mailRoutes.js";
+import paymentRoutes from "./routes/paymentsRoutes.js";
+
 
 const app = fastify({ logger: true });
 
@@ -44,4 +46,9 @@ app.register(catalogRoutes, { prefix: '/catalog' });
 
 app.register(mailRoutes,  { prefix: '/mail' });
 
-app.listen({ port: 3000, host: '0.0.0.0' });
+app.register(paymentRoutes, { prefix: '/payments' });
+
+await app.ready();
+console.log(app.printRoutes());
+
+await app.listen({ port: 3000, host: '0.0.0.0' });
