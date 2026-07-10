@@ -1,0 +1,44 @@
+import { Box, Typography } from '@mui/material';
+import ActorButton from '../actorComponents/ActorButton';
+
+const ActorFooter = ({ price, onClick }) => {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        gap: 1,
+        mt: 'auto',
+      }}
+    >
+      <Box>
+        <Typography
+          variant="caption"
+          sx={{
+            color: 'text.secondary',
+            fontSize: '0.75rem',
+            display: 'block',
+          }}
+        >
+          начиная с
+        </Typography>
+        <Typography
+          sx={{
+            fontWeight: 700,
+            fontSize: '1.1rem',
+            color: 'rgba(8, 94, 75, 1)',
+          }}
+        >
+          {price}₽
+        </Typography>
+      </Box>
+
+      <Box sx={{ width: '120px' }}>
+        <ActorButton label="Подробнее" onClick={onClick} />
+      </Box>
+    </Box>
+  );
+};
+
+export default ActorFooter;

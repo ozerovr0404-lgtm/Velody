@@ -1,23 +1,100 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect } from "react";
+import { logoutUser } from "../services/authUser/logoutUser";
+
 
 const UserContext = createContext(null);
 
 const UserProvider = ({ children }) => {
-  const [user, setUser] = useState({
-    name: "",
-    email: "",
-    token: "",
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [authModal, setAuthModal] = useState({
+    open: false,
+    mode: "login",
   });
 
-  //Добавить проверку сохранённого юзера
-
-  const contextValue = {
-    // докинуть нужные пропсы для юзера
-    user,
+  const openLogin = () => {
+    setAuthModal({ open: true, mode: "login" });
   };
 
+  const openRegister = () => {
+    setAuthModal({ open: true, mode: "register" });
+  };
+
+  const closeAuth = () => {
+    setAuthModal({ open: false, mode: "login" });
+  };
+  
+
+  const loadUser = async () => {
+    setLoading(true);
+    
+    try {
+      const result = await fetch('http://localhost:3000/api/auth/me', {
+        credentials: 'include'
+      });
+
+      const data = await result.json();
+
+      if (result.ok && data.user) {
+        setUser(data.user);
+        return data.user;
+        
+      } else {
+        setUser(null);
+      }
+
+    } catch (err) {
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+
+  useEffect(() => {
+    let interval;
+
+    const init = async () => {
+      const user = await loadUser();
+
+      if (user) {
+        interval = setInterval(() => {
+          loadUser();
+        }, 60_000);
+      }
+    };
+
+    init();
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, []);
+
+
+  const logout = async () => {
+    await logoutUser();
+    setUser(null);
+  };
+
+
+  const contextValue = {
+    user,
+    setUser,
+    loadUser,
+    loading,
+    logout,
+    authModal,
+    openLogin,
+    openRegister,
+    closeAuth
+  }
+
   return (
-    <UserContext.Provider value={contextValue}>{children}</UserContext.Provider>
+    <UserContext.Provider 
+      value={contextValue}>
+        {children}
+    </UserContext.Provider>
   );
 };
 

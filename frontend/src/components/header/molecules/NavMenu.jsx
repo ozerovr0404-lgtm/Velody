@@ -1,15 +1,57 @@
-import React from 'react';
-import { Box } from '@mui/material';
-import NavButton from '../atoms/NavButton';
+import { 
+  Box,
+  Button
+} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../../../context/UserContext';
+import { useContext } from 'react';
 
-const NavMenu = () => {
-  const menuItems = ['Главная', 'Поиск', 'Кабинет'];
+const NavMenu = ({ onOpenLogin }) => {
+  const navigate = useNavigate();
+  const { user } = useContext(UserContext);
 
+  const clickToProfile = () => {
+    if (!user) {
+      onOpenLogin?.();
+      return
+    }
+
+    navigate(`/profile/${user.profileId}`);
+  }
+
+  const clickToMainPage = () => {
+    navigate('/')
+  }
+
+  const clickToCatalogPage = () => {
+    navigate('/catalog')
+  }
+ 
   return (
-    <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 3 }}>
-      {menuItems.map((item) => (
-        <NavButton key={item} label={item} />
-      ))}
+    <Box 
+      sx={{ 
+        display: { xs: 'none', md: 'flex' }, 
+        gap: 3, 
+        '& .MuiButton-root': {
+          fontSize: '15px',
+          color: 'rgba(8, 94, 75, 1)'
+        }
+      }}>
+      <Button
+        onClick={clickToMainPage}
+      >
+        Главная
+      </Button>
+      <Button
+        onClick={clickToCatalogPage}
+      >
+        Поиск
+      </Button>
+      <Button
+        onClick={clickToProfile}
+      >
+        Кабинет
+      </Button>
     </Box>
   );
 };

@@ -1,4 +1,4 @@
-import { register, login } from "../controllers/authController.js";
+import { register, login, me, logout } from "../controllers/authController.js";
 import { validate } from "../middlewares/validate.js";
 import { loginSchema, registerSchema } from "../schemas/auth.schema.js";
 
@@ -13,5 +13,15 @@ export default async function authRoutes(fastify, options) {
     '/login',
     { preHandler: validate(loginSchema) },
     login
+  );
+
+  fastify.get(
+    '/me',
+    me
+  );
+
+  fastify.post(
+    '/logout',
+    logout
   );
 };

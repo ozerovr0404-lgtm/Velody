@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import { User } from '../../models/User.js';
 
-export const registerUser = async ({ email, password, stage_name, phone, role, status }) => {
+export const registerUser = async ({ email, password, stage_name, phone }) => {
   const ENG_SYMBOL = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_@.';
 
   if (!email || !password || !stage_name || !phone) {
@@ -24,9 +24,7 @@ export const registerUser = async ({ email, password, stage_name, phone, role, s
     email,
     password: hashedPassword,
     stage_name,
-    phone,
-    role,
-    status
+    phone
   });
 
   return user;

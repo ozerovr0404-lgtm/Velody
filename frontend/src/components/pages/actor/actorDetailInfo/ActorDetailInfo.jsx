@@ -14,15 +14,23 @@ import {
   Checkbox,
   FormControl,
   InputLabel,
-  Autocomplete
+  Autocomplete,
+  Switch,
+  FormControlLabel,
+  Rating
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import { useContext } from 'react';
+import { UserContext } from '../../../../context/UserContext';
+import sendMessage from '../../../../services/email/sendMessage';
+import PremiumSubscription from '../premiumSubscription/PremiumSubscription';
+import uploadArtistPhoto from '../../../../services/mediaServices/uploadArtistPhoto';
 
 const ActorDetailInfo = ({ actor, onUpdate }) => {
-  
+
+  const { user, openLogin } = useContext(UserContext);
   const [openMsg, setOpenMsg] = useState(false);
   const [message, setMessage] = useState('');
-  const [editing, setEditing] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [form, setForm] = useState({
     stage_name: actor?.stage_name ?? '',
@@ -31,7 +39,8 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
     price_from: actor?.price_from ?? '',
     description: actor?.description ?? '',
     genres: actor.genres ?? [],
-    artist_position: actor.artist_profile ?? []
+    artist_position: actor.artist_profile ?? [],
+    is_published: actor?.is_published ?? false
   });
   const fileRef = useRef();
 
@@ -40,15 +49,30 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
 
   const handleOpen = () => setOpenMsg(true);
   const handleClose = () => setOpenMsg(false);
-  const handleSend = () => {
-    setMessage('');
-    handleClose();
+
+  const handleSend = async () => {
+
+    if (!message.trim()) {
+      return;
+    }
+
+    try {
+      await sendMessage({
+        recipientId: actor.id,
+        message
+      });
+      
+      setMessage('');
+      handleClose();
+    } catch (err) {
+      console.error('Ошибка отправки сообщения!', err);
+    }
   };
 
   useEffect(() => {
     const load = async () => {
-      const resArtistPosition = await fetch('http://localhost:3000/actor/artist-positions');
-      const resGenres = await fetch('http://localhost:3000/actor/genres');
+      const resArtistPosition = await fetch('http://localhost:3000/artist-positions');
+      const resGenres = await fetch('http://localhost:3000/genres');
       const data1 = await resArtistPosition.json();
       const data2 = await resGenres.json();
       setArtistPositionOptions(data1.positions);
@@ -60,6 +84,7 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
 
 
   useEffect(() => {
+    
   if (!actor) return;
 
   setForm({
@@ -70,9 +95,11 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
       description: actor.description ?? '',
 
       genres: actor.genres ?? [],
-      artist_position: actor.artist_position ?? []
+      artist_position: actor.artist_position ?? [],
+
+      is_published: actor?.is_published ?? false
     });
-  }, [actor]);
+  }, [actor, editOpen]);
 
 
   const hadleEditOpen = () => {
@@ -90,28 +117,45 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
     setEditOpen(true);
   }
 
-  const handleEditToggle = () => setEditing((s) => !s);
 
   const handleEditClose = () => {
     setEditOpen(false);
   };
 
+
   const handleFile = async (file) => {
+
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const base64 = reader.result;
-      onUpdate?.({ avatar_url: base64 });
-    };
-    reader.readAsDataURL(file);
+
+    try {
+      const result = await uploadArtistPhoto(file);
+      console.log(result.photo.url);
+      window.location.reload();
+
+      onUpdate?.({
+        avatar_url: result.photo.url
+      });
+
+    } catch(err) {
+      console.error("Ошибка загрузки фото", err);
+    }
   };
 
   return (
     
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <input ref={fileRef} type="file" accept="image/*" hidden onChange={(e) => handleFile(e.target.files?.[0])} />
+      <input
+        ref={fileRef}
+        type="file"
+        accept="image/*"
+        hidden
+        onChange={(e) => {
+          handleFile(e.target.files?.[0]);
+          e.target.value = null;
+        }}
+      />
 
-      <Stack direction="row" spacing={2} alignItems="center">
+      <Stack direction="row" spacing={2}>
         <Avatar
           src={actor?.avatar_url}
           alt={actor?.stage_name}
@@ -125,7 +169,9 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
           }}
         >
           
-          <Stack direction="row" spacing={1} alignItems="center">
+          <Stack direction="row" spacing={1}>
+
+          <Box>
             <Typography 
               variant="h6"
               sx={{
@@ -134,56 +180,77 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
             >
               @{actor?.stage_name}
             </Typography>
-            <IconButton size="small" onClick={hadleEditOpen}>
-              <EditIcon fontSize="small" />
-            </IconButton>
-            
+
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row'
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: '22px',
+                  fontWeight: '500',
+                  mr: 1
+                }}
+              >
+                {actor?.rating}
+              </Typography>
+              <Rating value={actor?.rating} readOnly sx={{ mt: '4px' }} />
+            </Box>
+          </Box>
+
+            {user?.profileId === actor.id && 
+                <IconButton size="small" onClick={hadleEditOpen}>
+                  <EditIcon fontSize="small" />
+                </IconButton>
+            }
           </Stack>
             
-                    <>
-                      <Typography
-                        sx={{
-                          fontSize: 20
-                        }}
-                      >
-                        Специализация: {actor?.artist_position?.map(a => a.name).join(", ") || 'Не указана'}
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: 20
-                        }}
-                      >
-                        Жанр: {actor?.genres?.map(g => g.name).join(", ") || 'Не указан'}
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: 20
-                        }}
-                      >
-                        Опыт: {actor?.experience_years} лет
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: 20
-                        }}
-                      >
-                        Город: {actor?.city}
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: 20
-                        }}
-                      >
-                        Стоимость услуг от:
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: 30
-                        }}
-                      >
-                        ${actor?.price_from}
-                      </Typography>
-                    </>
+            <>
+              <Typography
+                sx={{
+                  fontSize: 20
+                }}
+              >
+                Специализация: {actor?.artist_position?.map(a => a.name).join(", ") || 'Не указана'}
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: 20
+                }}
+              >
+                Жанр: {actor?.genres?.map(g => g.name).join(", ") || 'Не указан'}
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: 20
+                }}
+              >
+                Опыт: {actor?.experience_years} лет
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: 20
+                }}
+              >
+                Город: {actor?.city}
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: 20
+                }}
+              >
+                Стоимость услуг от:
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: 30
+                }}
+              >
+                ₽{actor?.price_from}
+              </Typography>
+            </>
         </Box>
       </Stack>
 
@@ -290,7 +357,6 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
               options={genresOptions}
               value={form.genres}
               onChange={(event, newValue) => {
-                console.log("newValue", newValue);
                 setForm({ 
                   ...form, 
                   genres: newValue 
@@ -346,6 +412,29 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
             value={form.description}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
           />
+
+          <FormControl>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={form.is_published}
+                  onChange={(e) => setForm({...form, is_published: e.target.checked})}
+                  label={"Опубликовать профиль"}
+                  sx={{
+                    '& .MuiSwitch-switchBase.Mui-checked': {
+                      color: 'rgba(8, 94, 75, 1)',
+                    },
+                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                      backgroundColor: 'rgba(8, 94, 75, 1)',
+                    },
+                  }}
+                />
+              }
+              label={"Опубликовать профиль"}
+            />
+            
+          </FormControl>
+
         </DialogContent>
 
         <DialogActions>
@@ -362,10 +451,11 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
 
           <Button
             variant="contained"
-            onClick={() => {
-              onUpdate?.({
+            onClick={async () => {
+              await onUpdate?.({
                 ...form
               });
+              document.activeElement?.blur();
               handleEditClose();
             }}
             sx={{
@@ -380,19 +470,50 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
         </DialogActions>
       </Dialog>
 
-      <Button 
-        variant="outlined" 
-        size="normal" 
-        onClick={handleOpen}
-        sx={{
-          width: '250px',
-          height: '40px',
-          color: 'white',
-          backgroundColor: 'rgba(8, 94, 75, 1)'
-        }}
-      >
-        Связаться
-      </Button>
+
+      {user?.profileId === actor.id ? 
+        <>
+          <Button 
+            variant="outlined" 
+            size="normal" 
+            onClick={() => fileRef.current.click()}
+            sx={{
+              width: '250px',
+              height: '40px',
+              color: 'white',
+              backgroundColor: 'rgba(8, 94, 75, 1)'
+            }}
+          >
+            Загрузить фото
+          </Button>
+          <PremiumSubscription actor={actor} />
+        </>
+         : 
+        user ? <Button 
+          variant="outlined" 
+          size="normal" 
+          onClick={handleOpen}
+          sx={{
+            width: '250px',
+            height: '40px',
+            color: 'white',
+            backgroundColor: 'rgba(8, 94, 75, 1)'
+          }}
+        >
+          Связаться
+        </Button> : <Button 
+          variant="outlined" 
+          size="normal" 
+          onClick={openLogin}
+          sx={{
+            width: '250px',
+            height: '40px',
+            color: 'white',
+            backgroundColor: 'rgba(8, 94, 75, 1)'
+          }}
+        >
+          Ожидается авторизация
+        </Button>}
     </Box>
   );
 };

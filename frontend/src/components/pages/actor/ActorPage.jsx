@@ -6,21 +6,31 @@ import ActorInfo from './actorDiscription/ActorInfo';
 import ActorReviews from './actorReviews/ActorReviews';
 import updateUserProfile from '../../../services/updateProfile/updateUserProfile';
 import getUserProfileForId from '../../../services/getProfile/getUserProfileForId';
+import getReviewsByProfileId from '../../../services/artistFeedback/getReviewsByProfileId';
+import addReviewByProfileId from '../../../services/artistFeedback/addReviewByProfileId';
+
 
 const ActorPage = () => {
   const { id } = useParams();
-  console.log('ID TYPE:', typeof id, id);
 
   const [actor, setActor] = useState(null);
+  const [reviews, setReviews] = useState([]);
 
     useEffect(() => {
       if (!id) return;
+
+      setActor(null);
+      setReviews([]);
 
       let active = true;
 
       const load = async () => {
         const data = await getUserProfileForId(id);
         if (active) setActor(data);
+
+        const reviews = await getReviewsByProfileId(id);
+
+        if (reviews) setReviews(reviews);
       };
 
       load();
@@ -30,7 +40,10 @@ const ActorPage = () => {
       };
     }, [id]);
 
-  
+    
+    useEffect(() => {
+      window.scroll(0, 0);
+    }, []);
 
 
   const handleUpdate = async(payload) => {
@@ -43,8 +56,6 @@ const ActorPage = () => {
         genres: payload.genres.map(g => g.id)
       };
 
-      console.log('Clean Payload:', cleanPayload);
-
       const updated = await updateUserProfile(id, cleanPayload);
 
       setActor(updated);
@@ -54,6 +65,27 @@ const ActorPage = () => {
     }
   }
 
+
+  const handleAddReview = async ({ rating, comment }) => {
+    try {
+      const result = await addReviewByProfileId(id, {
+        rating,
+        comment
+      });
+
+      const updateReviews = await getReviewsByProfileId(id);
+      setReviews(updateReviews.reviews ?? updateReviews);
+
+      setActor(prev => ({
+        ...prev,
+        rating: result.rating,
+        reviews_count: result.reviews_count
+      }));
+
+    } catch (err) {
+      console.error(err);
+    }
+  }
   
   if (!actor && id) {
     return <div>Загрузка...</div>;
@@ -63,20 +95,20 @@ const ActorPage = () => {
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <Container maxWidth="md" sx={{ py: 6, ml: 35 }}>
-        <Grid container spacing={4} justifyContent="center">
-          <Grid item xs={12} md={4}>
+        <Grid container spacing={4}>
+          <Grid size={{ xs: 12, md: 10.8 }}>
             <ActorDetailInfo 
               actor={actor} 
               onUpdate={handleUpdate} />
           </Grid>
 
-          <Grid item xs={12} md={8}>
+          <Grid size={{ xs: 12, md: 10.8 }}>
 
             <ActorInfo 
               actor={actor} 
               onUpdate={handleUpdate} />
 
-            <ActorReviews actorId={actor.id} />
+            <ActorReviews actor={actor} reviews={reviews} addReview={handleAddReview} />
           </Grid>
         </Grid>
       </Container>

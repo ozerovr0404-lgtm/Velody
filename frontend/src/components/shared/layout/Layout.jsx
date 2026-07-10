@@ -1,34 +1,48 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Outlet } from "react-router-dom";
 import Header from "../../header/Header";
 import Footer from "../../footer/Footer";
 import RegisterModal from "../../../features/authModal/RegisterModal";
 import LoginModal from "../../../features/authModal/LoginModal";
-import './Layout.css'
+import { UserContext } from "../../../context/UserContext";
+import "./Layout.css";
 
 const Layout = () => {
-
-  const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
-  const [isOpenLoginModal, setIsOpenLoginModal] = useState(false);
-
-  const handleOpenRegister = () => setRegisterModalOpen(true);
-  const handleCloseRegister = () => setRegisterModalOpen(false);
-  const handleOpenLoginModal = () => setIsOpenLoginModal(true);
-  const handleCloseLoginModal = () => setIsOpenLoginModal(false);
+  const {
+    authModal,
+    openLogin,
+    openRegister,
+    closeAuth,
+    logout
+  } = useContext(UserContext);
 
   return (
     <>
-      <Header onRegisterClick={handleOpenRegister} onLoginClick={handleOpenLoginModal} />
-        <div className="appLayout">
-          <Outlet />
-        </div>
+      <Header
+        onLoginClick={openLogin}
+        onRegisterClick={openRegister}
+        onLogoutClick={logout}
+      />
+
+      <main className="appLayout">
+        <Outlet />
+      </main>
+
       <Footer />
 
-      <RegisterModal open={isRegisterModalOpen} onClose={handleCloseRegister} />
-      <LoginModal open={isOpenLoginModal} onClose={handleCloseLoginModal} />
-      
+      <RegisterModal
+        open={authModal.open && authModal.mode === "register"}
+        onClose={closeAuth}
+        onSwitchToLogin={openLogin}
+      />
+
+      <LoginModal
+        open={authModal.open && authModal.mode === "login"}
+        onClose={closeAuth}
+        onSwitchToRegister={openRegister}
+      />
     </>
-  )
+  );
 };
 
 export default Layout;

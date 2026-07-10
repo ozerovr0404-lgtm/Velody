@@ -1,11 +1,10 @@
 import Tab from '@mui/material/Tab';
 
-const CategoryTab = ({ value, label }) => {
+const CategoryTab = (props) => {
   return (
     <Tab
       disableRipple
-      value={value}
-      label={label}
+      {...props}
       sx={{
         textTransform: 'none',
         minHeight: 50,
@@ -13,6 +12,7 @@ const CategoryTab = ({ value, label }) => {
         padding: '8px 40px',
         margin: '0 10px',
         color: '#000000ff',
+        fontSize: '16px',
 
         borderBottom: '2px solid transparent',
         transition: 'border-color 0.2s ease',
@@ -23,11 +23,11 @@ const CategoryTab = ({ value, label }) => {
 
         '&.Mui-selected': {
           color: '#000000ff',
-          borderBottom: '2px solid rgba(3, 59, 47, 1) !important',
+          borderBottom: '2px solid rgba(3, 59, 47, 1)',
         },
       }}
     />
   );
-}
+};
 
 export default CategoryTab;

@@ -1,27 +1,23 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Box } from '@mui/material';
 import AuthTitle from '../atoms/AuthTitle';
 import AuthUserField from '../atoms/AuthUserField';
 import MainButton from '../../../components/shared/buttons/MainButton';
-import {
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem
-} from '@mui/material';
-import InputMask from 'react-input-mask';
-import TextField from '@mui/material/TextField';
+import { registerUser } from '../../../services/authUser/registerUser';
+import { UserContext } from '../../../context/UserContext';
+import Notification from '../../../components/shared/notification/Notification';
 
 const RegisterForm = ({ onClose }) => {
 
+  const { loadUser } = useContext(UserContext);
   const [stage_name, setStage_name] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
-  const [role, setRole] = useState(null);
   const [phone, setPhone] = useState('');
   const [error, setError] = useState('');
-  const status = 'ACTIVE'
+  const navigate = useNavigate();
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,31 +29,29 @@ const RegisterForm = ({ onClose }) => {
     }
 
     try {
-        const response = await fetch('http://localhost:3000/api/auth/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({ stage_name, email, password, status, role, phone })
-          });
-        
-          const data = await response.json();
+      const res = await registerUser(stage_name, email, password, phone);
 
-          if (!response.ok) {
-            setError(data.error || 'Ошибка регистрации!')
-            return;
-          }
+        await loadUser();
+      
+        onClose?.();
 
-          console.log(data);
+        navigate(`/profile/${res.profile.id}`);
 
-          if (response.ok) {
-            onClose?.();
-          }
+    } catch (err) {
+        setError(
+          err.message || 'Данные заполнены некорректно'
+        );
 
-      } catch (err) {
-        setError('Ошибка соединения с сервером!');
-      }
+        setTimeout(() => {
+          setError('');
+        }, 3000);
+    }
   }
 
   return (
+    <>
+    <Notification message={error} />
+    
     <Box 
       component="form"
       onSubmit={handleSubmit}
@@ -66,33 +60,12 @@ const RegisterForm = ({ onClose }) => {
           flexDirection: 'column', 
           alignItems: 'center',
           width: '100%',
-          height: '510px',
+          height: '430px',
           gap: '22px'
         }}
     >
 
       <AuthTitle title="Регистрация" />
-
-      <FormControl fullWidth>
-        <InputLabel id='role-label'>
-          В качестве кого?
-        </InputLabel>
-
-        <Select
-          label="Ищу или предлагаю?"
-          type="select"
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
-          sx={{
-            width: '100%',
-            height: '50px',
-            borderColor: '#979797'
-          }}
-        >
-          <MenuItem value='CLIENT'>Ищу</MenuItem>
-          <MenuItem value='ARTIST'>Предлагаю</MenuItem>
-        </Select>
-      </FormControl>
 
       <AuthUserField
         label="Имя"
@@ -133,6 +106,7 @@ const RegisterForm = ({ onClose }) => {
       <MainButton type="submit" label="Зарегистрироваться" color="white" backgroundColor="rgba(8, 94, 75, 1)" />
 
     </Box>
+    </>
   );
 };
 

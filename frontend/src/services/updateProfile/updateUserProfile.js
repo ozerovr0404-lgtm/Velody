@@ -2,9 +2,9 @@ const updateUserProfile = async (
   id, 
   payload
 ) => {
-  console.log("UPDATE PAYLOAD:", payload);
-  const response = await fetch(`http://localhost:3000/actor/profile/${id}`, {
+  const response = await fetch(`http://localhost:3000/profile/${id}`, {
       method: 'PATCH',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json'
       },
