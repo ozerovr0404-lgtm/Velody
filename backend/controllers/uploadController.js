@@ -3,11 +3,6 @@ import { uploadArtistPhotoService } from "../services/media/uploadArtistPhotoSer
 export const uploadArtistPhotoController = async (request, reply) => {
 
     try {
-      console.log("SESSION:", request.session);
-
-    console.log("USER:", request.session?.user);
-        console.log("UPLOAD CONTROLLER START");
-
 
         const file = await request.file();
 

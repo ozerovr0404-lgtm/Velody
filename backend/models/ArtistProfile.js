@@ -152,7 +152,7 @@ export class ArtistProfile {
           SELECT url
           FROM artist_photo ph
           WHERE ph.artist_profile_id = p.id
-          ORDER BY ph.order_index ASC
+          ORDER BY ph.created_at DESC
           LIMIT 1
         ) ph ON true
 
@@ -271,7 +271,7 @@ export class ArtistProfile {
           SELECT ph.url
           FROM artist_photo ph
           WHERE ph.artist_profile_id = p.id
-          ORDER BY ph.order_index ASC
+          ORDER BY ph.created_at DESC
           LIMIT 1
         ) AS avatar_url,
 
@@ -398,7 +398,7 @@ export class ArtistProfile {
                 SELECT apf.url
                 FROM artist_photo apf
                 WHERE apf.artist_profile_id = ap.id
-                ORDER BY apf.order_index ASC
+                ORDER BY apf.created_at DESC
                 LIMIT 1
               ),
               NULL
@@ -612,7 +612,7 @@ export class ArtistProfile {
               SELECT url
               FROM artist_photo
               WHERE artist_profile_id = ap.id
-              ORDER BY order_index ASC
+              ORDER BY created_at DESC
               LIMIT 1
             ) AS avatar_url,
 
@@ -649,14 +649,5 @@ export class ArtistProfile {
       );
 
       return result.rows;
-    }
-
-    
-    static async createPhoto({
-      artist_profile_id,
-      url,
-      order_index
-    }) {
-
     }
 }

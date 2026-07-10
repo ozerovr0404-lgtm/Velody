@@ -5,6 +5,7 @@ export const uploadArtistPhotoService = async ({
     file,
     artistProfileId
 }) => {
+    console.log("SERVICE PROFILE ID:", artistProfileId);
 
     const buffer = await file.toBuffer();
 
@@ -13,6 +14,9 @@ export const uploadArtistPhotoService = async ({
         mimeType: file.mimetype,
         originalName: file.filename
     });
+        console.log("S3 RESULT:", s3Result);
+
+    
 
     const photo = await ArtistPhoto.create({
 
@@ -23,6 +27,7 @@ export const uploadArtistPhotoService = async ({
         order_index: 0
 
     });
+    console.log("DB PHOTO:", photo);
 
 
     return photo;

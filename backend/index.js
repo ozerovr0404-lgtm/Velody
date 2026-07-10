@@ -37,7 +37,11 @@ app.register(fastifySession, {
   }
 });
 
-await app.register(import("@fastify/multipart"));
+await app.register(import("@fastify/multipart"), {
+  limits: {
+    fileSize: 10 * 1024 * 1024
+  }
+});
 
 
 app.register(authRoutes, { prefix: '/api/auth' });
