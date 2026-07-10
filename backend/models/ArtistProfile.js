@@ -650,4 +650,13 @@ export class ArtistProfile {
 
       return result.rows;
     }
+
+    
+    static async createPhoto({
+      artist_profile_id,
+      url,
+      order_index
+    }) {
+
+    }
 }
