@@ -6,6 +6,7 @@ import AuthUserField from '../atoms/AuthUserField';
 import MainButton from '../../../components/shared/buttons/MainButton';
 import { registerUser } from '../../../services/authUser/registerUser';
 import { UserContext } from '../../../context/UserContext';
+import Notification from '../../../components/shared/notification/Notification';
 
 const RegisterForm = ({ onClose }) => {
 
@@ -37,11 +38,20 @@ const RegisterForm = ({ onClose }) => {
         navigate(`/profile/${res.profile.id}`);
 
     } catch (err) {
-      setError('Ошибка регистрации!');
+        setError(
+          err.message || 'Данные заполнены некорректно'
+        );
+
+        setTimeout(() => {
+          setError('');
+        }, 3000);
     }
   }
 
   return (
+    <>
+    <Notification message={error} />
+    
     <Box 
       component="form"
       onSubmit={handleSubmit}
@@ -96,6 +106,7 @@ const RegisterForm = ({ onClose }) => {
       <MainButton type="submit" label="Зарегистрироваться" color="white" backgroundColor="rgba(8, 94, 75, 1)" />
 
     </Box>
+    </>
   );
 };
 
