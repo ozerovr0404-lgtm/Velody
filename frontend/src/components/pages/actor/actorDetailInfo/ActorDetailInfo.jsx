@@ -420,6 +420,14 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
                   checked={form.is_published}
                   onChange={(e) => setForm({...form, is_published: e.target.checked})}
                   label={"Опубликовать профиль"}
+                  sx={{
+                    '& .MuiSwitch-switchBase.Mui-checked': {
+                      color: 'rgba(8, 94, 75, 1)',
+                    },
+                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                      backgroundColor: 'rgba(8, 94, 75, 1)',
+                    },
+                  }}
                 />
               }
               label={"Опубликовать профиль"}

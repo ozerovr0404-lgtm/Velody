@@ -266,6 +266,7 @@ export class ArtistProfile {
         p.is_published,
         p.experience_years,
         p.is_published,
+        p.subscription_expires_at,
 
         (
           SELECT ph.url
