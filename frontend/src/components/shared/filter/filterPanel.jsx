@@ -181,6 +181,14 @@ const CatalogFilter = ({ filters, onChange, onApply, onReset }) => {
                   likeOnly: e.target.checked
                 })
               }
+              sx={{
+                '& .MuiSwitch-switchBase.Mui-checked': {
+                  color: 'rgba(8, 94, 75, 1)',
+                },
+                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                  backgroundColor: 'rgba(8, 94, 75, 1)',
+                },
+              }}
             />
           }
           label="Понравившиеся мне"

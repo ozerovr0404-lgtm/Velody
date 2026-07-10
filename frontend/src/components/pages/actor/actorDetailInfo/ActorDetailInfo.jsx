@@ -24,6 +24,7 @@ import { useContext } from 'react';
 import { UserContext } from '../../../../context/UserContext';
 import sendMessage from '../../../../services/email/sendMessage';
 import PremiumSubscription from '../premiumSubscription/PremiumSubscription';
+import uploadArtistPhoto from '../../../../services/mediaServices/uploadArtistPhoto';
 
 const ActorDetailInfo = ({ actor, onUpdate }) => {
 
@@ -123,19 +124,36 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
 
 
   const handleFile = async (file) => {
+
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const base64 = reader.result;
-      onUpdate?.({ avatar_url: base64 });
-    };
-    reader.readAsDataURL(file);
+
+    try {
+      const result = await uploadArtistPhoto(file);
+      console.log(result.photo.url);
+      window.location.reload();
+
+      onUpdate?.({
+        avatar_url: result.photo.url
+      });
+
+    } catch(err) {
+      console.error("Ошибка загрузки фото", err);
+    }
   };
 
   return (
     
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <input ref={fileRef} type="file" accept="image/*" hidden onChange={(e) => handleFile(e.target.files?.[0])} />
+      <input
+        ref={fileRef}
+        type="file"
+        accept="image/*"
+        hidden
+        onChange={(e) => {
+          handleFile(e.target.files?.[0]);
+          e.target.value = null;
+        }}
+      />
 
       <Stack direction="row" spacing={2}>
         <Avatar
@@ -402,6 +420,14 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
                   checked={form.is_published}
                   onChange={(e) => setForm({...form, is_published: e.target.checked})}
                   label={"Опубликовать профиль"}
+                  sx={{
+                    '& .MuiSwitch-switchBase.Mui-checked': {
+                      color: 'rgba(8, 94, 75, 1)',
+                    },
+                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                      backgroundColor: 'rgba(8, 94, 75, 1)',
+                    },
+                  }}
                 />
               }
               label={"Опубликовать профиль"}
@@ -444,15 +470,13 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
         </DialogActions>
       </Dialog>
 
-            {/* После подключения CDN сюда добавить условие - если user && */}
-
 
       {user?.profileId === actor.id ? 
         <>
           <Button 
             variant="outlined" 
             size="normal" 
-            onClick={handleFile}
+            onClick={() => fileRef.current.click()}
             sx={{
               width: '250px',
               height: '40px',

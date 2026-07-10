@@ -7,7 +7,7 @@ import fastifyCookie from "@fastify/cookie";
 import fastifySession from "@fastify/session";
 import mailRoutes from "./routes/mailRoutes.js";
 import paymentRoutes from "./routes/paymentsRoutes.js";
-
+import uploadRoutes from "./routes/uploadRoutes.js";
 
 const app = fastify({ logger: true });
 
@@ -37,6 +37,12 @@ app.register(fastifySession, {
   }
 });
 
+await app.register(import("@fastify/multipart"), {
+  limits: {
+    fileSize: 10 * 1024 * 1024
+  }
+});
+
 
 app.register(authRoutes, { prefix: '/api/auth' });
 
@@ -48,7 +54,8 @@ app.register(mailRoutes,  { prefix: '/mail' });
 
 app.register(paymentRoutes, { prefix: '/payments' });
 
+app.register(uploadRoutes, { prefix: '/api/upload' });
+
 await app.ready();
-console.log(app.printRoutes());
 
 await app.listen({ port: 3000, host: '0.0.0.0' });

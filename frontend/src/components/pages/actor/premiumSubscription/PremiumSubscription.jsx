@@ -1,4 +1,4 @@
-import { Paper, Typography, Button } from "@mui/material";
+import { Paper, Typography } from "@mui/material";
 import MainButton from "../../../shared/buttons/MainButton";
 import createPremiumSubscription from "../../../../services/premiumFeatures/createPremiumSubscription";
 
@@ -6,7 +6,7 @@ const PremiumSubscription = ({ actor }) => {
 
   const handlePremium = async () => {
     try {
-      const data = await createPremiumSubscription();
+      const data = await createPremiumSubscription(actor.id);
 
       window.location.href = data.payment_url;
     } catch (err) {
@@ -28,28 +28,31 @@ const active =
       Premium
     </Typography>
   
-    {active ?
+    {active && (
       <>
         <Typography color="success.main">
-        Подписка активна
+          Подписка активна
         </Typography>
-    
+
         <Typography>
-        до {
-        new Date(actor.subscription_expires_at)
-        .toLocaleDateString()
-        }
+          до {
+            new Date(actor.subscription_expires_at)
+            .toLocaleDateString()
+          }
         </Typography>
       </>
-      :
-      <>
-        <Typography sx={{ mb: 1 }} >
-          Будьте всегда на виду и получите больше предложений!
-        </Typography>
-  
-        <MainButton label="Подключить Premium" color="rgba(8, 94, 75, 1)" backgroundColor="rgba(255, 255, 255, 1)" onClick={handlePremium} />
-      </>}
-  
+    )}
+
+      <MainButton
+        label={
+          active 
+          ? "Продлить Premium"
+          : "Подключить Premium"
+        }
+        color="rgba(8, 94, 75, 1)"
+        backgroundColor="rgba(255,255,255,1)"
+        onClick={handlePremium}
+      />
     </Paper>
   );
 }
