@@ -5,8 +5,9 @@ import { createYooKassaPayment } from "../services/yookassa/createYooKassaPaymen
 
 export const createPaymentController = async (request, reply) => {
   try {
-    const result = await createPaymentService(request.body);
+    const result = await createPaymentService(request);
 
+    console.log('SESSION', request.session);
     return reply.code(201).send(result)
   } catch (err) {
     console.error(err);

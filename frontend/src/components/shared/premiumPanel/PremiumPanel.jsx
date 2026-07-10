@@ -71,12 +71,6 @@ const PremiumPanel = () => {
         },
       }}
     >
-      <Fade
-        key={artist.id}
-        in={true}
-        timeout={500}
-        nodeRef={fadeRef}
-      >
         <Slide
           key={artist.id}
           direction={direction}
@@ -283,7 +277,6 @@ const PremiumPanel = () => {
             </Box>
           </Box>
         </Slide>
-      </Fade>
     </Paper>
   );
 };

@@ -1,10 +1,10 @@
 import { Payments } from "../../models/Payments.js";
 import { createYooKassaPayment } from "../yookassa/createYooKassaPayment.js";
 
-export const createPaymentService = async (data) => {
-
+export const createPaymentService = async (request) => {
+  console.log("SESSION USER:", request.session.user);
     const paymentData = {
-      artist_id: data.artist_id,
+      artist_id: request.session.user.profileId,
       amount: 1000,
       status: "PENDING"
     };
