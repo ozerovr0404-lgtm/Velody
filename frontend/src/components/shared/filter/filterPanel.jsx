@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Box, Typography, Paper, Slider, TextField, Divider, FormControlLabel, Switch, Autocomplete } from '@mui/material';
 import MainButton from '../buttons/MainButton';
+import { useContext } from 'react';
+import { UserContext } from '../../../context/UserContext';
 
 const CatalogFilter = ({ filters, onChange, onApply, onReset }) => {
 
   const [genresOptions, setGenresOptions] = useState([]);
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     const loadGenres = async () => {
@@ -167,20 +170,23 @@ const CatalogFilter = ({ filters, onChange, onApply, onReset }) => {
 
       <Divider sx={{ mb: 3 }} />
 
-      <FormControlLabel
-        control={
-          <Switch
-            checked={filters.likeOnly}
-            onChange={(e) =>
-              onChange({
-                ...filters,
-                likeOnly: e.target.checked
-              })
-            }
-          />
-        }
-        label="Понравившиеся мне"
-      />
+      {!!user &&
+        <FormControlLabel
+          control={
+            <Switch
+              checked={filters.likeOnly}
+              onChange={(e) =>
+                onChange({
+                  ...filters,
+                  likeOnly: e.target.checked
+                })
+              }
+            />
+          }
+          label="Понравившиеся мне"
+        />
+      }
+      
       <Box sx={{ display: "flex", justifyContent: "center", mt: 2, gap: 1 }} >
         <MainButton label="Применить" color="white" backgroundColor="rgba(8, 94, 75, 1)" onClick={onApply} />
         <MainButton label="Сбросить" color="rgba(8, 94, 75, 1)" backgroundColor="rgba(255, 255, 255, 1)" onClick={onReset} />

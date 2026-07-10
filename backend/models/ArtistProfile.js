@@ -573,4 +573,81 @@ export class ArtistProfile {
         client.release();
       }
     };
+
+
+    static async extendSubscription(client, artist_id) {
+      const result = await client.query(
+        `
+          UPDATE artist_profile
+          SET subscription_expires_at =
+          CASE
+            WHEN subscription_expires_at > NOW()
+              THEN subscription_expires_at + interval '30 days'
+            ELSE
+              NOW() + interval '30 days'
+          END
+          WHERE id = $1
+          RETURNING *
+        `,
+        [artist_id]
+      );
+
+      return result.rows[0];
+    }
+
+    static async getPremiumArtists() {
+      const result = await pool.query(
+        `
+          SELECT
+            ap.id,
+            ap.stage_name,
+            ap.city,
+            ap.description,
+            ap.price_from,
+            ap.rating,
+            ap.reviews_count,
+            ap.subscription_expires_at,
+
+            (
+              SELECT url
+              FROM artist_photo
+              WHERE artist_profile_id = ap.id
+              ORDER BY order_index ASC
+              LIMIT 1
+            ) AS avatar_url,
+
+            (
+              SELECT COALESCE(json_agg(g.name), '[]')
+              FROM artist_genre ag
+              JOIN genre g
+                ON g.id = ag.genre_id
+              WHERE ag.artist_profile_id = ap.id
+            ) AS genres,
+            
+            (
+              SELECT COALESCE(json_agg(aposition.position_name), '[]')
+              FROM artist_profile_position app
+              JOIN artist_position aposition
+                ON aposition.id = app.artist_position_id
+              WHERE app.artist_profile_id = ap.id
+            ) AS positions
+
+          FROM artist_profile ap
+
+          WHERE 
+            ap.subscription_expires_at IS NOT NULL
+            AND ap.subscription_expires_at > NOW()
+            AND ap.is_published = true
+
+          ORDER BY
+            ap.reviews_count DESC,
+            ap.rating DESC,
+            ap.subscription_expires_at DESC
+
+          LIMIT 20
+        `
+      );
+
+      return result.rows;
+    }
 }

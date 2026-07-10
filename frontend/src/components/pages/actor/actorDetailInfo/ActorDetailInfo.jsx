@@ -23,6 +23,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useContext } from 'react';
 import { UserContext } from '../../../../context/UserContext';
 import sendMessage from '../../../../services/email/sendMessage';
+import PremiumSubscription from '../premiumSubscription/PremiumSubscription';
 
 const ActorDetailInfo = ({ actor, onUpdate }) => {
 
@@ -229,7 +230,7 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
                   fontSize: 30
                 }}
               >
-                ${actor?.price_from}
+                ₽{actor?.price_from}
               </Typography>
             </>
         </Box>
@@ -446,19 +447,24 @@ const ActorDetailInfo = ({ actor, onUpdate }) => {
             {/* После подключения CDN сюда добавить условие - если user && */}
 
 
-      {user?.profileId === actor.id ? <Button 
-          variant="outlined" 
-          size="normal" 
-          onClick={handleFile}
-          sx={{
-            width: '250px',
-            height: '40px',
-            color: 'white',
-            backgroundColor: 'rgba(8, 94, 75, 1)'
-          }}
-        >
-          Загрузить фото
-        </Button> : 
+      {user?.profileId === actor.id ? 
+        <>
+          <Button 
+            variant="outlined" 
+            size="normal" 
+            onClick={handleFile}
+            sx={{
+              width: '250px',
+              height: '40px',
+              color: 'white',
+              backgroundColor: 'rgba(8, 94, 75, 1)'
+            }}
+          >
+            Загрузить фото
+          </Button>
+          <PremiumSubscription actor={actor} />
+        </>
+         : 
         user ? <Button 
           variant="outlined" 
           size="normal" 
