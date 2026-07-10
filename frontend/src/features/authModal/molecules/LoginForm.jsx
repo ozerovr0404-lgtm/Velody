@@ -5,6 +5,7 @@ import AuthUserField from '../atoms/AuthUserField';
 import MainButton from '../../../components/shared/buttons/MainButton';
 import { useContext } from 'react';
 import { UserContext } from '../../../context/UserContext';
+import Notification from '../../../components/shared/notification/Notification';
 
 const LoginForm = ({ onClose, onSwitchToRegister }) => {
   const [email, setEmail] = useState('');
@@ -17,6 +18,14 @@ const LoginForm = ({ onClose, onSwitchToRegister }) => {
     e.preventDefault();
     setError('');
 
+    const showError = (msg) => {
+      setError(msg);
+
+      setTimeout(() => {
+        setError('');
+      }, 3000);
+    };
+
     try {
       const response = await fetch('http://localhost:3000/api/auth/login', {
         method: 'POST',
@@ -28,7 +37,7 @@ const LoginForm = ({ onClose, onSwitchToRegister }) => {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || 'Ошибка авторизации!')
+        showError(data.error || 'Ошибка авторизации!')
         return;
       }
 
@@ -38,61 +47,64 @@ const LoginForm = ({ onClose, onSwitchToRegister }) => {
       }
 
     } catch (err) {
-      setError('Ошибка соединения с сервером!')
+      showError('Ошибка соединения с сервером!')
     }
   }
 
   return (
-    <Box
+    <>
+      <Notification message={error} />
+      <Box
       component="form"
       onSubmit={handleSubmit}
       sx={{ 
         display: 'flex', 
         flexDirection: 'column', 
-        width: '100%',
-        height: '250px',
-        gap: '25px'
-      }}
-    >
-      <AuthTitle title="Авторизация" />
-
-      <AuthUserField 
-        label="Email"
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-
-      <AuthUserField
-        label="Пароль"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          gap: 2,
-          justifyContent: 'flex-end'
+          width: '100%',
+          height: '250px',
+          gap: '25px'
         }}
       >
-        <MainButton 
-          type="submit"
-          label="Войти"
-          color="white" backgroundColor="rgba(8, 94, 75, 1)"
+        <AuthTitle title="Авторизация" />
+
+        <AuthUserField 
+          label="Email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
 
-        <MainButton 
-          type="button"
-          label="Регистрация"
-          onClick={onSwitchToRegister}
-          color="rgba(8, 94, 75, 1)" backgroundColor="rgba(255, 255, 255, 1)"
+        <AuthUserField
+          label="Пароль"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
+
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            gap: 2,
+            justifyContent: 'flex-end'
+          }}
+        >
+          <MainButton 
+            type="submit"
+            label="Войти"
+            color="white" backgroundColor="rgba(8, 94, 75, 1)"
+          />
+
+          <MainButton 
+            type="button"
+            label="Регистрация"
+            onClick={onSwitchToRegister}
+            color="rgba(8, 94, 75, 1)" backgroundColor="rgba(255, 255, 255, 1)"
+          />
+        </Box>
+
       </Box>
-
-    </Box>
+    </>
   );
 };
 
